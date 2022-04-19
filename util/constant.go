@@ -9,4 +9,5 @@ var (
 	InvalidData          = "Invalid data"
 	EmailOrPasswordWrong = "Email or password wrong"
 	LoginSuccessFully    = "Login successfully"
+	InvalidToken         = "Invalid token"
 )
