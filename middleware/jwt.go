@@ -1,13 +1,10 @@
 package middleware
 
 import (
-	"echo-app/database"
-	"echo-app/model"
 	"echo-app/util"
 	"fmt"
-	"github.com/golang-jwt/jwt"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"os"
@@ -61,16 +58,9 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 			})
 		}
 
-		// vaidate token
+		// vaidate token and set id token
 		if claims, ok := parsedToken.Claims.(*Claims); ok && parsedToken.Valid {
-			ctx := c.Request().Context()
-			id, _ := primitive.ObjectIDFromHex(claims.ID)
-			var user model.User
-			err := database.GetUserCol().FindOne(ctx, bson.M{"_id": id}).Decode(&user)
-			if err != nil {
-				return c.JSON(http.StatusUnauthorized, err.Error())
-			}
-			c.Set("user", user)
+			c.Set("id", claims.ID)
 			return next(c)
 		} else {
 			return c.JSON(http.StatusUnauthorized, util.Response{

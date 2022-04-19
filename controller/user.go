@@ -5,25 +5,32 @@ import (
 	"echo-app/model"
 	"echo-app/service"
 	"echo-app/util"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
-	"strconv"
+	"strings"
+	"time"
 )
 
-func CreateUser(c echo.Context) error {
-	// bind data
-	payload, err := bindAndValidate(c)
-	if err != nil {
-		return err
-	}
+type Query struct {
+	Page  int `query:"page"`
+	Limit int `query:"limit"`
+}
 
-	// check exist user
-	foundUser, err := service.GetUserByEmail(c, payload.Email)
-	if err != nil {
-		return err
+func CreateUser(c echo.Context) error {
+	// get body
+	body := c.Get("body")
+	payload, ok := body.(*model.User)
+	if !ok {
+		return c.JSON(http.StatusBadRequest, util.Response{
+			Message: "Invalid data",
+		})
 	}
+	// check exist user
+	foundUser := service.GetUserByEmail(payload.Email)
+	fmt.Println(payload, foundUser)
 	if payload.Email == foundUser.Email {
 		return c.JSON(http.StatusBadRequest, util.Response{
 			Message: "Email is already in exist",
@@ -38,34 +45,34 @@ func CreateUser(c echo.Context) error {
 		})
 	}
 	insertData := model.User{
-		Name:     payload.Name,
-		Age:      payload.Age,
-		Email:    payload.Email,
-		Password: password,
-	}
-
-	// role admin
-	path := c.Request().URL.Path
-	if path == "/users/register-admin" {
-		return service.CreateUser(c, &insertData, true)
+		ID:        primitive.NewObjectID(),
+		Name:      payload.Name,
+		Dob:       payload.Dob,
+		Email:     strings.ToLower(payload.Email),
+		Password:  password,
+		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
 	}
 
 	// create user
-	return service.CreateUser(c, &insertData, false)
+	result := service.CreateUser(insertData)
+	return c.JSON(http.StatusOK, util.Response{
+		Message: result,
+	})
 }
 
 func Login(c echo.Context) error {
-	payload, err := bindAndValidate(c)
-	if err != nil {
-		return err
+	payload, ok := c.Get("body").(model.UserLogin)
+	if ok {
+		return c.JSON(http.StatusBadRequest, util.Response{
+			Message: "Invalid data",
+		})
 	}
 
-	//check user
-	foundUser, err := service.GetUserByEmail(c, payload.Email)
-	if err != nil {
-		return err
-	}
-	if payload.Email != foundUser.Email || !checkPasswordHash(payload.Password, foundUser.Password) {
+	//check password
+	foundUser := service.GetUserByEmail(payload.Email)
+	fmt.Println(strings.ToLower(payload.Email), foundUser.Email, checkPasswordHash(payload.Password, foundUser.Password), payload.Password)
+
+	if strings.ToLower(payload.Email) != foundUser.Email || !checkPasswordHash(payload.Password, foundUser.Password) {
 		return c.JSON(http.StatusBadRequest, util.Response{
 			Message: "Email or Password was wrong",
 		})
@@ -74,7 +81,9 @@ func Login(c echo.Context) error {
 	// Generate token
 	token, err := middleware.GenerateToken(foundUser.ID)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, util.Response{
+			Message: "Invalid data",
+		})
 	}
 	return c.JSON(http.StatusBadRequest, util.Response{
 		Message: "Login successfully",
@@ -84,21 +93,26 @@ func Login(c echo.Context) error {
 
 func AllUsers(c echo.Context) error {
 	// get query param
-	page, err := strconv.ParseInt(c.QueryParam("page"), 10, 64)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+	var query Query
+	if err := c.Bind(&query); err != nil {
+		return c.JSON(http.StatusOK, util.Response{
+			Message: err.Error(),
+		})
 	}
-	limit, err := strconv.ParseInt(c.QueryParam("limit"), 10, 64)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+
+	allUsers := service.AllUsers(c, query.Page, query.Limit)
+	if allUsers == nil {
+		allUsers = make([]model.User, 0)
 	}
-	return service.AllUsers(c, page, limit)
+	return c.JSON(http.StatusOK, allUsers)
 }
 
 func GetUserById(c echo.Context) error {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, util.Response{
+			Message: "Invalid data",
+		})
 	}
 
 	return service.GetUserById(c, id)
@@ -106,21 +120,25 @@ func GetUserById(c echo.Context) error {
 
 func UpdateUserById(c echo.Context) error {
 	// bind data
-	payload, err := bindAndValidate(c)
-	if err != nil {
-		return err
+	payload, ok := c.Get("body").(model.UserUpdate)
+	if !ok {
+		return c.JSON(http.StatusBadRequest, util.Response{
+			Message: "Invalid data",
+		})
 	}
 
 	// parse id from path param
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, util.Response{
+			Message: err.Error(),
+		})
 	}
 
 	// init insert data
 	insertData := model.User{
 		Name: payload.Name,
-		Age:  payload.Age,
+		Dob:  payload.Dob,
 	}
 
 	return service.UpdateUserById(c, id, insertData)
@@ -129,7 +147,9 @@ func UpdateUserById(c echo.Context) error {
 func DeleteUserById(c echo.Context) error {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, util.Response{
+			Message: "Invalid data",
+		})
 	}
 
 	return service.DeleteUserById(c, id)
@@ -143,20 +163,4 @@ func hashPassword(password string) (string, error) {
 func checkPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
-}
-
-func bindAndValidate(c echo.Context) (*model.User, error) {
-	payload := new(model.User)
-	if err := c.Bind(payload); err != nil {
-		return nil, c.JSON(http.StatusBadRequest, util.Response{
-			Message: "invalid value",
-		})
-	}
-
-	if !middleware.Validate(payload) {
-		return nil, c.JSON(http.StatusBadRequest, util.Response{
-			Message: "invalid value",
-		})
-	}
-	return payload, nil
 }

@@ -15,59 +15,55 @@ import (
 
 var ctx = context.TODO()
 
-func CreateUser(c echo.Context, insertData *model.User, isAdmin bool) error {
-	if isAdmin {
-		insertData.Role = "admin"
-	} else {
-		insertData.Role = "user"
-	}
+func CreateUser(insertData model.User) string {
 	_, err := database.GetUserCol().InsertOne(ctx, insertData)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err.Error()
 	}
-
-	return c.JSON(http.StatusOK, util.Response{
-		Message: "Create successfully",
-	})
+	return "Create successfully"
 }
 
-func GetUserByEmail(c echo.Context, email string) (model.User, error) {
+func GetUserByEmail(email string) model.User {
 	var user model.User
 	err := database.GetUserCol().FindOne(ctx, bson.M{"email": email}).Decode(&user)
+	fmt.Println(user)
 	if err != nil {
-		return user, c.JSON(http.StatusBadRequest, err.Error())
+		fmt.Println(err.Error())
 	}
-	return user, nil
+	return user
 }
 
-func AllUsers(c echo.Context, page int64, limit int64) error {
+func AllUsers(c echo.Context, page int, limit int) []model.User {
+	var allUsers []model.User
+
 	// options query
 	optionsQuery := new(options.FindOptions)
-	optionsQuery.SetSkip((page - 1) * limit)
-	optionsQuery.SetLimit(limit)
+	optionsQuery.SetSkip(int64(page * limit))
+	optionsQuery.SetLimit(int64(limit))
 
 	// Find users
 	cursor, err := database.GetUserCol().Find(ctx, bson.M{}, optionsQuery)
 	if err != nil {
-		fmt.Println(err.Error(), "111111111")
-		return c.JSON(http.StatusBadRequest, err.Error())
+		fmt.Println(err.Error())
+		return allUsers
 	}
 
 	// Decode found documents
-	var people []model.User
-	if err := cursor.All(ctx, &people); err != nil {
-		fmt.Println(err.Error(), "2222222222222")
-		return c.JSON(http.StatusBadRequest, people)
+	if err := cursor.All(ctx, &allUsers); err != nil {
+		fmt.Println(err.Error())
+		return allUsers
 	}
 
-	return c.JSON(http.StatusOK, people)
+	return allUsers
 }
 
 func GetUserById(c echo.Context, id primitive.ObjectID) error {
 	var user model.User
 	err := database.GetUserCol().FindOne(ctx, bson.M{"_id": id}).Decode(&user)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusOK, util.Response{
+			Message: err.Error(),
+		})
 	}
 
 	return c.JSON(http.StatusOK, user)
@@ -76,16 +72,20 @@ func GetUserById(c echo.Context, id primitive.ObjectID) error {
 func UpdateUserById(c echo.Context, id primitive.ObjectID, insertData model.User) error {
 	result, err := database.GetUserCol().UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set": insertData})
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, util.Response{
+			Message: err.Error(),
+		})
 	}
 
 	return c.JSON(http.StatusOK, result)
 }
 
 func DeleteUserById(c echo.Context, id primitive.ObjectID) error {
-	result, err := database.GetUserCol().DeleteOne(ctx, bson.M{"set": id})
+	result, err := database.GetUserCol().DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, util.Response{
+			Message: err.Error(),
+		})
 	}
 
 	return c.JSON(http.StatusOK, result)
