@@ -2,30 +2,35 @@ package database
 
 import (
 	"context"
-	"echo-app/util"
+	"echo-app/config"
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"os"
 	"time"
 )
 
 var database *mongo.Database
+var userColName = "users"
+var adminColName = "admin"
 
 func RunDB() {
-	util.Dotenv()
+	var env = config.GetEnv()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("DB_CONNECT_URI")))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(env.Database.URI))
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 
-	database = client.Database("myFirstDatabase")
+	database = client.Database(env.Database.Name)
 }
 
 func GetUserCol() *mongo.Collection {
-	return database.Collection("users")
+	return database.Collection(userColName)
+}
+
+func GetAdminCol() *mongo.Collection {
+	return database.Collection(adminColName)
 }
