@@ -6,11 +6,9 @@ import (
 	"echo-app/model"
 	"echo-app/util"
 	"fmt"
-	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"net/http"
 )
 
 var ctx = context.TODO()
@@ -20,7 +18,7 @@ func CreateUser(insertData model.User) string {
 	if err != nil {
 		return err.Error()
 	}
-	return "Create successfully"
+	return util.CreateSuccessFully
 }
 
 func GetUserByEmail(email string) model.User {
@@ -33,7 +31,7 @@ func GetUserByEmail(email string) model.User {
 	return user
 }
 
-func AllUsers(c echo.Context, page int, limit int) []model.User {
+func AllUsers(page int, limit int) []model.User {
 	var allUsers []model.User
 
 	// options query
@@ -57,36 +55,36 @@ func AllUsers(c echo.Context, page int, limit int) []model.User {
 	return allUsers
 }
 
-func GetUserById(c echo.Context, id primitive.ObjectID) error {
+func GetUserById(id primitive.ObjectID) model.User {
 	var user model.User
 	err := database.GetUserCol().FindOne(ctx, bson.M{"_id": id}).Decode(&user)
 	if err != nil {
-		return c.JSON(http.StatusOK, util.Response{
-			Message: err.Error(),
-		})
+		fmt.Println(err.Error())
+		return user
 	}
-
-	return c.JSON(http.StatusOK, user)
+	return user
 }
 
-func UpdateUserById(c echo.Context, id primitive.ObjectID, insertData model.User) error {
+func UpdateUserById(id primitive.ObjectID, insertData model.UserUpdate) string {
+	fmt.Println(id, insertData)
 	result, err := database.GetUserCol().UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set": insertData})
+	fmt.Println(*result)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, util.Response{
-			Message: err.Error(),
-		})
+		return err.Error()
 	}
-
-	return c.JSON(http.StatusOK, result)
+	if result.MatchedCount == 0 {
+		return util.UserNotFound
+	}
+	return util.UpdateSuccessFully
 }
 
-func DeleteUserById(c echo.Context, id primitive.ObjectID) error {
+func DeleteUserById(id primitive.ObjectID) string {
 	result, err := database.GetUserCol().DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, util.Response{
-			Message: err.Error(),
-		})
+		return err.Error()
 	}
-
-	return c.JSON(http.StatusOK, result)
+	if result.DeletedCount == 0 {
+		return util.UserNotFound
+	}
+	return util.DeleteSuccessFully
 }

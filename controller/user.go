@@ -11,7 +11,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"strings"
-	"time"
 )
 
 type Query struct {
@@ -22,10 +21,10 @@ type Query struct {
 func CreateUser(c echo.Context) error {
 	// get body
 	body := c.Get("body")
-	payload, ok := body.(*model.User)
+	payload, ok := body.(model.User)
 	if !ok {
 		return c.JSON(http.StatusBadRequest, util.Response{
-			Message: "Invalid data",
+			Message: util.InvalidData,
 		})
 	}
 	// check exist user
@@ -41,7 +40,7 @@ func CreateUser(c echo.Context) error {
 	password, err := hashPassword(payload.Password)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, util.Response{
-			Message: "invalid value",
+			Message: util.InvalidData,
 		})
 	}
 	insertData := model.User{
@@ -50,7 +49,7 @@ func CreateUser(c echo.Context) error {
 		Dob:       payload.Dob,
 		Email:     strings.ToLower(payload.Email),
 		Password:  password,
-		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
+		CreatedAt: util.CurrentDateTime(),
 	}
 
 	// create user
@@ -61,10 +60,11 @@ func CreateUser(c echo.Context) error {
 }
 
 func Login(c echo.Context) error {
-	payload, ok := c.Get("body").(model.UserLogin)
-	if ok {
+	body := c.Get("body")
+	payload, ok := body.(model.UserLogin)
+	if !ok {
 		return c.JSON(http.StatusBadRequest, util.Response{
-			Message: "Invalid data",
+			Message: util.InvalidData,
 		})
 	}
 
@@ -74,19 +74,20 @@ func Login(c echo.Context) error {
 
 	if strings.ToLower(payload.Email) != foundUser.Email || !checkPasswordHash(payload.Password, foundUser.Password) {
 		return c.JSON(http.StatusBadRequest, util.Response{
-			Message: "Email or Password was wrong",
+			Message: util.EmailOrPasswordWrong,
 		})
 	}
 
 	// Generate token
+	fmt.Println(foundUser.ID)
 	token, err := middleware.GenerateToken(foundUser.ID)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, util.Response{
-			Message: "Invalid data",
+			Message: util.InvalidData,
 		})
 	}
 	return c.JSON(http.StatusBadRequest, util.Response{
-		Message: "Login successfully",
+		Message: util.LoginSuccessFully,
 		Token:   token,
 	})
 }
@@ -100,7 +101,7 @@ func AllUsers(c echo.Context) error {
 		})
 	}
 
-	allUsers := service.AllUsers(c, query.Page, query.Limit)
+	allUsers := service.AllUsers(query.Page, query.Limit)
 	if allUsers == nil {
 		allUsers = make([]model.User, 0)
 	}
@@ -108,14 +109,14 @@ func AllUsers(c echo.Context) error {
 }
 
 func GetUserById(c echo.Context) error {
-	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+	id, err := primitive.ObjectIDFromHex(c.Get("id").(string))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, util.Response{
-			Message: "Invalid data",
+		return c.JSON(http.StatusOK, util.Response{
+			Message: util.InvalidData,
 		})
 	}
-
-	return service.GetUserById(c, id)
+	foundUser := service.GetUserById(id)
+	return c.JSON(http.StatusOK, foundUser)
 }
 
 func UpdateUserById(c echo.Context) error {
@@ -123,36 +124,32 @@ func UpdateUserById(c echo.Context) error {
 	payload, ok := c.Get("body").(model.UserUpdate)
 	if !ok {
 		return c.JSON(http.StatusBadRequest, util.Response{
-			Message: "Invalid data",
+			Message: util.InvalidData,
 		})
 	}
 
 	// parse id from path param
-	id, err := primitive.ObjectIDFromHex(c.Param("id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, util.Response{
-			Message: err.Error(),
-		})
-	}
+	id := getId(c)
 
 	// init insert data
-	insertData := model.User{
+	insertData := model.UserUpdate{
 		Name: payload.Name,
 		Dob:  payload.Dob,
 	}
-
-	return service.UpdateUserById(c, id, insertData)
+	result := service.UpdateUserById(id, insertData)
+	return c.JSON(http.StatusOK, util.Response{
+		Message: result,
+	})
 }
 
 func DeleteUserById(c echo.Context) error {
-	id, err := primitive.ObjectIDFromHex(c.Param("id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, util.Response{
-			Message: "Invalid data",
-		})
-	}
+	id := getId(c)
 
-	return service.DeleteUserById(c, id)
+	result := service.DeleteUserById(id)
+
+	return c.JSON(http.StatusOK, util.Response{
+		Message: result,
+	})
 }
 
 func hashPassword(password string) (string, error) {
@@ -163,4 +160,19 @@ func hashPassword(password string) (string, error) {
 func checkPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func getId(c echo.Context) primitive.ObjectID {
+	authId := c.Get("id")
+	authIdStrConv, ok := authId.(string)
+	if !ok {
+		if !ok {
+			fmt.Println("Parse id to string failed")
+		}
+	}
+	id, err := primitive.ObjectIDFromHex(authIdStrConv)
+	if err != nil {
+		fmt.Println("Parse string id to ObjectId failed")
+	}
+	return id
 }
