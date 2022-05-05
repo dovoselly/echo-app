@@ -7,7 +7,8 @@ type (
 		ID        primitive.ObjectID `json:"_id" bson:"_id"`
 		AdminId   primitive.ObjectID `json:"adminId" bson:"adminId"`
 		ReviewId  primitive.ObjectID `json:"reviewId" bson:"reviewId"`
-		Content   primitive.ObjectID `json:"content" bson:"content"`
+		Rating    uint               `json:"rating" bson:"rating"`
+		Content   string             `json:"content" bson:"content"`
 		CreatedAt string             `json:"createdAt" bson:"createdAt"`
 		UpdatedAt string             `json:"updatedAt" bson:"updatedAt"`
 	}
