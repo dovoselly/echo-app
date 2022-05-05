@@ -6,7 +6,7 @@ type (
 	Review struct {
 		ID        primitive.ObjectID `json:"_id" bson:"_id"`
 		UserId    primitive.ObjectID `json:"userId" bson:"userId"`
-		ReviewId  primitive.ObjectID `json:"reviewId" bson:"reviewId"`
+		ProductId primitive.ObjectID `json:"productId" bson:"productId"`
 		Rating    uint               `json:"rating" bson:"rating"`
 		Content   string             `json:"content" bson:"content"`
 		CreatedAt string             `json:"createdAt" bson:"createdAt"`
