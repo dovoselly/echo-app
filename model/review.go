@@ -5,7 +5,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 type (
 	Review struct {
 		ID        primitive.ObjectID `json:"_id" bson:"_id"`
-		AdminId   primitive.ObjectID `json:"adminId" bson:"adminId"`
+		UserId    primitive.ObjectID `json:"userId" bson:"userId"`
 		ReviewId  primitive.ObjectID `json:"reviewId" bson:"reviewId"`
 		Rating    uint               `json:"rating" bson:"rating"`
 		Content   string             `json:"content" bson:"content"`
