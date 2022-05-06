@@ -7,13 +7,11 @@ import (
 )
 
 func user(e *echo.Echo) {
-	usersRouter := e.Group("/users")
-	{
-		usersRouter.POST("/register", controller.CreateUser, middleware.CreateUser)
-		usersRouter.POST("/login", controller.Login, middleware.Login)
-		usersRouter.GET("", controller.AllUsers)
-		usersRouter.GET("/", controller.GetUserById)
-		usersRouter.PUT("/", controller.UpdateUserById, middleware.Auth, middleware.UpdateUser)
-		usersRouter.DELETE("/", controller.DeleteUserById, middleware.Auth)
-	}
+	e.POST("/register", controller.Register)
+	e.POST("/login", controller.Login)
+	e.PATCH("/password", controller.ChangePassword, middleware.Auth)
+	e.POST("/reset-password", controller.ResetPassword, middleware.Auth)
+	e.GET("/:username", controller.GetUserByUsername)
+	e.PUT("/me", controller.UpdateUserInfo, middleware.Auth)
+	e.PATCH("/me/change-avatar", controller.ChangeAvatar, middleware.Auth)
 }

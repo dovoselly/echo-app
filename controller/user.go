@@ -13,12 +13,7 @@ import (
 	"strings"
 )
 
-type Query struct {
-	Page  int `query:"page"`
-	Limit int `query:"limit"`
-}
-
-func CreateUser(c echo.Context) error {
+func Register(c echo.Context) error {
 	// get body
 	body := c.Get("body")
 	payload, ok := body.(model.User)
@@ -29,7 +24,6 @@ func CreateUser(c echo.Context) error {
 	}
 	// check exist user
 	foundUser := service.GetUserByEmail(payload.Email)
-	fmt.Println(payload, foundUser)
 	if payload.Email == foundUser.Email {
 		return c.JSON(http.StatusBadRequest, util.Response{
 			Message: "Email is already in exist",
@@ -92,64 +86,29 @@ func Login(c echo.Context) error {
 	})
 }
 
-func AllUsers(c echo.Context) error {
-	// get query param
-	var query Query
-	if err := c.Bind(&query); err != nil {
-		return c.JSON(http.StatusOK, util.Response{
-			Message: err.Error(),
-		})
-	}
+func ChangePassword(c echo.Context) error {
 
-	allUsers := service.AllUsers(query.Page, query.Limit)
-	if allUsers == nil {
-		allUsers = make([]model.User, 0)
-	}
-	return c.JSON(http.StatusOK, allUsers)
+	return c.JSON(http.StatusOK, "")
 }
 
-func GetUserById(c echo.Context) error {
-	id, err := primitive.ObjectIDFromHex(c.Get("id").(string))
-	if err != nil {
-		return c.JSON(http.StatusOK, util.Response{
-			Message: util.InvalidData,
-		})
-	}
-	foundUser := service.GetUserById(id)
-	return c.JSON(http.StatusOK, foundUser)
+func ResetPassword(c echo.Context) error {
+
+	return c.JSON(http.StatusOK, "")
 }
 
-func UpdateUserById(c echo.Context) error {
-	// bind data
-	payload, ok := c.Get("body").(model.UserUpdate)
-	if !ok {
-		return c.JSON(http.StatusBadRequest, util.Response{
-			Message: util.InvalidData,
-		})
-	}
+func GetUserByUsername(c echo.Context) error {
 
-	// parse id from path param
-	id := getId(c)
-
-	// init insert data
-	insertData := model.UserUpdate{
-		Name: payload.Name,
-		Dob:  payload.Dob,
-	}
-	result := service.UpdateUserById(id, insertData)
-	return c.JSON(http.StatusOK, util.Response{
-		Message: result,
-	})
+	return c.JSON(http.StatusOK, "")
 }
 
-func DeleteUserById(c echo.Context) error {
-	id := getId(c)
+func UpdateUserInfo(c echo.Context) error {
 
-	result := service.DeleteUserById(id)
+	return c.JSON(http.StatusOK, "")
+}
 
-	return c.JSON(http.StatusOK, util.Response{
-		Message: result,
-	})
+func ChangeAvatar(c echo.Context) error {
+
+	return c.JSON(http.StatusOK, "")
 }
 
 func hashPassword(password string) (string, error) {
@@ -160,19 +119,4 @@ func hashPassword(password string) (string, error) {
 func checkPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
-}
-
-func getId(c echo.Context) primitive.ObjectID {
-	authId := c.Get("id")
-	authIdStrConv, ok := authId.(string)
-	if !ok {
-		if !ok {
-			fmt.Println("Parse id to string failed")
-		}
-	}
-	id, err := primitive.ObjectIDFromHex(authIdStrConv)
-	if err != nil {
-		fmt.Println("Parse string id to ObjectId failed")
-	}
-	return id
 }
