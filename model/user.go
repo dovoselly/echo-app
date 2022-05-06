@@ -1,50 +1,54 @@
 package model
 
-import (
-	validation "github.com/go-ozzo/ozzo-validation"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"regexp"
-)
+import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type (
 	User struct {
-		ID        primitive.ObjectID `param:"id" json:"_id" bson:"_id"`
-		Name      string             `param:"name" query:"name" json:"name" bson:"name"`
-		Dob       string             `param:"dob" query:"dob" json:"dob" bson:"dob"`
-		Email     string             `param:"email" query:"email" json:"email" bson:"email"`
-		Password  string             `json:"password" bson:"password"`
-		CreatedAt string             `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
+		ID             primitive.ObjectID `bson:"_id"`
+		Email          string             `bson:"email" `
+		Username       string             `bson:"username"`
+		HashedPassword string             `bson:"hashedPassword"`
+		Name           string             `bson:"name"`
+		DateOfBirth    string             `bson:"dateOfBirth"`
+		Avatar         string             `bson:"avatar"`
+		Gender         string             `bson:"gender"`
+		Phone          string             `bson:"phone"`
+		Status         string             `bson:"status"`
+		CreatedAt      string             `bson:"createdAt"`
+		UssspdatedAt   string             `bson:"updatedAt"`
+	}
+
+	UserDetail struct {
+		ID             primitive.ObjectID `json:"_id"`
+		Email          string             `json:"email"`
+		Username       string             `json:"username"`
+		HashedPassword string             `json:"hashedPassword"`
+		Name           string             `json:"name"`
+		DateOfBirth    string             `json:"dateOfBirth"`
+		Avatar         string             `json:"avatar"`
+		Gender         string             `json:"gender"`
+		Phone          string             `json:"phone"`
+		Status         string             `json:"status"`
+		CreatedAt      string             `json:"createdAt"`
+		UssspdatedAt   string             `json:"updatedAt"`
 	}
 
 	UserLogin struct {
-		Email    string `param:"email" query:"email" json:"email" bson:"email"`
-		Password string `json:"password" bson:"password"`
+		UserName string `json:"userName"`
+		Password string `json:"password"`
+	}
+
+	UserChangePassword struct {
+		CurrentPassword string `json:"currentPassword"`
+		NewPassword     string `json:"newPassword"`
 	}
 
 	UserUpdate struct {
-		Name string `param:"name" query:"name" json:"name" bson:"name"`
-		Dob  string `param:"dob" query:"dob" json:"dob" bson:"dob"`
+		FullName    string `json:"fullName"`
+		Email       string `json:"email"`
+		Phone       string `json:"phone"`
+		DateOfBirth string `json:"dateOfBirth"`
+		Gender      string `json:"gender"`
+		Address     string `json:"address"`
 	}
 )
-
-func (u User) Validate() error {
-	return validation.ValidateStruct(&u,
-		validation.Field(&u.Name, validation.Length(2, 50)),
-		validation.Field(&u.Dob, validation.Required),
-		validation.Field(&u.Email, validation.Length(8, 50)),
-		validation.Field(&u.Password, validation.Match(regexp.MustCompile("^[a-zA-Z0-9_!@#$%^&*()~+=,./?;:]{8,50}$"))))
-}
-
-func (u UserUpdate) Validate() error {
-	return validation.ValidateStruct(&u,
-		validation.Field(&u.Name, validation.Length(2, 50)),
-		validation.Field(&u.Dob, validation.Required),
-	)
-}
-
-func (u UserLogin) Validate() error {
-	return validation.ValidateStruct(&u,
-		validation.Field(&u.Email, validation.Length(8, 50)),
-		validation.Field(&u.Password, validation.Match(regexp.MustCompile("^[a-zA-Z0-9_!@#$%^&*()`~+=,./:;]{8,50}$"))),
-	)
-}
