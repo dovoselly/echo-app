@@ -15,7 +15,7 @@ type (
 		Phone          string             `bson:"phone"`
 		Status         string             `bson:"status"`
 		CreatedAt      string             `bson:"createdAt"`
-		UssspdatedAt   string             `bson:"updatedAt"`
+		UpdatedAt      string             `bson:"updatedAt"`
 	}
 
 	UserDetail struct {
@@ -30,7 +30,7 @@ type (
 		Phone          string             `json:"phone"`
 		Status         string             `json:"status"`
 		CreatedAt      string             `json:"createdAt"`
-		UssspdatedAt   string             `json:"updatedAt"`
+		UpdatedAt      string             `json:"updatedAt"`
 	}
 
 	UserLogin struct {
