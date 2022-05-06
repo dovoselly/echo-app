@@ -14,7 +14,7 @@ import (
 )
 
 type Claims struct {
-	ID string `json:"_id,omitempty" bson:"_id,omitempty"`
+	ID string `json:"_id" bson:"_id"`
 	jwt.StandardClaims
 }
 
@@ -59,7 +59,7 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 			})
 		}
 
-		// vaidate token and set id token
+		// validate token and set id token
 		if claims, ok := parsedToken.Claims.(*Claims); ok && parsedToken.Valid {
 			c.Set("id", claims.ID)
 			return next(c)
