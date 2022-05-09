@@ -5,5 +5,4 @@ import (
 )
 
 func user(e *echo.Echo) {
-
 }
