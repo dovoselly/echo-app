@@ -16,7 +16,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	config.InitDotEnv()
-	database.RunDB()
+	database.Connect()
 
 	routes.Routes(e)
 

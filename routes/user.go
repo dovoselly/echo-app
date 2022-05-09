@@ -1,17 +1,18 @@
 package routes
 
 import (
-	"echo-app/controller"
-	"echo-app/middleware"
+	"echo-app/controllers"
+	"echo-app/middlewares"
+	"echo-app/validations"
 	"github.com/labstack/echo/v4"
 )
 
 func user(e *echo.Echo) {
-	e.POST("/register", controller.Register)
-	e.POST("/login", controller.Login)
-	e.PATCH("/password", controller.ChangePassword, middleware.Auth)
-	e.POST("/reset-password", controller.ResetPassword, middleware.Auth)
-	e.GET("/:username", controller.GetUserByUsername)
-	e.PUT("/me", controller.UpdateUserInfo, middleware.Auth)
-	e.PATCH("/me/change-avatar", controller.ChangeAvatar, middleware.Auth)
+	e.POST("/register", controllers.Register, validations.Register)
+	e.POST("/login", controllers.Login)
+	e.PATCH("/password", controllers.ChangePassword, middlewares.Auth)
+	e.POST("/reset-password", controllers.ResetPassword, middlewares.Auth)
+	e.GET("/:username", controllers.GetUserByUsername)
+	e.PUT("/me", controllers.UpdateUserInfo, middlewares.Auth)
+	e.PATCH("/me/change-avatar", controllers.ChangeAvatar, middlewares.Auth)
 }

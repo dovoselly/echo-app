@@ -1,6 +1,10 @@
-package model
+package models
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	validation "github.com/go-ozzo/ozzo-validation"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"regexp"
+)
 
 type (
 	User struct {
@@ -33,6 +37,15 @@ type (
 		UpdatedAt      string             `json:"updatedAt"`
 	}
 
+	UserRegister struct {
+		Email       string `json:"email"`
+		Username    string `json:"userName"`
+		Password    string `json:"password"`
+		Name        string `json:"name"`
+		DateOfBirth string `json:"dateOfBirth"`
+		Gender      string `json:"gender"`
+	}
+
 	UserLogin struct {
 		UserName string `json:"userName"`
 		Password string `json:"password"`
@@ -52,3 +65,11 @@ type (
 		Address     string `json:"address"`
 	}
 )
+
+func (u UserRegister) Validate() error {
+	return validation.ValidateStruct(&u,
+		validation.Field(&u.Email, validation.Match(regexp.MustCompile("^[a-zA-Z0-9_]{8,64}$"))),
+		validation.Field(&u.Username, validation.Match(regexp.MustCompile("^[a-zA-Z0-9_]{8,64}$"))),
+		validation.Field(&u.Password, validation.Match(regexp.MustCompile("^[a-zA-Z0-9_]{8,64}$"))),
+	)
+}

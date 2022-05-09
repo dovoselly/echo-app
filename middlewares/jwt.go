@@ -1,8 +1,8 @@
-package middleware
+package middlewares
 
 import (
 	"echo-app/config"
-	"echo-app/util"
+	"echo-app/utils"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
@@ -54,7 +54,7 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 			return []byte(env.Jwt.SecretKey), nil
 		})
 		if err != nil {
-			return c.JSON(http.StatusUnauthorized, util.Response{
+			return c.JSON(http.StatusUnauthorized, utils.Response{
 				Message: "Invalid Token",
 			})
 		}
@@ -64,8 +64,8 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 			c.Set("id", claims.ID)
 			return next(c)
 		} else {
-			return c.JSON(http.StatusUnauthorized, util.Response{
-				Message: util.InvalidToken,
+			return c.JSON(http.StatusUnauthorized, utils.Response{
+				Message: utils.InvalidToken,
 			})
 		}
 	}

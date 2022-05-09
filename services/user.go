@@ -1,10 +1,10 @@
-package service
+package services
 
 import (
 	"context"
 	"echo-app/database"
-	"echo-app/model"
-	"echo-app/util"
+	"echo-app/models"
+	"echo-app/utils"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -13,26 +13,25 @@ import (
 
 var ctx = context.TODO()
 
-func CreateUser(insertData model.User) string {
+func Register(insertData models.User) string {
 	_, err := database.GetUserCol().InsertOne(ctx, insertData)
 	if err != nil {
 		return err.Error()
 	}
-	return util.CreateSuccessFully
+	return utils.CreateSuccessFully
 }
 
-func GetUserByEmail(email string) model.User {
-	var user model.User
-	err := database.GetUserCol().FindOne(ctx, bson.M{"email": email}).Decode(&user)
-	fmt.Println(user)
+func GetUserByEmail(email string, username string) models.User {
+	var user models.User
+	err := database.GetUserCol().FindOne(ctx, bson.M{"$or": []bson.M{{"email": email}, {username: username}}}).Decode(&user)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 	return user
 }
 
-func AllUsers(page int, limit int) []model.User {
-	var allUsers []model.User
+func AllUsers(page int, limit int) []models.User {
+	var allUsers []models.User
 
 	// options query
 	optionsQuery := new(options.FindOptions)
@@ -55,8 +54,8 @@ func AllUsers(page int, limit int) []model.User {
 	return allUsers
 }
 
-func GetUserById(id primitive.ObjectID) model.User {
-	var user model.User
+func GetUserById(id primitive.ObjectID) models.User {
+	var user models.User
 	err := database.GetUserCol().FindOne(ctx, bson.M{"_id": id}).Decode(&user)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -65,7 +64,7 @@ func GetUserById(id primitive.ObjectID) model.User {
 	return user
 }
 
-func UpdateUserById(id primitive.ObjectID, insertData model.UserUpdate) string {
+func UpdateUserById(id primitive.ObjectID, insertData models.UserUpdate) string {
 	fmt.Println(id, insertData)
 	result, err := database.GetUserCol().UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set": insertData})
 	fmt.Println(*result)
@@ -73,9 +72,9 @@ func UpdateUserById(id primitive.ObjectID, insertData model.UserUpdate) string {
 		return err.Error()
 	}
 	if result.MatchedCount == 0 {
-		return util.UserNotFound
+		return utils.UserNotFound
 	}
-	return util.UpdateSuccessFully
+	return utils.UpdateSuccessFully
 }
 
 func DeleteUserById(id primitive.ObjectID) string {
@@ -84,7 +83,7 @@ func DeleteUserById(id primitive.ObjectID) string {
 		return err.Error()
 	}
 	if result.DeletedCount == 0 {
-		return util.UserNotFound
+		return utils.UserNotFound
 	}
-	return util.DeleteSuccessFully
+	return utils.DeleteSuccessFully
 }

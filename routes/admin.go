@@ -1,15 +1,15 @@
 package routes
 
 import (
-	"echo-app/controller"
-	"echo-app/middleware"
+	"echo-app/controllers"
+	"echo-app/middlewares"
 	"github.com/labstack/echo/v4"
 )
 
 func admin(e echo.Echo) {
 	adminRouter := e.Group("/admin")
 	{
-		adminRouter.POST("/register", controller.CreateUser, middleware.CreateUser)
-		adminRouter.POST("/login", controller.Login, middleware.Login)
+		adminRouter.POST("/register", controllers.CreateUser, middlewares.CreateUser)
+		adminRouter.POST("/login", controllers.Login, middlewares.Login)
 	}
 }
