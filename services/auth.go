@@ -6,6 +6,7 @@ import (
 	"echo-app/database"
 	"echo-app/models"
 	"errors"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
@@ -18,19 +19,31 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 		user       models.UserResonse
 	)
 
-	// Check exist username, password
-	errExistUsername := collection.FindOne(ctx, bson.M{"username": payload.Username}).Decode(&user)
-	errExistEmail := collection.FindOne(ctx, bson.M{"email": payload.Email}).Decode(&user)
+	// // Check exist username, password
+	// errExistUsername := collection.FindOne(ctx, bson.M{"username": payload.Username}).Decode(&user)
+	// errExistEmail := collection.FindOne(ctx, bson.M{"email": payload.Email}).Decode(&user)
 
-	if errExistUsername == nil && errExistEmail == nil {
-		err := errors.New("username and email da ton tai")
-		return models.UserBSON{}, err
-	} else if errExistUsername == nil {
-		err := errors.New("Username da ton tai")
-		return models.UserBSON{}, err
-	} else if errExistEmail == nil {
-		err := errors.New("Email da ton tai")
-		return models.UserBSON{}, err
+	// if errExistUsername == nil && errExistEmail == nil {
+	// 	err := errors.New("username and email da ton tai")
+	// 	return models.UserBSON{}, err
+	// } else if errExistUsername == nil {
+	// 	err := errors.New("Username da ton tai")
+	// 	return models.UserBSON{}, err
+	// } else if errExistEmail == nil {
+	// 	err := errors.New("Email da ton tai")
+	// 	return models.UserBSON{}, err
+	// }
+
+	errExist := collection.FindOne(ctx, bson.M{"$or": []bson.M{{"email": payload.Email}, {"username": payload.Username}}}).Decode(&user)
+	fmt.Println("user: ", user)
+	fmt.Println("error: ", errExist)
+
+	if (models.UserResonse{}) == user {
+		return models.UserBSON{}, errors.New(" da ton tai")
+	}
+
+	if errExist == nil {
+		return models.UserBSON{}, errExist
 	}
 
 	// HashPassword

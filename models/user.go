@@ -119,7 +119,7 @@ func (payload UserRegister) Validate() error {
 		validation.Field(
 			&payload.Gender,
 			validation.Required.Error("Gender is required"),
-			validation.In("Female", "Male"),
+			validation.In("female", "male"),
 		),
 
 		validation.Field(
