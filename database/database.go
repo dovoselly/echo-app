@@ -13,7 +13,7 @@ var database *mongo.Database
 var userColName = "users"
 var adminColName = "admin"
 
-func RunDB() {
+func Connect() {
 	var env = config.GetEnv()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -25,12 +25,4 @@ func RunDB() {
 	}
 
 	database = client.Database(env.Database.Name)
-}
-
-func GetUserCol() *mongo.Collection {
-	return database.Collection(userColName)
-}
-
-func GetAdminCol() *mongo.Collection {
-	return database.Collection(adminColName)
 }
