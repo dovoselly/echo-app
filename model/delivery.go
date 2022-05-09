@@ -1,14 +1,32 @@
 package model
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type (
-	Delivery struct {
-		ID               primitive.ObjectID `json:"_id" bson:"_id"`
-		ShippingUnitName string             `json:"shippingUnitName" bson:"shippingUnitName"`
-		ShipFee          int                `json:"shipFee" bson:"shipFee"`
-		Address          string             `json:"address" bson:"address"`
-		CreatedAt        string             `json:"createdAt" bson:"createdAt"`
-		UpdatedAt        string             `json:"updatedAt" bson:"updatedAt"`
+	DeliveryBSON struct {
+		ID               primitive.ObjectID `bson:"_id"`
+		ShippingUnitName string             `bson:"shippingUnitName"`
+		ShipFee          int                `bson:"shipFee"`
+		Address          string             `bson:"address"`
+		CreatedAt        time.Time          `bson:"createdAt"`
+		UpdatedAt        time.Time          `bson:"updatedAt"`
+	}
+	DeliveryResponse struct {
+		ID               primitive.ObjectID `json:"_id"`
+		ShippingUnitName string             `json:"shippingUnitName"`
+		ShipFee          int                `json:"shipFee"`
+		Address          string             `json:"address"`
+		CreatedAt        time.Time          `json:"createdAt"`
+		UpdatedAt        time.Time          `json:"updatedAt"`
+	}
+
+	DeliveryCreate struct {
+		ShippingUnitName string `json:"shippingUnitName"`
+		ShipFee          int    `json:"shipFee"`
+		Address          string `json:"address"`
 	}
 )
