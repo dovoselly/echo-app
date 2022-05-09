@@ -16,7 +16,7 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 	var (
 		collection = database.UserCol()
 		ctx        = context.Background()
-		user       models.UserResonse
+		user       *models.UserResonse
 	)
 
 	// // Check exist username, password
@@ -34,11 +34,12 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 	// 	return models.UserBSON{}, err
 	// }
 
+	fmt.Println("user11111: ", user)
 	errExist := collection.FindOne(ctx, bson.M{"$or": []bson.M{{"email": payload.Email}, {"username": payload.Username}}}).Decode(&user)
 	fmt.Println("user: ", user)
 	fmt.Println("error: ", errExist)
 
-	if (models.UserResonse{}) == user {
+	if user != nil {
 		return models.UserBSON{}, errors.New(" da ton tai")
 	}
 
