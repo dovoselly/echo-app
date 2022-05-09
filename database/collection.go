@@ -9,7 +9,3 @@ func UserCol() *mongo.Collection {
 func AdminCol() *mongo.Collection {
 	return database.Collection(adminColName)
 }
-
-func ProductCol() *mongo.Collection {
-	return database.Collection(adminColName)
-}

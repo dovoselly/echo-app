@@ -1,22 +1,49 @@
 package models
 
 import (
+	"time"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type (
-	Order struct {
-		ID         primitive.ObjectID `json:"_id" bson:"_id"`
-		UserId     primitive.ObjectID `json:"userId" bson:"userId"`
-		DeliveryId primitive.ObjectID `json:"deliveryId" bson:"delivery"`
-		OrderCode  string             `json:"orderCode" bson:"orderCode"`
-		Status     string             `json:"status" bson:"status"`
-		Payment    PaymentType        `json:"payment" bson:"payment"`
-		TotalPrice int64              `json:"totalPrice" bson:"totalPrice"`
-		Note       string             `json:"note" bson:"note"`
-		Items      []OrderItem        `json:"items" bson:"items"`
-		CreatedAt  string             `json:"createdAt" bson:"createdAt"`
-		UpdatedAt  string             `json:"updatedAt" bson:"updatedAt"`
+	OrderBSON struct {
+		ID         primitive.ObjectID `bson:"_id"`
+		UserId     primitive.ObjectID `bson:"userId"`
+		DeliveryId primitive.ObjectID `bson:"deliveryId"`
+		OrderCode  string             `bson:"orderCode"`
+		Status     string             `bson:"status"`
+		TotalPrice int64              `bson:"totalPrice"`
+		Note       string             `bson:"note"`
+		Payment    PaymentType        `bson:"payment"`
+		Items      []OrderItem        `bson:"items"`
+		CreatedAt  time.Time          `bson:"createdAt"`
+		UpdatedAt  time.Time          `bson:"updatedAt"`
+	}
+
+	OrderResponse struct {
+		ID         string      `json:"_id"`
+		UserId     User        `json:"userId"`
+		DeliveryId string      `json:"deliveryId"`
+		OrderCode  string      `json:"orderCode"`
+		Status     string      `json:"status"`
+		TotalPrice int64       `json:"totalPrice"`
+		Note       string      `json:"note"`
+		Payment    PaymentType `json:"payment"`
+		Items      []OrderItem `json:"items"`
+		CreatedAt  time.Time   `json:"createdAt"`
+		UpdatedAt  time.Time   `json:"updatedAt"`
+	}
+
+	OrderCreate struct {
+		UserId     string      `json:"userId"`
+		DeliveryId string      `json:"deliveryId"`
+		OrderCode  string      `json:"orderCode"`
+		Status     string      `json:"status"`
+		TotalPrice int64       `json:"totalPrice"`
+		Note       string      `json:"note"`
+		Payment    PaymentType `json:"payment"`
+		Items      []OrderItem `json:"items"`
 	}
 
 	PaymentType struct {
