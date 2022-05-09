@@ -1,9 +1,13 @@
 package model
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type (
-	User struct {
+	UserBSON struct {
 		ID             primitive.ObjectID `bson:"_id"`
 		Email          string             `bson:"email" `
 		Username       string             `bson:"username"`
@@ -14,11 +18,11 @@ type (
 		Gender         string             `bson:"gender"`
 		Phone          string             `bson:"phone"`
 		Status         string             `bson:"status"`
-		CreatedAt      string             `bson:"createdAt"`
-		UpdatedAt      string             `bson:"updatedAt"`
+		CreatedAt      time.Time          `bson:"createdAt"`
+		UssspdatedAt   time.Time          `bson:"updatedAt"`
 	}
 
-	UserDetail struct {
+	UserResponse struct {
 		ID             primitive.ObjectID `json:"_id"`
 		Email          string             `json:"email"`
 		Username       string             `json:"username"`
@@ -29,8 +33,8 @@ type (
 		Gender         string             `json:"gender"`
 		Phone          string             `json:"phone"`
 		Status         string             `json:"status"`
-		CreatedAt      string             `json:"createdAt"`
-		UpdatedAt      string             `json:"updatedAt"`
+		CreatedAt      time.Time          `json:"createdAt"`
+		UssspdatedAt   time.Time          `json:"updatedAt"`
 	}
 
 	UserLogin struct {
@@ -50,5 +54,10 @@ type (
 		DateOfBirth string `json:"dateOfBirth"`
 		Gender      string `json:"gender"`
 		Address     string `json:"address"`
+	}
+
+	UserInfo struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
 	}
 )
