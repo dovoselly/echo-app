@@ -24,7 +24,7 @@ type (
 	ProductQuery struct {
 		Page        int    `query:"page"`
 		Name        int    `query:"name"`
-		CatagoryId  string `query:"catagoryId"`
+		CategoryId  string `query:"categoryId"`
 		priceFromTo string `query:"priceFromTo"`
 		BrandId     string `query:"brandId"`
 		Price       string `query:"price"`
