@@ -40,11 +40,15 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 	fmt.Println("error: ", errExist)
 
 	if user != nil {
-		return models.UserBSON{}, errors.New(" da ton tai")
-	}
-
-	if errExist == nil {
-		return models.UserBSON{}, errExist
+		if user.Email == payload.Email && user.Username == payload.Username {
+			return models.UserBSON{}, errors.New("email and username is already")
+		}
+		if user.Email == payload.Email {
+			return models.UserBSON{}, errors.New("email is already")
+		}
+		if user.Username == payload.Username {
+			return models.UserBSON{}, errors.New("email is already")
+		}
 	}
 
 	// HashPassword
