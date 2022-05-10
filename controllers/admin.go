@@ -5,6 +5,7 @@ import (
 	"echo-app/services"
 	"echo-app/utils"
 	"github.com/labstack/echo/v4"
+	"net/http"
 )
 
 func AdminLogin(c echo.Context) error {
@@ -24,4 +25,20 @@ func AdminLogin(c echo.Context) error {
 		"isAdmin": true,
 	}
 	return utils.Response200(c, data, "")
+}
+
+func MyProfileAdmin(c echo.Context) error {
+	return c.JSON(http.StatusOK, "Get admin profile")
+}
+
+func UpdateMyProfileAdmin(c echo.Context) error {
+	return c.JSON(http.StatusOK, "Update admin profile")
+}
+
+func ChangePasswordAdmin(c echo.Context) error {
+	return c.JSON(http.StatusOK, "Change password admin")
+}
+
+func ChangeAvatarAdmin(c echo.Context) error {
+	return c.JSON(http.StatusOK, "Change avatar admin")
 }
