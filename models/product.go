@@ -22,14 +22,14 @@ type (
 	}
 
 	ProductQuery struct {
-		Page        int64  `query:"page"`
-		Name        string `query:"name"`
-		CategoryId  string `query:"categoryId"`
-		priceFromTo string `query:"priceFromTo"`
-		BrandId     string `query:"brandId"`
-		Sort        string `query:"sort"`
-		Price       string `query:"price"`
-		CreatedAt   string `query:"createdAt"`
+		Page        int64  `query:"page" binding:"required"`
+		Name        string `query:"name,omitempty"`
+		CategoryId  string `query:"categoryId,omitempty"`
+		PriceFromTo string `query:"priceFromTo,omitempty"`
+		BrandId     string `query:"brandId,omitempty"`
+		Sort        string `query:"sort,omitempty"`
+		Price       string `query:"price,omitempty"`
+		CreatedAt   string `query:"createdAt,omitempty"`
 	}
 )
 
