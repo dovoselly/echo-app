@@ -18,9 +18,7 @@ func ListProduct(filter interface{}, options *options.FindOptions) ([]models.Pro
 		return listProduct, err
 	}
 
-	if err := cursor.All(utils.Ctx, &listProduct); err != nil {
-		return listProduct, err
-	}
+	err = cursor.All(utils.Ctx, &listProduct)
 	return listProduct, nil
 }
 
