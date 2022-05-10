@@ -10,7 +10,7 @@ import (
 )
 
 func ListReview(productId primitive.ObjectID, query models.ReviewQuery) ([]models.Review, error) {
-	filter := bson.M{"productId": productId}
+	filter := bson.M{"productId": productId, "rating": query.Rating}
 
 	optionsQuery := new(options.FindOptions)
 	optionsQuery.SetSkip(query.Page * limit)
