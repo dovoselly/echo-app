@@ -22,11 +22,12 @@ type (
 	}
 
 	ProductQuery struct {
-		Page        int    `query:"page"`
-		Name        int    `query:"name"`
+		Page        int64  `query:"page"`
+		Name        string `query:"name"`
 		CategoryId  string `query:"categoryId"`
 		priceFromTo string `query:"priceFromTo"`
 		BrandId     string `query:"brandId"`
+		Sort        string `query:"sort"`
 		Price       string `query:"price"`
 		CreatedAt   string `query:"createdAt"`
 	}

@@ -6,7 +6,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"strconv"
 	"strings"
 )
 
@@ -29,12 +28,8 @@ func ListProduct(query models.ProductQuery) ([]models.Product, error) {
 	}
 
 	// options query
-	page, err := strconv.ParseInt(query.Page, 0, 64)
-	if err != nil {
-		return nil, err
-	}
 	optionsQuery := new(options.FindOptions)
-	optionsQuery.SetSkip(page * limit)
+	optionsQuery.SetSkip(query.Page * limit)
 	optionsQuery.SetLimit(limit)
 
 	sort := strings.Split(query.Sort, ",")
@@ -52,6 +47,7 @@ func ListProduct(query models.ProductQuery) ([]models.Product, error) {
 	return results, err
 }
 
-func ProductDetail(id primitive.ObjectID) (model.Product, error) {
-	return dao.ProductDetail(id), nil
+func ProductDetail(id primitive.ObjectID) (models.Product, error) {
+	results, err := dao.ProductDetail(id)
+	return results, err
 }

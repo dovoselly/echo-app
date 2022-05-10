@@ -5,6 +5,7 @@ import (
 	"echo-app/models"
 	"echo-app/utils"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -23,6 +24,11 @@ func ListProduct(filter interface{}, options *options.FindOptions) ([]models.Pro
 	return listProduct, nil
 }
 
-func ProductDetails(id primitive.ObjectID) (models.Product, error) {
-	results := database.ProductCol().FindOne()
+func ProductDetail(id primitive.ObjectID) (models.Product, error) {
+	var results models.Product
+	if err := database.ProductCol().FindOne(utils.Ctx, bson.M{"id": id}).Decode(&results); err != nil {
+		return results, err
+	}
+
+	return results, nil
 }

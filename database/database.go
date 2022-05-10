@@ -12,6 +12,7 @@ import (
 var database *mongo.Database
 var userColName = "users"
 var adminColName = "admin"
+var productColName = "products"
 
 func Connect() {
 	var env = config.GetEnv()
