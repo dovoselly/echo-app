@@ -28,3 +28,22 @@ func UserRegister(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+func UserLogin(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var (
+			body models.UserLogin
+		)
+
+		// Validate
+		c.Bind(&body)
+		err := body.Validate()
+
+		if err != nil {
+			return utils.Response400(c, nil, err.Error())
+		}
+		// Success
+		c.Set("body", body)
+		return next(c)
+	}
+}
