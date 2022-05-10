@@ -24,9 +24,7 @@ func ListProduct(filter interface{}, options *options.FindOptions) ([]models.Pro
 
 func ProductDetail(id primitive.ObjectID) (models.Product, error) {
 	var results models.Product
-	if err := database.ProductCol().FindOne(utils.Ctx, bson.M{"id": id}).Decode(&results); err != nil {
-		return results, err
-	}
+	err := database.ProductCol().FindOne(utils.Ctx, bson.M{"id": id}).Decode(&results)
 
-	return results, nil
+	return results, err
 }
