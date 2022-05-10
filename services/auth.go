@@ -36,6 +36,7 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 
 	fmt.Println("user11111: ", user)
 	errExist := collection.FindOne(ctx, bson.M{"$or": []bson.M{{"email": payload.Email}, {"username": payload.Username}}}).Decode(&user)
+
 	fmt.Println("user: ", user)
 	fmt.Println("error: ", errExist)
 
