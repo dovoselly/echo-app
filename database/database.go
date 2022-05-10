@@ -9,14 +9,15 @@ import (
 	"time"
 )
 
-var database *mongo.Database
-var userColName = "users"
-var adminColName = "admin"
-var productColName = "products"
+var db *mongo.Database
+
+// var userColName = "users"
+// var adminColName = "admin"
 
 func Connect() {
 	var env = config.GetEnv()
 
+	// Connect
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -25,5 +26,6 @@ func Connect() {
 		fmt.Println(err.Error())
 	}
 
-	database = client.Database(env.Database.Name)
+	db = client.Database(env.Database.Name)
+	fmt.Println("Database connected to", env.Database.Name)
 }
