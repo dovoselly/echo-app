@@ -18,9 +18,9 @@ type (
 	}
 
 	ReviewQuery struct {
-		Page      string `json:"page" binding:"required"`
-		Rating    uint8  `json:"rating"`
-		CreatedAt string `json:"createdAt"`
+		Page   int64  `json:"page" binding:"required"`
+		Rating uint8  `json:"rating"`
+		Sort   string `json:"sort"`
 	}
 
 	CreateReview struct {

@@ -1,30 +1,23 @@
 package services
 
-import (
-	"echo-app/models"
-	"echo-app/utils"
-	"fmt"
-	"go.mongodb.org/mongo-driver/bson"
-)
-
 //var ctx = context.TODO()
 //
-func Register(insertData models.User) string {
-	_, err := database.GetUserCol().InsertOne(ctx, insertData)
-	if err != nil {
-		return err.Error()
-	}
-	return utils.CreateSuccessFully
-}
-
-func GetUserByEmail(email string, username string) models.User {
-	var user models.User
-	err := database.GetUserCol().FindOne(ctx, bson.M{"$or": []bson.M{{"email": email}, {username: username}}}).Decode(&user)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	return user
-}
+//func Register(insertData models.User) string {
+//	_, err := database.GetUserCol().InsertOne(ctx, insertData)
+//	if err != nil {
+//		return err.Error()
+//	}
+//	return utils.CreateSuccessFully
+//}
+//
+//func GetUserByEmail(email string, username string) models.User {
+//	var user models.User
+//	err := database.GetUserCol().FindOne(ctx, bson.M{"$or": []bson.M{{"email": email}, {username: username}}}).Decode(&user)
+//	if err != nil {
+//		fmt.Println(err.Error())
+//	}
+//	return user
+//}
 
 //
 //func AllUsers(page int, limit int) []models.User {

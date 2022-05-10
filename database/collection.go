@@ -29,4 +29,8 @@ func ProductCol() *mongo.Collection {
 	return db.Collection(products)
 }
 
+func ReviewCol() *mongo.Collection {
+	return db.Collection(products)
+}
+
 // ...
