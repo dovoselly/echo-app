@@ -9,7 +9,7 @@ import (
 
 func auth(e *echo.Echo) {
 	e.POST("/register", controllers.Register, validations.UserRegister)
-	// e.POST("/login", controllers.Login)
+	e.POST("/login", controllers.Login, validations.UserLogin)
 	// e.PATCH("/password", controllers.ChangePassword, middlewares.Auth)
 	// e.POST("/reset-password", controllers.ResetPassword, middlewares.Auth)
 	// e.GET("/:username", controllers.GetUserByUsername)

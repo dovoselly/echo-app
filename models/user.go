@@ -40,7 +40,7 @@ type (
 	}
 
 	UserLogin struct {
-		UserName string `json:"userName"`
+		Username string `json:"username"`
 		Password string `json:"password"`
 	}
 
@@ -125,6 +125,23 @@ func (payload UserRegister) Validate() error {
 		validation.Field(
 			&payload.DateOfBirth,
 			validation.Required.Error("DateOfBirth is required"),
+		),
+	)
+}
+
+func (payload UserLogin) Validate() error {
+	return validation.ValidateStruct(&payload,
+
+		validation.Field(
+			&payload.Username,
+			validation.Required.Error("Username is required"),
+			validation.Length(5, 30).Error("UserName is length: 5 -> 30"),
+		),
+
+		validation.Field(
+			&payload.Password,
+			validation.Required.Error("Password is required"),
+			validation.Length(5, 30).Error("Password is length: 5 -> 30"),
 		),
 	)
 }

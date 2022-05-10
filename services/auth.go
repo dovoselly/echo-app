@@ -5,6 +5,7 @@ import (
 	"echo-app/dao"
 	"echo-app/database"
 	"echo-app/models"
+	"echo-app/utils"
 	"errors"
 	"fmt"
 
@@ -47,12 +48,12 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 			return models.UserBSON{}, errors.New("email is already")
 		}
 		if user.Username == payload.Username {
-			return models.UserBSON{}, errors.New("email is already")
+			return models.UserBSON{}, errors.New("username is already")
 		}
 	}
 
 	// HashPassword
-	payload.Password, _ = HashPassword(payload.Password)
+	payload.Password, _ = hashPassword(payload.Password)
 
 	//Create user
 	doc, err := dao.UserRegister(payload.ConvertToBSON())
@@ -65,7 +66,40 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 
 }
 
-func HashPassword(password string) (string, error) {
+func Login(user models.UserLogin) (string, error) {
+
+	// FInd user by username
+	userBSON, err := dao.GetUserByUsername(user.Username)
+	if err != nil {
+		return "", errors.New("Email not existed in db")
+	}
+
+	// verify user password
+	if checkPasswordHash(user.Password, userBSON.Password) != nil {
+		return "", errors.New("Wrong password")
+	}
+
+	// JWT payload
+	data := map[string]interface{}{
+		"id": userBSON.ID,
+	}
+
+	// Genderate user token
+	token, err := utils.GenerateUserToken(data)
+	if err != nil {
+		return "", errors.New("GenerateUserToken failed")
+	}
+
+	return token, nil
+
+}
+
+func hashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
+}
+
+func checkPasswordHash(password, hash string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err
 }
