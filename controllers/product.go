@@ -29,8 +29,3 @@ func ProductDetail(c echo.Context) error {
 	results, err := services.ProductDetail(id)
 	return utils.Response200(c, results, err.Error())
 }
-
-func CreateReview(c echo.Context) error {
-
-	return nil
-}

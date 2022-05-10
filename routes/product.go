@@ -11,6 +11,5 @@ func product(e *echo.Echo) {
 	{
 		productRoutes.GET("", controllers.ListProduct, validations.ListProduct)
 		productRoutes.GET("/:id", controllers.ProductDetail)
-		productRoutes.GET("/:id/reviews", controllers.ProductDetail)
 	}
 }
