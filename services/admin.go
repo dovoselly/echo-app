@@ -26,16 +26,16 @@ func AdminLogin(loginBody models.AdminLoginBody) (string, error) {
 	}
 
 	// return JWT token
-	return utils.GenerateToken(data)
+	return utils.GenerateToken(data), err
 }
 
-//func MyProfileAdmin(ID string) (models.Admin, error) {
-//	doc, err := dao.AdminProfileFindByID(ID)
-//	if err != nil {
-//		return doc, err
-//	}
-//	return doc, nil
-//}
+func MyProfileAdmin(ID string) (models.Admin, error) {
+	doc, err := dao.AdminProfileFindByID(ID)
+	if err != nil {
+		return doc, err
+	}
+	return doc, nil
+}
 
 //func GetAdminProfileByID(id string) (models.Admin, error) {
 //	// to objectID
