@@ -10,7 +10,6 @@ import (
 	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
@@ -53,7 +52,7 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 	}
 
 	// HashPassword
-	payload.Password, _ = hashPassword(payload.Password)
+	payload.Password, _ = utils.HashPassword(payload.Password)
 
 	//Create user
 	doc, err := dao.UserRegister(payload.ConvertToBSON())
@@ -75,7 +74,7 @@ func Login(user models.UserLogin) (string, error) {
 	}
 
 	// verify user password
-	if checkPasswordHash(user.Password, userBSON.Password) != nil {
+	if utils.CheckPasswordHash(user.Password, userBSON.Password) != nil {
 		return "", errors.New("Wrong password")
 	}
 
@@ -92,14 +91,4 @@ func Login(user models.UserLogin) (string, error) {
 
 	return token, nil
 
-}
-
-func hashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
-}
-
-func checkPasswordHash(password, hash string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err
 }

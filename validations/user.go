@@ -47,3 +47,48 @@ func UserLogin(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+func UserChangePassword(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		// code
+		var (
+			bodyChangePassword models.UserChangePassword
+		)
+
+		//validate
+		c.Bind(&bodyChangePassword)
+
+		err := bodyChangePassword.Validate()
+
+		// if err
+		if err != nil {
+			return utils.Response400(c, nil, err.Error())
+		}
+
+		// Success
+		c.Set("bodyChangePassword", bodyChangePassword)
+		return next(c)
+	}
+}
+
+func IDUserInToken(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+
+		// GetJWTPaylaod
+		jwtPayload, err := utils.GetJWTPayload(c)
+
+		if err != nil {
+			return utils.Response400(c, nil, err.Error())
+		}
+
+		id := jwtPayload["id"].(string)
+
+		// ValidateObjectID
+		if err := utils.ValidateObjectID(id); err != nil {
+			return utils.Response400(c, nil, err.Error())
+		}
+
+		c.Set("id", id)
+		return next(c)
+	}
+}
