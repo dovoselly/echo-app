@@ -3,6 +3,7 @@ package routes
 import (
 	"echo-app/controllers"
 	"echo-app/validations"
+
 	"github.com/labstack/echo/v4"
 )
 
