@@ -29,6 +29,6 @@ func AdminLogin(loginBody models.AdminLoginBody) (string, error) {
 	return middlewares.GenerateToken(data)
 }
 
-func MyProfile(ID string) (models.Admin, error) {
-
-}
+//func MyProfile(ID string) (models.Admin, error) {
+//
+//}

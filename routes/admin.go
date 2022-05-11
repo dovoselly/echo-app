@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func admin(e echo.Echo) {
+func admin(e *echo.Echo) {
 	adminRouter := e.Group("/admin")
 	{
 		adminRouter.POST("/admin-login", controllers.AdminLogin, validations.AdminLoginBody)
