@@ -9,7 +9,7 @@ import (
 )
 
 func AdminLogin(c echo.Context) error {
-	var admin = c.Get("body").(models.AdminLoginBody)
+	var admin = c.Get("adminLoginBody").(models.AdminLoginBody)
 
 	// process data
 	token, err := services.AdminLogin(admin)
