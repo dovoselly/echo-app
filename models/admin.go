@@ -3,7 +3,6 @@ package models
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"time"
 )
 
 type (
@@ -17,8 +16,8 @@ type (
 		Avatar         string             `bson:"avatar"`
 		Gender         string             `bson:"gender"`
 		Phone          string             `bson:"phone"`
-		CreatedAt      time.Time          `bson:"createdAt"`
-		UpdatedAt      time.Time          `bson:"updatedAt"`
+		CreatedAt      string             `bson:"createdAt"`
+		UpdatedAt      string             `bson:"updatedAt"`
 	}
 
 	// AdminLogin
