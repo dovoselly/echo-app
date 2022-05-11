@@ -2,10 +2,9 @@ package services
 
 import (
 	"echo-app/dao"
-	"echo-app/middlewares"
 	"echo-app/models"
+	"echo-app/utils"
 	"errors"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func AdminLogin(loginBody models.AdminLoginBody) (string, error) {
@@ -27,24 +26,24 @@ func AdminLogin(loginBody models.AdminLoginBody) (string, error) {
 	}
 
 	// return JWT token
-	return middlewares.GenerateToken(data)
+	return utils.GenerateToken(data)
 }
 
-func MyProfileAdmin(ID string) (models.Admin, error) {
-	doc, err := dao.AdminProfileFindByID(ID)
-	if err != nil {
-		return doc, err
-	}
-	return doc, nil
-}
+//func MyProfileAdmin(ID string) (models.Admin, error) {
+//	doc, err := dao.AdminProfileFindByID(ID)
+//	if err != nil {
+//		return doc, err
+//	}
+//	return doc, nil
+//}
 
-func GetAdminProfileByID(id string) (models.Admin, error) {
-	// to objectID
-	objID, _ := primitive.ObjectIDFromHex(id)
-
-	admin, err := dao.GetAdminProfileFindByID(objID)
-	if err != nil {
-		return admin, err
-	}
-	return admin, nil
-}
+//func GetAdminProfileByID(id string) (models.Admin, error) {
+//	// to objectID
+//	objID, _ := primitive.ObjectIDFromHex(id)
+//
+//	admin, err := dao.GetAdminProfileFindByID(objID)
+//	if err != nil {
+//		return admin, err
+//	}
+//	return admin, nil
+//}
