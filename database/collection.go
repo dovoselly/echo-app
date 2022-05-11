@@ -30,7 +30,11 @@ func ProductCol() *mongo.Collection {
 }
 
 func ReviewCol() *mongo.Collection {
-	return db.Collection(products)
+	return db.Collection(reviews)
+}
+
+func ReplyCol() *mongo.Collection {
+	return db.Collection(replies)
 }
 
 // ...

@@ -11,4 +11,8 @@ type (
 		CreatedAt string             `json:"createdAt" bson:"createdAt"`
 		UpdatedAt string             `json:"updatedAt" bson:"updatedAt"`
 	}
+
+	CreateReply struct {
+		Content string `json:"content"`
+	}
 )

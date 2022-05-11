@@ -11,7 +11,7 @@ func review(e *echo.Echo) {
 	reviewRoutes := e.Group("/reviews")
 	{
 		productRoutes.POST("/products/:id/reviews", controllers.CreateReview, validations.CreateReview)
-		productRoutes.POST("/products/:id", controllers.ListReview)
+		productRoutes.POST("/products/:id", controllers.ListReview, validations.ListReview)
 	}
 	{
 		reviewRoutes.GET("", controllers.ListProduct, validations.ListProduct)
