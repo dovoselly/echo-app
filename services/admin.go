@@ -5,6 +5,7 @@ import (
 	"echo-app/middlewares"
 	"echo-app/models"
 	"errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func AdminLogin(loginBody models.AdminLoginBody) (string, error) {
@@ -29,6 +30,21 @@ func AdminLogin(loginBody models.AdminLoginBody) (string, error) {
 	return middlewares.GenerateToken(data)
 }
 
-//func MyProfile(ID string) (models.Admin, error) {
-//
-//}
+func MyProfileAdmin(ID string) (models.Admin, error) {
+	doc, err := dao.AdminProfileFindByID(ID)
+	if err != nil {
+		return doc, err
+	}
+	return doc, nil
+}
+
+func GetAdminProfileByID(id string) (models.Admin, error) {
+	// to objectID
+	objID, _ := primitive.ObjectIDFromHex(id)
+
+	admin, err := dao.GetAdminProfileFindByID(objID)
+	if err != nil {
+		return admin, err
+	}
+	return admin, nil
+}

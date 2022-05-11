@@ -51,7 +51,7 @@ func InitAdminAccount() {
 	}
 }
 
-func AdminProfileFindByID(ID string) (models.Admin, error) {
+func GetAdminProfileFindByID(ID string) (models.Admin, error) {
 	var (
 		adminCol = database.AdminCol()
 		ctx      = context.Background()

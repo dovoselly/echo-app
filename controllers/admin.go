@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"echo-app/middlewares"
 	"echo-app/models"
 	"echo-app/services"
 	"echo-app/utils"
@@ -28,7 +29,22 @@ func AdminLogin(c echo.Context) error {
 }
 
 func MyProfileAdmin(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Get admin profile")
+	// jwtPayload get id
+	jwtPayload, _ := middlewares.GetJWTPayload(c)
+
+	// admin id
+	adminID := jwtPayload["id"].(string)
+
+	// get admin profile
+	profile, err := services.MyProfileAdmin(adminID)
+
+	// if err
+	if err != nil {
+		return utils.Response400(c, nil, err.Error())
+	}
+
+	// get admin
+	admin, err := services.
 }
 
 func UpdateMyProfileAdmin(c echo.Context) error {
