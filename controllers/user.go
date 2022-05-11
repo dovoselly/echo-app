@@ -10,7 +10,7 @@ import (
 
 func UserChangePassword(c echo.Context) error {
 	var (
-		body = c.Get("bodyChangePassword").(models.UserChangePassword)
+		body = c.Get("body").(models.UserChangePassword)
 		id   = c.Get("id").(string)
 	)
 

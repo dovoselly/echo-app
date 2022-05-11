@@ -11,12 +11,12 @@ import (
 func UserRegister(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var (
-			payload models.UserRegister
+			body models.UserRegister
 		)
 
 		// Validate
-		c.Bind(&payload)
-		err := payload.Validate()
+		c.Bind(&body)
+		err := body.Validate()
 
 		//if err
 		if err != nil {
@@ -24,7 +24,7 @@ func UserRegister(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		// Success
-		c.Set("payload", payload)
+		c.Set("body", body)
 		return next(c)
 	}
 }
@@ -52,13 +52,13 @@ func UserChangePassword(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// code
 		var (
-			bodyChangePassword models.UserChangePassword
+			body models.UserChangePassword
 		)
 
 		//validate
-		c.Bind(&bodyChangePassword)
+		c.Bind(&body)
 
-		err := bodyChangePassword.Validate()
+		err := body.Validate()
 
 		// if err
 		if err != nil {
@@ -66,7 +66,7 @@ func UserChangePassword(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		// Success
-		c.Set("bodyChangePassword", bodyChangePassword)
+		c.Set("body", body)
 		return next(c)
 	}
 }
