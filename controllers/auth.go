@@ -12,11 +12,11 @@ import (
 func Register(c echo.Context) error {
 
 	var (
-		payload = c.Get("payload").(models.UserRegister)
+		body = c.Get("body").(models.UserRegister)
 	)
 
 	// Process data
-	rawData, err := services.UserRegister(payload)
+	rawData, err := services.UserRegister(body)
 
 	if err != nil {
 

@@ -13,7 +13,7 @@ type (
 		ID          primitive.ObjectID `bson:"_id"`
 		Email       string             `bson:"email" `
 		Username    string             `bson:"username"`
-		Password    string             `bson:"hashedPassword"`
+		Password    string             `bson:"password"`
 		Name        string             `bson:"name"`
 		DateOfBirth string             `bson:"dateOfBirth"`
 		Avatar      string             `bson:"avatar"`
@@ -28,7 +28,7 @@ type (
 		ID          primitive.ObjectID `json:"_id"`
 		Email       string             `json:"email"`
 		Username    string             `json:"username"`
-		Password    string             `json:"hashedPassword"`
+		Password    string             `json:"password"`
 		Name        string             `json:"name"`
 		DateOfBirth string             `json:"dateOfBirth"`
 		Avatar      string             `json:"avatar"`
@@ -88,7 +88,7 @@ func (payload UserRegister) ConvertToBSON() UserBSON {
 	return result
 }
 
-// Validate PlayerCreatePayload
+// Validate form body
 func (payload UserRegister) Validate() error {
 	return validation.ValidateStruct(&payload,
 
@@ -142,6 +142,23 @@ func (payload UserLogin) Validate() error {
 			&payload.Password,
 			validation.Required.Error("Password is required"),
 			validation.Length(5, 30).Error("Password is length: 5 -> 30"),
+		),
+	)
+}
+
+func (body UserChangePassword) Validate() error {
+	return validation.ValidateStruct(&body,
+
+		validation.Field(
+			&body.CurrentPassword,
+			validation.Required.Error("CurrentPassword is required"),
+			validation.Length(5, 30).Error("CurrentPassword is length: 5 -> 30"),
+		),
+
+		validation.Field(
+			&body.NewPassword,
+			validation.Required.Error("NewPassword is required"),
+			validation.Length(5, 30).Error("NewPassword is length: 5 -> 30"),
 		),
 	)
 }

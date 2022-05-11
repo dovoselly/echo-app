@@ -4,7 +4,8 @@ import (
 	"echo-app/config"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
+	"github.com/labstack/echo/v4"
 )
 
 // JwtCustomClaims ...
@@ -14,8 +15,6 @@ type JwtCustomClaims struct {
 	jwt.StandardClaims
 }
 
-var envVars = config.GetEnv()
-
 // GenerateUserToken ...
 func GenerateUserToken(data map[string]interface{}) (string, error) {
 
@@ -23,7 +22,7 @@ func GenerateUserToken(data map[string]interface{}) (string, error) {
 	claims := &JwtCustomClaims{
 		data,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Minute * 120).Unix(),
+			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
 		},
 	}
 
@@ -31,7 +30,7 @@ func GenerateUserToken(data map[string]interface{}) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// sign token
-	str, err := token.SignedString([]byte(envVars.Jwt.SecretKey))
+	str, err := token.SignedString([]byte(config.GetEnv().Jwt.SecretKey))
 
 	// if err
 	if err != nil {
@@ -39,4 +38,24 @@ func GenerateUserToken(data map[string]interface{}) (string, error) {
 	}
 
 	return str, nil
+}
+
+// GetJWTPayload ...
+func GetJWTPayload(c echo.Context) (map[string]interface{}, error) {
+	// get jwt object from context
+	user := c.Get("user").(*jwt.Token)
+
+	claims := &JwtCustomClaims{}
+
+	// ParseWithClaims
+	_, err := jwt.ParseWithClaims(user.Raw, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(config.GetEnv().Jwt.SecretKey), nil
+	})
+
+	// if err
+	if err != nil {
+		return nil, err
+	}
+
+	return claims.Data, nil
 }

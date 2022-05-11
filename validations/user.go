@@ -11,12 +11,12 @@ import (
 func UserRegister(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var (
-			payload models.UserRegister
+			body models.UserRegister
 		)
 
 		// Validate
-		c.Bind(&payload)
-		err := payload.Validate()
+		c.Bind(&body)
+		err := body.Validate()
 
 		//if err
 		if err != nil {
@@ -24,7 +24,7 @@ func UserRegister(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		// Success
-		c.Set("payload", payload)
+		c.Set("body", body)
 		return next(c)
 	}
 }
@@ -44,6 +44,51 @@ func UserLogin(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 		// Success
 		c.Set("body", body)
+		return next(c)
+	}
+}
+
+func UserChangePassword(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		// code
+		var (
+			body models.UserChangePassword
+		)
+
+		//validate
+		c.Bind(&body)
+
+		err := body.Validate()
+
+		// if err
+		if err != nil {
+			return utils.Response400(c, nil, err.Error())
+		}
+
+		// Success
+		c.Set("body", body)
+		return next(c)
+	}
+}
+
+func IDUserInToken(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+
+		// GetJWTPaylaod
+		jwtPayload, err := utils.GetJWTPayload(c)
+
+		if err != nil {
+			return utils.Response400(c, nil, err.Error())
+		}
+
+		id := jwtPayload["id"].(string)
+
+		// ValidateObjectID
+		if err := utils.ValidateObjectID(id); err != nil {
+			return utils.Response400(c, nil, err.Error())
+		}
+
+		c.Set("id", id)
 		return next(c)
 	}
 }
