@@ -51,11 +51,11 @@ func InitAdminAccount() {
 	}
 }
 
-func GetAdminProfileFindByID(ID string) (models.Admin, error) {
+func AdminProfileFindByID(ID string) (models.Admin, error) {
 	var (
-		adminCol = database.AdminCol()
-		ctx      = context.Background()
-		profile  = models.Admin{}
+		adminCol     = database.AdminCol()
+		ctx          = context.Background()
+		adminProfile models.Admin
 	)
 
 	// objectID
@@ -63,13 +63,13 @@ func GetAdminProfileFindByID(ID string) (models.Admin, error) {
 
 	// find profile
 	filter := bson.M{"_id": objID}
-	err := adminCol.FindOne(ctx, filter).Decode(&profile)
+	err := adminCol.FindOne(ctx, filter).Decode(&adminProfile)
 
 	// if err
 	if err != nil {
-		return profile, err
+		return adminProfile, err
 	}
 
-	return profile, nil
+	return adminProfile, nil
 
 }
