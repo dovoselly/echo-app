@@ -26,7 +26,7 @@ func AdminLogin(loginBody models.AdminLoginBody) (string, error) {
 	}
 
 	// return JWT token
-	return utils.GenerateToken(data)
+	return utils.GenerateToken(data), err
 }
 
 func MyProfileAdmin(ID string) (models.Admin, error) {
