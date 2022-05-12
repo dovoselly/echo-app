@@ -9,15 +9,47 @@ import (
 )
 
 func CreateReply(c echo.Context) error {
-	idString := c.Param("id")
-	id, err := primitive.ObjectIDFromHex(idString)
+	reviewIdString := c.Param("id")
+	reviewId, err := primitive.ObjectIDFromHex(reviewIdString)
 	if err != nil {
-		return utils.Response404(c, nil, utils.InvalidData)
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
 	payloadInterface := c.Get("payload")
 	payload := payloadInterface.(models.CreateReply)
 
-	err = services.CreateReply(id, payload)
+	userId, err := utils.GetUserId(c)
+	if err != nil {
+		return utils.Response400(c, nil, utils.InvalidData)
+	}
+
+	err = services.CreateReply(userId, reviewId, payload)
 	return utils.Response200(c, nil, err.Error())
+}
+
+func UpdateReply(c echo.Context) error {
+	replyIdString := c.Param("id")
+	replyId, err := primitive.ObjectIDFromHex(replyIdString)
+	if err != nil {
+		return utils.Response400(c, nil, utils.InvalidData)
+	}
+
+	userId, err := utils.GetUserId(c)
+	if err != nil {
+		return utils.Response400(c, nil, utils.InvalidData)
+	}
+
+	bodyInterface := c.Get("body")
+	body := bodyInterface.(models.CreateReply)
+
+	results, err := services.UpdateReply(userId, replyId, body)
+	if err != nil {
+		utils.Response400(c, nil, err.Error())
+	}
+	if results.MatchedCount == 0 {
+		return utils.Response400(c, nil, utils.InvalidData)
+	}
+
+	return utils.Response200(c, nil, utils.UpdateSuccessFully)
+
 }
