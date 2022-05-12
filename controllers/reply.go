@@ -40,16 +40,18 @@ func UpdateReply(c echo.Context) error {
 	}
 
 	bodyInterface := c.Get("body")
-	body := bodyInterface.(models.CreateReply)
+	body, ok := bodyInterface.(models.CreateReply)
+	if !ok {
+		return utils.Response400(c, nil, utils.InvalidData)
+	}
 
 	results, err := services.UpdateReply(userId, replyId, body)
 	if err != nil {
-		utils.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, err.Error())
 	}
 	if results.MatchedCount == 0 {
 		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
 	return utils.Response200(c, nil, utils.UpdateSuccessFully)
-
 }
