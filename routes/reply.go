@@ -17,6 +17,6 @@ func reply(e *echo.Echo) {
 	replyRoutes := e.Group("/replies", middleware.JWT([]byte(config.GetEnv().Jwt.SecretKey)))
 	{
 		replyRoutes.PUT("/:id", controllers.UpdateReply, validations.CreateReply)
-		replyRoutes.DELETE("/:id", controllers.UpdateReply)
+		replyRoutes.DELETE("/:id", controllers.DeleteReply)
 	}
 }

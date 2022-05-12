@@ -33,3 +33,10 @@ func UpdateReply(userId primitive.ObjectID, replyId primitive.ObjectID, body mod
 	results, err := dao.UpdateReply(filter, updateData)
 	return results, err
 }
+
+func DeleteReply(userId primitive.ObjectID, replyId primitive.ObjectID) (*mongo.DeleteResult, error) {
+	filter := bson.M{"_id": replyId, "userId": userId}
+
+	results, err := dao.DeleteReply(filter)
+	return results, err
+}
