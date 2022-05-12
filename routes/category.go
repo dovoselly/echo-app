@@ -4,7 +4,6 @@ import (
 	"echo-app/config"
 	"echo-app/controllers"
 	"echo-app/validations"
-
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -17,8 +16,8 @@ func category(e *echo.Echo) {
 	{
 		categoryRouter.POST("", controllers.CreateCategory, validations.CategoryCreateBody)
 		categoryRouter.GET("", controllers.GetListCategory)
-		categoryRouter.GET("/:id", controllers.GetCategoryByID)
-		categoryRouter.PUT("/:id", controllers.UpdateCategory)
+		categoryRouter.GET("/:id", controllers.GetCategoryByID, validations.ValidateID)
+		categoryRouter.PUT("/:id", controllers.UpdateCategory, validations.ValidateID, validations.CategoryUpdateBody)
 		categoryRouter.PATCH("/:id/disable", controllers.DisabledCategory)
 		categoryRouter.PATCH("/:id/enabled", controllers.EnabledCategory)
 
