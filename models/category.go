@@ -2,9 +2,8 @@ package models
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
-	"time"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 type (
@@ -28,6 +27,7 @@ type (
 	CategoryCreateBody struct {
 		Name        string `json:"name"`
 		Description string `json:"description"`
+		//Status      string `json:"status" default:"Enabled"`
 	}
 
 	CategoryUpdateBody struct {
@@ -42,3 +42,25 @@ func (c CategoryCreateBody) Validate() error {
 		validation.Field(&c.Description, validation.Required),
 	)
 }
+
+func (c CategoryUpdateBody) Validate() error {
+	return validation.ValidateStruct(&c,
+		validation.Field(&c.Name, validation.Required),
+		validation.Field(&c.Description, validation.Required),
+	)
+}
+
+// NewCategory ...
+//func (c CategoryCreateBody) NewCategory() Category {
+//	return Category{
+//		ID         : primitive.NewObjectID(),
+//		Name      : c.Name,
+//		Description string             `bson:"description"`
+//
+//		bool:
+//			boo
+//		Status     :  ,
+//		CreatedAt   :
+//		UpdatedAt   time.Time          `bson:"updatedAt"`
+//	}
+//}
