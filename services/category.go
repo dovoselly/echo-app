@@ -10,6 +10,7 @@ import (
 
 func CreateCategory(categoryBody models.CategoryCreateBody) error {
 	// category BSON
+
 	category := models.Category{
 		ID:          primitive.NewObjectID(),
 		Name:        categoryBody.Name,
@@ -24,4 +25,31 @@ func CreateCategory(categoryBody models.CategoryCreateBody) error {
 	}
 
 	return nil
+}
+
+//func GetAllCategory()
+
+func GetCategoryByID(ID string) (models.Category, error) {
+	// to objectID
+	objID, _ := primitive.ObjectIDFromHex(ID)
+
+	// get category by id
+	category, err := dao.GetCategoryByID(objID)
+
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
+}
+
+func UpdateCategory(ID string, body models.CategoryUpdateBody) error {
+	objID, _ := primitive.ObjectIDFromHex(ID)
+
+	err := dao.UpdateCategory(objID, body)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }

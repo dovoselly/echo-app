@@ -19,7 +19,7 @@ func CreateCategory(c echo.Context) error {
 		return utils.Response400(c, nil, err.Error())
 	}
 
-	return utils.Response200(c, nil, "")
+	return utils.Response200(c, body, "")
 }
 
 func GetListCategory(c echo.Context) error {
@@ -27,11 +27,33 @@ func GetListCategory(c echo.Context) error {
 }
 
 func GetCategoryByID(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Get category detail")
+	var strID = c.Get("strID").(string)
+
+	// process
+	category, err := services.GetCategoryByID(strID)
+
+	// if error
+	if err != nil {
+		return utils.Response400(c, nil, err.Error())
+	}
+
+	return utils.Response200(c, category, "")
 }
 
 func UpdateCategory(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Update category")
+	var (
+		ID   = c.Get("id").(string)
+		body = c.Get("body").(models.CategoryUpdateBody)
+	)
+
+	// process data
+	err := services.UpdateCategory(ID, body)
+	if err != nil {
+		return utils.Response400(c, nil, err.Error())
+	}
+
+	return utils.Response200(c, nil, "")
+
 }
 
 func DisabledCategory(c echo.Context) error {
