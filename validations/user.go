@@ -48,7 +48,7 @@ func UserLogin(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func UserChangePassword(next echo.HandlerFunc) echo.HandlerFunc {
+func ChangeUserPassword(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// code
 		var (
@@ -71,24 +71,21 @@ func UserChangePassword(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func IDUserInToken(next echo.HandlerFunc) echo.HandlerFunc {
+func UpdateUerInfo(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		var (
+			body models.UserUpdate
+		)
 
-		// GetJWTPaylaod
-		jwtPayload, err := utils.GetJWTPayload(c)
+		// validate
+		c.Bind(&body)
 
-		if err != nil {
+		if err := body.Validate(); err != nil {
 			return utils.Response400(c, nil, err.Error())
 		}
 
-		id := jwtPayload["id"].(string)
-
-		// ValidateObjectID
-		if err := utils.ValidateObjectID(id); err != nil {
-			return utils.Response400(c, nil, err.Error())
-		}
-
-		c.Set("id", id)
+		// Success
+		c.Set("body", body)
 		return next(c)
 	}
 }

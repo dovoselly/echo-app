@@ -19,6 +19,8 @@ func user(e *echo.Echo) {
 
 	user.Use(middleware.JWT([]byte(env.Jwt.SecretKey)))
 
-	// user.PATCH("/me/password", controllers.UserChangePassword, validations.IDUserInToken, validations.UserChangePassword)
-	user.PATCH("/me/password", controllers.UserChangePassword, validations.IDUserInToken, validations.UserChangePassword)
+	user.GET("/me", controllers.GetUserInfo)
+	user.PUT("/me", controllers.UpdateUserInfo, validations.UpdateUerInfo)
+	user.PATCH("/me/password", controllers.ChangeUserPassword, validations.ChangeUserPassword)
+
 }
