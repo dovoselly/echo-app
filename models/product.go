@@ -13,10 +13,10 @@ type (
 		BrandId     primitive.ObjectID `json:"brandId" bson:"brandId"`
 		Price       uint               `json:"price" bson:"price"`
 		Description string             `json:"description" bson:"description"`
-		Images      string             `json:"images" bson:"images"`
+		Images      []string           `json:"images" bson:"images"`
 		Quantity    uint               `json:"quantity" bson:"quantity"`
 		Rest        uint               `json:"rest" bson:"rest"`
-		Status      uint               `json:"status" bson:"status"`
+		Status      string             `json:"status" bson:"status"`
 		CreatedAt   string             `json:"createdAt" bson:"createdAt"`
 		UpdatedAt   string             `json:"updatedAt" bson:"updatedAt"`
 	}

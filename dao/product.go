@@ -22,9 +22,9 @@ func ListProduct(filter interface{}, options *options.FindOptions) ([]models.Pro
 	return listProduct, nil
 }
 
-func ProductDetail(id primitive.ObjectID) (models.Product, error) {
-	var results models.Product
-	err := database.ProductCol().FindOne(utils.Ctx, bson.M{"id": id}).Decode(&results)
+func ProductDetail(id primitive.ObjectID) (*models.Product, error) {
+	var results *models.Product
+	err := database.ProductCol().FindOne(utils.Ctx, bson.M{"_id": id}).Decode(&results)
 
 	return results, err
 }

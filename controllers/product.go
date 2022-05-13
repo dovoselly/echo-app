@@ -27,5 +27,8 @@ func ProductDetail(c echo.Context) error {
 		return utils.Response404(c, nil, utils.InvalidData)
 	}
 	results, err := services.ProductDetail(id)
-	return utils.Response200(c, results, err.Error())
+	if err != nil {
+		return utils.Response200(c, results, err.Error())
+	}
+	return utils.Response200(c, results, "")
 }
