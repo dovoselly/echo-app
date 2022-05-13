@@ -11,7 +11,7 @@ import (
 func CreateCategory(categoryBody models.CategoryCreateBody) error {
 	// category BSON
 
-	category := models.Category{
+	category := models.CategoryBSON{
 		ID:          primitive.NewObjectID(),
 		Name:        categoryBody.Name,
 		Description: categoryBody.Description,
@@ -27,14 +27,49 @@ func CreateCategory(categoryBody models.CategoryCreateBody) error {
 	return nil
 }
 
-//func GetAllCategory()
+func GetListCategory() ([]models.CategoryResponse, error) {
 
-func GetCategoryByID(ID string) (models.Category, error) {
+	listCategory := make([]models.CategoryResponse, 0)
+
+	// get list category bson
+	categoriesBSON, err := dao.GetListCategory()
+	if err != nil {
+		return listCategory, err
+	}
+
+	for _, categoryBSON := range categoriesBSON {
+		categoryJSON := models.CategoryResponse{
+			ID:          categoryBSON.ID,
+			Name:        categoryBSON.Name,
+			Description: categoryBSON.Description,
+			Status:      categoryBSON.Status,
+		}
+		listCategory = append(listCategory, categoryJSON)
+	}
+
+	return listCategory, nil
+
+}
+
+func GetCategoryByID(ID string) (models.CategoryResponse, error) {
+	var (
+		category models.CategoryResponse
+	)
+
 	// to objectID
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
 	// get category by id
-	category, err := dao.GetCategoryByID(objID)
+	categoryBSON, err := dao.GetCategoryByID(objID)
+
+	category = models.CategoryResponse{
+		ID:          categoryBSON.ID,
+		Name:        categoryBSON.Name,
+		Description: categoryBSON.Description,
+		Status:      categoryBSON.Status,
+		CreatedAt:   categoryBSON.CreatedAt,
+		UpdatedAt:   categoryBSON.UpdatedAt,
+	}
 
 	if err != nil {
 		return category, err
