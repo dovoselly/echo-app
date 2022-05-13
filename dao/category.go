@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateCategory(category models.Category) error {
+func CreateCategory(category models.CategoryBSON) error {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
@@ -20,15 +20,30 @@ func CreateCategory(category models.Category) error {
 	return err
 }
 
-//func GetListCategory(page, limit int) ([]models.Category, error) {
-//	count,_ :=
-//}
-
-func GetCategoryByID(ID primitive.ObjectID) (models.Category, error) {
+func GetListCategory() ([]models.CategoryBSON, error) {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
-		category    models.Category
+		categories  []models.CategoryBSON
+	)
+
+	cursor, err := categoryCol.Find(ctx, bson.D{})
+	if err != nil {
+		return categories, err
+	}
+
+	if err = cursor.All(ctx, &categories); err != nil {
+		return categories, nil
+	}
+
+	return categories, nil
+}
+
+func GetCategoryByID(ID primitive.ObjectID) (models.CategoryBSON, error) {
+	var (
+		categoryCol = database.CategoryCol()
+		ctx         = context.Background()
+		category    models.CategoryBSON
 	)
 
 	// find category
