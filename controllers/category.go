@@ -23,11 +23,15 @@ func CreateCategory(c echo.Context) error {
 }
 
 func GetListCategory(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Get all category")
+	categories, err := services.GetListCategory()
+	if err != nil {
+		return utils.Response400(c, nil, err.Error())
+	}
+	return utils.Response200(c, categories, "")
 }
 
 func GetCategoryByID(c echo.Context) error {
-	var strID = c.Get("strID").(string)
+	var strID = c.Get("id").(string)
 
 	// process
 	category, err := services.GetCategoryByID(strID)
