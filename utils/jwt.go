@@ -6,6 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // JwtCustomClaims ...
@@ -58,4 +59,22 @@ func GetJWTPayload(c echo.Context) (map[string]interface{}, error) {
 	}
 
 	return claims.Data, nil
+}
+
+func GetIdInToken(c echo.Context) (primitive.ObjectID, error) {
+
+	// GetJWTPaylaod
+	jwtPayload, err := GetJWTPayload(c)
+	if err != nil {
+		return primitive.ObjectID{}, err
+	}
+
+	idString := jwtPayload["id"].(string)
+
+	ID, err := primitive.ObjectIDFromHex(idString)
+	if err != nil {
+		return primitive.ObjectID{}, err
+	}
+
+	return ID, nil
 }

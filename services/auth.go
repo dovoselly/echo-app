@@ -16,27 +16,11 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 	var (
 		collection = database.UserCol()
 		ctx        = context.Background()
-		user       *models.UserResonse
+		user       *models.UserResponse
 	)
 
-	// // Check exist username, password
-	// errExistUsername := collection.FindOne(ctx, bson.M{"username": payload.Username}).Decode(&user)
-	// errExistEmail := collection.FindOne(ctx, bson.M{"email": payload.Email}).Decode(&user)
-
-	// if errExistUsername == nil && errExistEmail == nil {
-	// 	err := errors.New("username and email da ton tai")
-	// 	return models.UserBSON{}, err
-	// } else if errExistUsername == nil {
-	// 	err := errors.New("Username da ton tai")
-	// 	return models.UserBSON{}, err
-	// } else if errExistEmail == nil {
-	// 	err := errors.New("Email da ton tai")
-	// 	return models.UserBSON{}, err
-	// }
-
-	fmt.Println("user11111: ", user)
+	// check exist email and username
 	errExist := collection.FindOne(ctx, bson.M{"$or": []bson.M{{"email": payload.Email}, {"username": payload.Username}}}).Decode(&user)
-	fmt.Println("user: ", user)
 	fmt.Println("error: ", errExist)
 
 	if user != nil {
@@ -53,6 +37,9 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 
 	// HashPassword
 	payload.Password, _ = utils.HashPassword(payload.Password)
+
+	// default status
+	payload.Status = "ACTIVE"
 
 	//Create user
 	doc, err := dao.UserRegister(payload.ConvertToBSON())

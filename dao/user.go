@@ -74,3 +74,34 @@ func UpdateUserPassword(ID primitive.ObjectID, newPassword string) error {
 	}
 	return nil
 }
+
+func GetInfoUser(ID primitive.ObjectID) (models.UserBSON, error) {
+	var (
+		userCol = database.UserCol()
+		ctx     = context.Background()
+		user    models.UserBSON
+	)
+	filter := bson.M{"_id": ID}
+	err := userCol.FindOne(ctx, filter).Decode(&user)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func UpdateInfoUser(ID primitive.ObjectID, body models.UserInfoBSON) error {
+	var (
+		userCol = database.UserCol()
+		ctx     = context.Background()
+	)
+
+	filter := bson.M{"_id": ID}
+
+	_, err := userCol.UpdateOne(ctx, filter, bson.M{"$set": body})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
