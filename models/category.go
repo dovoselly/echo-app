@@ -7,7 +7,7 @@ import (
 )
 
 type (
-	Category struct {
+	CategoryBSON struct {
 		ID          primitive.ObjectID `bson:"_id"`
 		Name        string             `bson:"name"`
 		Description string             `bson:"description"`
