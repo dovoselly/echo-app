@@ -2,8 +2,8 @@ package services
 
 import (
 	"echo-app/dao"
-	"echo-app/middlewares"
 	"echo-app/models"
+	"echo-app/utils"
 	"errors"
 )
 
@@ -26,5 +26,24 @@ func AdminLogin(loginBody models.AdminLoginBody) (string, error) {
 	}
 
 	// return JWT token
-	return middlewares.GenerateToken(data)
+	return utils.GenerateToken(data), err
 }
+
+func MyProfileAdmin(ID string) (models.Admin, error) {
+	doc, err := dao.AdminProfileFindByID(ID)
+	if err != nil {
+		return doc, err
+	}
+	return doc, nil
+}
+
+//func GetAdminProfileByID(id string) (models.Admin, error) {
+//	// to objectID
+//	objID, _ := primitive.ObjectIDFromHex(id)
+//
+//	admin, err := dao.GetAdminProfileFindByID(objID)
+//	if err != nil {
+//		return admin, err
+//	}
+//	return admin, nil
+//}

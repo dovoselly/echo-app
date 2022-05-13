@@ -50,3 +50,26 @@ func InitAdminAccount() {
 		adminCol.InsertOne(ctx, admin)
 	}
 }
+
+func AdminProfileFindByID(ID string) (models.Admin, error) {
+	var (
+		adminCol     = database.AdminCol()
+		ctx          = context.Background()
+		adminProfile models.Admin
+	)
+
+	// objectID
+	objID, _ := primitive.ObjectIDFromHex(ID)
+
+	// find profile
+	filter := bson.M{"_id": objID}
+	err := adminCol.FindOne(ctx, filter).Decode(&adminProfile)
+
+	// if err
+	if err != nil {
+		return adminProfile, err
+	}
+
+	return adminProfile, nil
+
+}
