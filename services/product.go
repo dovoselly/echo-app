@@ -5,48 +5,73 @@ import (
 	"echo-app/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"strconv"
 	"strings"
 )
 
 var limit int64 = 10
 
-func ListProduct(query models.ProductQuery) ([]models.Product, error) {
+func ListProduct(query models.ProductQuery) ([]models.ProductResponse, error) {
 	//init filter
-	filter := bson.M{}
+	filter := bson.M{"status": "enable"}
+
 	if query.CategoryId != "" {
-		filter["CategoryId"], _ = primitive.ObjectIDFromHex(query.CategoryId)
+		filter["categoryId"], _ = primitive.ObjectIDFromHex(query.CategoryId)
 	}
 	if query.BrandId != "" {
-		filter["BrandId"], _ = primitive.ObjectIDFromHex(query.BrandId)
+		filter["brandId"], _ = primitive.ObjectIDFromHex(query.BrandId)
 	}
 	if query.Name != "" {
-		filter["Name"] = query.Name
+		filter["name"] = query.Name
 	}
-	if query.PriceFromTo != "" {
-		priceFromTo := strings.Split(query.PriceFromTo, ",")
-		filter["PriceFromTo"] = bson.M{"$and": []bson.M{
-			{"price": bson.M{"$gte": priceFromTo[0]}},
-			{"price": bson.M{"$lte": priceFromTo[1]}},
-		},
+	if query.PriceFrom != "" {
+		priceFrom, _ := strconv.ParseInt(query.PriceFrom, 10, 64)
+		filter["price"] = bson.M{
+			"$lte": priceFrom,
 		}
 	}
 
 	// options query
-	optionsQuery := new(options.FindOptions)
-	optionsQuery.SetSkip(query.Page * limit)
-	optionsQuery.SetLimit(limit)
+	//optionsQuery := new(options.FindOptions)
+	//optionsQuery.SetSkip(query.Page * limit)
+	//optionsQuery.SetLimit(limit)
 
-	if query.Sort != "" {
-		sort := strings.Split(query.Sort, ",")
-		sortMap := map[string]interface{}{
-			"price":     sort[0],
-			"createdAt": sort[1],
-		}
-		optionsQuery.SetSort(sortMap)
+	pipeline := []bson.M{
+		{"$match": filter},
+		{"$lookup": bson.M{
+			"from":         "brands",
+			"localField":   "brandId",
+			"foreignField": "_id",
+			"as":           "brand",
+		}},
+		{"$lookup": bson.M{
+			"from":         "categories",
+			"localField":   "categoryId",
+			"foreignField": "_id",
+			"as":           "category",
+		}},
+		{"$skip": query.Page * limit},
+		{"$limit": limit},
+		{"$unwind": "$category"},
+		{"$unwind": "$brand"},
 	}
 
-	results, err := dao.ListProduct(filter, optionsQuery)
+	if query.Sort != "" {
+		sortArr := strings.Split(query.Sort, ",")
+		sortMap := bson.M{}
+		for _, v := range sortArr {
+			var value int
+			if string([]rune(v)[1]) != "-" {
+				value = -1
+			} else {
+				value = 1
+			}
+			sortMap[v] = value
+		}
+		pipeline = append(pipeline, bson.M{"$sort": sortMap})
+	}
+
+	results, err := dao.ListProduct(pipeline)
 
 	return results, err
 }

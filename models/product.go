@@ -9,7 +9,7 @@ type (
 	Product struct {
 		Id          primitive.ObjectID `json:"_id" bson:"_id"`
 		Name        string             `json:"name" bson:"name"`
-		CategoryId  primitive.ObjectID `json:"category" bson:"category"`
+		CategoryId  primitive.ObjectID `json:"categoryId" bson:"categoryId"`
 		BrandId     primitive.ObjectID `json:"brandId" bson:"brandId"`
 		Price       uint               `json:"price" bson:"price"`
 		Description string             `json:"description" bson:"description"`
@@ -22,14 +22,27 @@ type (
 	}
 
 	ProductQuery struct {
-		Page        int64  `query:"page" binding:"required"`
-		Name        string `query:"name,omitempty"`
-		CategoryId  string `query:"categoryId,omitempty"`
-		PriceFromTo string `query:"priceFromTo,omitempty"`
-		BrandId     string `query:"brandId,omitempty"`
-		Sort        string `query:"sort,omitempty"`
-		Price       string `query:"price,omitempty"`
-		CreatedAt   string `query:"createdAt,omitempty"`
+		Page       int64  `query:"page" binding:"required"`
+		Name       string `query:"name"`
+		CategoryId string `query:"categoryId"`
+		PriceFrom  string `query:"priceFrom"`
+		BrandId    string `query:"brandId"`
+		Sort       string `query:"sort"`
+	}
+
+	ProductResponse struct {
+		Id          primitive.ObjectID     `bson:"_id"`
+		Name        string                 `bson:"name"`
+		Category    map[string]interface{} `bson:"category"`
+		Brand       map[string]interface{} `bson:"brand"`
+		Price       uint                   `bson:"price"`
+		Description string                 `bson:"description"`
+		Images      []string               `bson:"images"`
+		Quantity    uint                   `bson:"quantity"`
+		Rest        uint                   `bson:"rest"`
+		Status      string                 `bson:"status"`
+		CreatedAt   string                 `bson:"createdAt"`
+		UpdatedAt   string                 `bson:"updatedAt"`
 	}
 )
 

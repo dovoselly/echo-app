@@ -17,7 +17,10 @@ func ListProduct(c echo.Context) error {
 	}
 
 	results, err := services.ListProduct(query)
-	return utils.Response200(c, results, err.Error())
+	if err != nil {
+		return utils.Response200(c, results, err.Error())
+	}
+	return utils.Response200(c, results, "")
 }
 
 func ProductDetail(c echo.Context) error {
