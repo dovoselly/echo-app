@@ -16,7 +16,7 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 	var (
 		collection = database.UserCol()
 		ctx        = context.Background()
-		user       *models.UserRepsonse
+		user       *models.UserResponse
 	)
 
 	// check exist email and username

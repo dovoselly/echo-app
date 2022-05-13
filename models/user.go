@@ -35,7 +35,7 @@ type (
 		Status      string `bson:"status"`
 	}
 
-	UserRepsonse struct {
+	UserResponse struct {
 		ID          primitive.ObjectID `json:"_id"`
 		Email       string             `json:"email"`
 		Username    string             `json:"username"`
