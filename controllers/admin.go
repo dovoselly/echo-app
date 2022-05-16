@@ -49,6 +49,24 @@ func MyProfileAdmin(c echo.Context) error {
 	return utils.Response200(c, data, "")
 }
 
+func UpdateMyProfileAdmin(c echo.Context) error {
+	var body = c.Get("adminRequestBody").(models.Admin)
+
+	// jwtPayload for get id
+	jwtPayload, _ := utils.GetJWTPayload(c)
+	id := jwtPayload["id"].(string)
+
+	// UpdateProfile
+	err := services.UpdateMyProfileAdmin(id, body)
+
+	// if err
+	if err != nil {
+		return utils.Response400(c, nil, err.Error())
+	}
+
+	return utils.Response200(c, id, "")
+}
+
 //func AdminLogin(c echo.Context) error {
 //	return c.JSON(http.StatusOK, "Admin login")
 //}
@@ -56,10 +74,6 @@ func MyProfileAdmin(c echo.Context) error {
 //func MyProfileAdmin(c echo.Context) error {
 //	return c.JSON(http.StatusOK, "Get Admin profile")
 //}
-
-func UpdateMyProfileAdmin(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Update admin profile")
-}
 
 func ChangePasswordAdmin(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Change password admin")

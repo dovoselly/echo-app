@@ -47,3 +47,8 @@ func MyProfileAdmin(ID string) (models.Admin, error) {
 //	}
 //	return admin, nil
 //}
+
+func UpdateMyProfileAdmin(ID string, newProfile models.Admin) error {
+	err := dao.UpdateMyProfileAdmin(ID, newProfile)
+	return err
+}

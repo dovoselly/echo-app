@@ -73,3 +73,27 @@ func AdminProfileFindByID(ID string) (models.Admin, error) {
 	return adminProfile, nil
 
 }
+
+func UpdateMyProfileAdmin(ID string, newProfile models.Admin) error {
+	var (
+		adminCol = database.AdminCol()
+		ctx      = context.Background()
+	)
+
+	objID, _ := primitive.ObjectIDFromHex(ID)
+	update := models.Admin{
+		FullName:    newProfile.FullName,
+		DateOfBirth: newProfile.DateOfBirth,
+		Gender:      newProfile.Gender,
+		Phone:       newProfile.Phone,
+	}
+
+	// UpdateOne
+	_, err := adminCol.UpdateOne(ctx, bson.M{"_id": objID}, bson.M{"$set": update})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
