@@ -23,7 +23,7 @@ type (
 
 	OrderResponse struct {
 		ID         string      `json:"_id"`
-		UserId     User        `json:"userId"`
+		UserId     UserInfo    `json:"userId"`
 		DeliveryId string      `json:"deliveryId"`
 		OrderCode  string      `json:"orderCode"`
 		Status     string      `json:"status"`

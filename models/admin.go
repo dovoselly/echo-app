@@ -7,17 +7,30 @@ import (
 
 type (
 	Admin struct {
-		ID             primitive.ObjectID `json:"_id" bson:"_id"`
-		Email          string             ` json:"email" bson:"email"`
-		Username       string             ` json:"username" bson:"username"`
-		HashedPassword string             ` json:"hashedPassword" bson:"hashedPassword"`
-		FullName       string             ` json:"fullName" bson:"fullName"`
-		DateOfBirth    string             ` json:"dateOfBirth" bson:"dateOfBirth"`
-		Avatar         string             `json:"avatar" bson:"avatar"`
-		Gender         string             ` json:"gender" bson:"gender"`
-		Phone          string             ` json:"phone" bson:"phone"`
-		CreatedAt      string             ` json:"createdAt" bson:"createdAt"`
-		UpdatedAt      string             ` json:"updatedAt" bson:"updatedAt"`
+		ID             primitive.ObjectID `bson:"_id" `
+		Email          string             `bson:"email"`
+		Username       string             `bson:"username"`
+		HashedPassword string             `bson:"hashedPassword"`
+		FullName       string             `bson:"fullName"`
+		DateOfBirth    string             `bson:"dateOfBirth"`
+		Avatar         string             `bson:"avatar"`
+		Gender         string             `bson:"gender"`
+		Phone          string             `bson:"phone"`
+		CreatedAt      string             `bson:"createdAt"`
+		UpdatedAt      string             `bson:"updatedAt"`
+	}
+	AdminResponse struct {
+		ID             primitive.ObjectID `json:"_id"`
+		Email          string             `json:"email"`
+		Username       string             `json:"username"`
+		Hassedpassword string             `json:"hassedpassword"`
+		Fullname       string             `json:"fullname"`
+		DateOfBirth    string             `json:"dateOfBirth"`
+		Avatar         string             `json:"avatar"`
+		Gender         string             `json:"gender"`
+		Phone          string             `json:"phone"`
+		CreatedAt      string             `json:"createdAt"`
+		UpdatedAt      string             `json:"updatedAt"`
 	}
 
 	// AdminLogin
