@@ -21,6 +21,7 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 
 	// check exist email and username
 	errExist := collection.FindOne(ctx, bson.M{"$or": []bson.M{{"email": payload.Email}, {"username": payload.Username}}}).Decode(&user)
+
 	fmt.Println("error: ", errExist)
 
 	if user != nil {
@@ -70,8 +71,8 @@ func Login(user models.UserLogin) (string, error) {
 		"id": userBSON.ID,
 	}
 
-	// Genderate user token
-	token, err := utils.GenerateUserToken(data)
+	// Generate user token
+	token, err := utils.GenerateToken(data)
 	if err != nil {
 		return "", errors.New("GenerateUserToken failed")
 	}

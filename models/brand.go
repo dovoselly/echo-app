@@ -1,6 +1,7 @@
 package models
 
 import (
+	validation "github.com/go-ozzo/ozzo-validation"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -25,13 +26,27 @@ type (
 		UpdatedAt   time.Time          `json:"updatedAt"`
 	}
 
-	BrandCreate struct {
+	BrandCreateBody struct {
 		Name        string `json:"name"`
 		Description string `json:"description"`
 	}
 
-	BrandUpdate struct {
+	BrandUpdateBody struct {
 		Name        string `json:"name"`
 		Description string `json:"description"`
 	}
 )
+
+func (c BrandCreateBody) Validate() error {
+	return validation.ValidateStruct(&c,
+		validation.Field(&c.Name, validation.Required),
+		validation.Field(&c.Description, validation.Required),
+	)
+}
+
+func (c BrandUpdateBody) Validate() error {
+	return validation.ValidateStruct(&c,
+		validation.Field(&c.Name, validation.Required),
+		validation.Field(&c.Description, validation.Required),
+	)
+}
