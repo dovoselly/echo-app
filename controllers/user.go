@@ -13,7 +13,7 @@ func ChangeUserPassword(c echo.Context) error {
 		body = c.Get("body").(models.UserChangePassword)
 	)
 
-	id, _err := utils.GetIdInToken(c)
+	id, _err := utils.GetUserId(c)
 	if _err != nil {
 		return _err
 	}
@@ -30,7 +30,7 @@ func ChangeUserPassword(c echo.Context) error {
 func GetUserInfo(c echo.Context) error {
 
 	// Get Id in token
-	ID, _err := utils.GetIdInToken(c)
+	ID, _err := utils.GetUserId(c)
 	if _err != nil {
 		return _err
 	}
@@ -52,7 +52,7 @@ func UpdateUserInfo(c echo.Context) error {
 	)
 
 	// Get Id in token
-	ID, _err := utils.GetIdInToken(c)
+	ID, _err := utils.GetUserId(c)
 	if _err != nil {
 		return _err
 	}

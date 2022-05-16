@@ -2,6 +2,7 @@ package main
 
 import (
 	"echo-app/config"
+	"echo-app/dao"
 	"echo-app/database"
 	"echo-app/routes"
 
@@ -18,10 +19,15 @@ func main() {
 	e := echo.New()
 
 	e.Use(middleware.CORS())
-	e.Use(middleware.Recover())
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
+
+	e.Use(middleware.Recover())
+	config.InitDotEnv()
+	database.Connect()
+
+	dao.InitAdminAccount()
 
 	routes.Routes(e)
 

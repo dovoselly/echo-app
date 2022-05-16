@@ -2,49 +2,50 @@ package utils
 
 import (
 	"echo-app/config"
-	"time"
-
+	"fmt"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"strconv"
+	"time"
 )
 
-// JwtCustomClaims ...
 type JwtCustomClaims struct {
-	//ID string
+	// ID String
 	Data map[string]interface{}
 	jwt.StandardClaims
 }
 
-// GenerateUserToken ...
-func GenerateUserToken(data map[string]interface{}) (string, error) {
+func GenerateToken(data map[string]interface{}) (string, error) {
+	var env = config.GetEnv()
 
-	// claims ...
-	claims := &JwtCustomClaims{
+	// create expires time
+	expTimeMs, err := strconv.Atoi(env.Jwt.TokenLife)
+	if err != nil {
+		fmt.Println(err)
+	}
+	exp := time.Now().Add(time.Millisecond * time.Duration(expTimeMs)).Unix()
+
+	// init claims
+	claims := JwtCustomClaims{
 		data,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
+			ExpiresAt: exp,
 		},
 	}
 
 	// generate token with claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	strToken, err := token.SignedString([]byte(env.Jwt.SecretKey))
 
-	// sign token
-	str, err := token.SignedString([]byte(config.GetEnv().Jwt.SecretKey))
-
-	// if err
-	if err != nil {
-		return "", err
-	}
-
-	return str, nil
+	return strToken, err
 }
 
-// GetJWTPayload ...
 func GetJWTPayload(c echo.Context) (map[string]interface{}, error) {
 	// get jwt object from context
+	fmt.Println(c.Get("user"))
+
 	user := c.Get("user").(*jwt.Token)
+	fmt.Println(user.Raw)
 
 	claims := &JwtCustomClaims{}
 
@@ -59,22 +60,4 @@ func GetJWTPayload(c echo.Context) (map[string]interface{}, error) {
 	}
 
 	return claims.Data, nil
-}
-
-func GetIdInToken(c echo.Context) (primitive.ObjectID, error) {
-
-	// GetJWTPaylaod
-	jwtPayload, err := GetJWTPayload(c)
-	if err != nil {
-		return primitive.ObjectID{}, err
-	}
-
-	idString := jwtPayload["id"].(string)
-
-	ID, err := primitive.ObjectIDFromHex(idString)
-	if err != nil {
-		return primitive.ObjectID{}, err
-	}
-
-	return ID, nil
 }
