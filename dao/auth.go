@@ -7,7 +7,7 @@ import (
 	"fmt"
 )
 
-func UserRegister(doc models.UserBSON) (models.UserBSON, error) {
+func UserRegister(doc models.User) (models.User, error) {
 	fmt.Println("dao")
 	var (
 		collection = database.UserCol()
