@@ -7,7 +7,7 @@ import (
 
 type (
 	Admin struct {
-		ID             primitive.ObjectID `bson:"_id"`
+		ID             primitive.ObjectID `bson:"_id" `
 		Email          string             `bson:"email"`
 		Username       string             `bson:"username"`
 		HashedPassword string             `bson:"hashedPassword"`
@@ -18,6 +18,19 @@ type (
 		Phone          string             `bson:"phone"`
 		CreatedAt      string             `bson:"createdAt"`
 		UpdatedAt      string             `bson:"updatedAt"`
+	}
+	AdminResponse struct {
+		ID             primitive.ObjectID `json:"_id"`
+		Email          string             `json:"email"`
+		Username       string             `json:"username"`
+		Hassedpassword string             `json:"hassedpassword"`
+		Fullname       string             `json:"fullname"`
+		DateOfBirth    string             `json:"dateOfBirth"`
+		Avatar         string             `json:"avatar"`
+		Gender         string             `json:"gender"`
+		Phone          string             `json:"phone"`
+		CreatedAt      string             `json:"createdAt"`
+		UpdatedAt      string             `json:"updatedAt"`
 	}
 
 	// AdminLogin
