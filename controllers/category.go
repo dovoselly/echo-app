@@ -9,7 +9,7 @@ import (
 )
 
 func CreateCategory(c echo.Context) error {
-	var body = c.Get("categoryBody").(models.CategoryCreateBody)
+	var body = c.Get("body").(models.CategoryCreateBody)
 
 	// process data
 	err := services.CreateCategory(body)
@@ -44,20 +44,32 @@ func GetCategoryByID(c echo.Context) error {
 	return utils.Response200(c, category, "")
 }
 
-func UpdateCategory(c echo.Context) error {
+func UpdateCategoryByID(c echo.Context) error {
 	var (
 		ID   = c.Get("id").(string)
 		body = c.Get("body").(models.CategoryUpdateBody)
 	)
 
 	// process data
-	err := services.UpdateCategory(ID, body)
+	err := services.UpdateCategoryByID(ID, body)
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}
 
 	return utils.Response200(c, nil, "")
 
+}
+
+func DeleteCategoryByID(c echo.Context) error {
+	var id = c.Get("id").(string)
+
+	//process
+	err := services.DeleteCategoryByID(id)
+	if err != nil {
+		return utils.Response400(c, nil, err.Error())
+	}
+
+	return utils.Response200(c, nil, "")
 }
 
 func DisabledCategory(c echo.Context) error {
