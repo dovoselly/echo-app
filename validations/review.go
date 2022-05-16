@@ -26,9 +26,6 @@ func CreateReview(next echo.HandlerFunc) echo.HandlerFunc {
 		if err := body.Validate(); err != nil {
 			return utils.Response400(c, nil, err.Error())
 		}
-		if body.Rating > 5 || body.Rating < 1 {
-			return utils.Response400(c, nil, "rating must be between 1 - 5")
-		}
 		c.Set("body", body)
 		return next(c)
 	}

@@ -3,6 +3,7 @@ package services
 import (
 	"echo-app/dao"
 	"echo-app/models"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"strconv"
@@ -62,6 +63,7 @@ func ListProduct(query models.ProductQuery) ([]models.ProductResponse, error) {
 		for _, v := range sortArr {
 			var value int
 			if string([]rune(v)[1]) != "-" {
+				fmt.Println(string([]rune(v)[0]))
 				value = -1
 			} else {
 				value = 1

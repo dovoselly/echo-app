@@ -4,26 +4,28 @@ import (
 	"echo-app/models"
 	"echo-app/services"
 	"echo-app/utils"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func ListReview(c echo.Context) error {
-	idString := c.Param("id")
-	id, err := primitive.ObjectIDFromHex(idString)
+	productIdString := c.Param("id")
+	productId, err := primitive.ObjectIDFromHex(productIdString)
+	fmt.Println(productIdString)
 	if err != nil {
-		return utils.Response404(c, nil, utils.InvalidData)
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
 	queryInterface := c.Get("query")
 	query, ok := queryInterface.(models.ReviewQuery)
 	if !ok {
-		return utils.Response404(c, nil, utils.InvalidData)
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
-	results, err := services.ListReview(id, query)
+	results, err := services.ListReview(productId, query)
 	if err != nil {
-
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
 	return utils.Response200(c, results, utils.CreateSuccessFully)
 }

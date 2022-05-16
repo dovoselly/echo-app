@@ -9,13 +9,9 @@ import (
 )
 
 func review(e *echo.Echo) {
-	productRoutes := e.Group("/products", middleware.JWT([]byte(config.GetEnv().Jwt.SecretKey)))
-	reviewRoutes := e.Group("/reviews")
+	productRoutes := e.Group("/products")
 	{
-		productRoutes.POST("/:id/reviews", controllers.CreateReview, validations.CreateReview)
-		productRoutes.POST("/:id", controllers.ListReview, validations.ListReview)
-	}
-	{
-		reviewRoutes.GET("", controllers.ListReview, validations.ListReview)
+		productRoutes.POST("/:id/reviews", controllers.CreateReview, validations.CreateReview, middleware.JWT([]byte(config.GetEnv().Jwt.SecretKey)))
+		productRoutes.GET("/:id/reviews", controllers.ListReview, validations.ListReview)
 	}
 }

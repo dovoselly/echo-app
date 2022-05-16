@@ -10,7 +10,7 @@ import (
 
 func ListReview(filter bson.M, options *options.FindOptions) ([]models.Review, error) {
 	var listReview []models.Review
-	cursor, err := database.ProductCol().Find(utils.Ctx, filter, options)
+	cursor, err := database.ReviewCol().Find(utils.Ctx, filter, options)
 	if err != nil {
 		return listReview, err
 	}
