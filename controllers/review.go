@@ -29,14 +29,24 @@ func ListReview(c echo.Context) error {
 }
 
 func CreateReview(c echo.Context) error {
-	payloadInterface := c.Get("payload")
+	userId, err := utils.GetUserId(c)
+	if err != nil {
+		return utils.Response404(c, nil, utils.InvalidData)
+	}
 
+	payloadInterface := c.Get("body")
 	payload, ok := payloadInterface.(models.CreateReview)
 	if !ok {
 		return utils.Response404(c, nil, utils.InvalidData)
 	}
 
-	err := services.CreateReview(payload)
+	productIdString := c.Param("id")
+	productId, err := primitive.ObjectIDFromHex(productIdString)
+	if err != nil {
+		return utils.Response404(c, nil, utils.InvalidData)
+	}
+
+	err = services.CreateReview(userId, productId, payload)
 	if err != nil {
 		return utils.Response200(c, "", err.Error())
 	}

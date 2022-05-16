@@ -26,11 +26,14 @@ func ListReview(productId primitive.ObjectID, query models.ReviewQuery) ([]model
 	return results, err
 }
 
-func CreateReview(payload models.CreateReview) error {
+func CreateReview(userId primitive.ObjectID, productId primitive.ObjectID, body models.CreateReview) error {
 	//init insert data
 	insertData := models.Review{
-		Rating:    payload.Rating,
-		Content:   payload.Content,
+		ID:        primitive.NewObjectID(),
+		UserId:    userId,
+		ProductId: productId,
+		Rating:    body.Rating,
+		Content:   body.Content,
 		CreatedAt: utils.CurrentDateTime(),
 		UpdatedAt: utils.CurrentDateTime(),
 	}

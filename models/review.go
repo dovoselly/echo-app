@@ -3,7 +3,6 @@ package models
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"regexp"
 )
 
 type (
@@ -32,6 +31,5 @@ type (
 func (r CreateReview) Validate() error {
 	return validation.ValidateStruct(&r,
 		validation.Field(&r.Content, validation.Length(1, 5000).Error("length 1-5000 characters")),
-		validation.Field(&r.Rating, validation.Match(regexp.MustCompile("[1-5]")).Error("rating from 1 to 5")),
 	)
 }
