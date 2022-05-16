@@ -3,7 +3,7 @@ package middlewares
 import (
 	"echo-app/config"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"strconv"
 	"time"
@@ -15,9 +15,9 @@ type JwtCustomClaims struct {
 	jwt.StandardClaims
 }
 
-var env = config.GetEnv()
-
 func GenerateToken(data map[string]interface{}) (string, error) {
+	var env = config.GetEnv()
+
 	// create expires time
 	expTimeMs, err := strconv.Atoi(env.Jwt.TokenLife)
 	if err != nil {
@@ -42,7 +42,10 @@ func GenerateToken(data map[string]interface{}) (string, error) {
 
 func GetJWTPayload(c echo.Context) (map[string]interface{}, error) {
 	// get jwt object from context
+	fmt.Println(c.Get("user"))
+
 	user := c.Get("user").(*jwt.Token)
+	fmt.Println(user.Raw)
 
 	claims := &JwtCustomClaims{}
 
