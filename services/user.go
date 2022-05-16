@@ -1,79 +1,76 @@
 package services
 
-//var ctx = context.TODO()
-//
-//func Register(insertData models.User) string {
-//	_, err := database.GetUserCol().InsertOne(ctx, insertData)
-//	if err != nil {
-//		return err.Error()
-//	}
-//	return utils.CreateSuccessFully
-//}
-//
-//func GetUserByEmail(email string, username string) models.User {
-//	var user models.User
-//	err := database.GetUserCol().FindOne(ctx, bson.M{"$or": []bson.M{{"email": email}, {username: username}}}).Decode(&user)
-//	if err != nil {
-//		fmt.Println(err.Error())
-//	}
-//	return user
-//}
+import (
+	"echo-app/dao"
+	"echo-app/models"
+	"echo-app/utils"
 
-//
-//func AllUsers(page int, limit int) []models.User {
-//	var allUsers []models.User
-//
-//	// options query
-//	optionsQuery := new(options.FindOptions)
-//	optionsQuery.SetSkip(int64(page * limit))
-//	optionsQuery.SetLimit(int64(limit))
-//
-//	// Find users
-//	cursor, err := database.GetUserCol().Find(ctx, bson.M{}, optionsQuery)
-//	if err != nil {
-//		fmt.Println(err.Error())
-//		return allUsers
-//	}
-//
-//	// Decode found documents
-//	if err := cursor.All(ctx, &allUsers); err != nil {
-//		fmt.Println(err.Error())
-//		return allUsers
-//	}
-//
-//	return allUsers
-//}
-//
-//func GetUserById(id primitive.ObjectID) models.User {
-//	var user models.User
-//	err := database.GetUserCol().FindOne(ctx, bson.M{"_id": id}).Decode(&user)
-//	if err != nil {
-//		fmt.Println(err.Error())
-//		return user
-//	}
-//	return user
-//}
-//
-//func UpdateUserById(id primitive.ObjectID, insertData models.UserUpdate) string {
-//	fmt.Println(id, insertData)
-//	result, err := database.GetUserCol().UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set": insertData})
-//	fmt.Println(*result)
-//	if err != nil {
-//		return err.Error()
-//	}
-//	if result.MatchedCount == 0 {
-//		return utils.UserNotFound
-//	}
-//	return utils.UpdateSuccessFully
-//}
-//
-//func DeleteUserById(id primitive.ObjectID) string {
-//	result, err := database.GetUserCol().DeleteOne(ctx, bson.M{"_id": id})
-//	if err != nil {
-//		return err.Error()
-//	}
-//	if result.DeletedCount == 0 {
-//		return utils.UserNotFound
-//	}
-//	return utils.DeleteSuccessFully
-//}
+	"github.com/pkg/errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
+func ChangeUserPassword(ID primitive.ObjectID, body models.UserChangePassword) error {
+	// check currentPassword
+	userBSON, _ := dao.GetUserById(ID)
+	if utils.CheckPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
+		return errors.New("CurrentPassword is incorrect")
+	}
+
+	// HashPassword truoc khi update
+	newPassword, _ := utils.HashPassword(body.NewPassword)
+
+	// update password
+	err := dao.UpdateUserPassword(ID, newPassword)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func GetUserInfo(ID primitive.ObjectID) (models.UserInfo, error) {
+	var (
+		info models.UserInfo
+	)
+
+	// get user
+	user, err := dao.GetInfoUser(ID)
+	if err != nil {
+		return info, err
+	}
+
+	// convert to userInfo
+	info = models.UserInfo{
+		ID:          user.ID,
+		FullName:    user.FullName,
+		Email:       user.Email,
+		Username:    user.Username,
+		Avatar:      user.Avatar,
+		Gender:      user.Gender,
+		DateOfBirth: user.DateOfBirth,
+		Phone:       user.Phone,
+		Address:     user.Address,
+	}
+
+	return info, nil
+}
+
+func UpdateUserInfo(ID primitive.ObjectID, body models.UserUpdate) error {
+
+	bodyBSON := models.UserInfoBSON{
+		FullName:    body.FullName,
+		Email:       body.Email,
+		Phone:       body.Phone,
+		DateOfBirth: body.DateOfBirth,
+		Gender:      body.Gender,
+		Address:     body.Address,
+	}
+
+	// update info
+	if err := dao.UpdateInfoUser(ID, bodyBSON); err != nil {
+		return err
+	}
+
+	return nil
+}

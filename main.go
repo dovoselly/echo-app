@@ -5,11 +5,14 @@ import (
 	"echo-app/dao"
 	"echo-app/database"
 	"echo-app/routes"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func init() {
+	config.InitDotEnv()
+	database.Connect()
 }
 
 func main() {

@@ -2,8 +2,10 @@ package utils
 
 import (
 	"echo-app/config"
-	"github.com/dgrijalva/jwt-go"
+	"fmt"
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
+	"strconv"
 	"time"
 )
 
@@ -13,59 +15,37 @@ type JwtCustomClaims struct {
 	jwt.StandardClaims
 }
 
-var envVars = config.GetEnv()
+func GenerateToken(data map[string]interface{}) (string, error) {
+	var env = config.GetEnv()
 
-//
-//func GenerateToken(data map[string]interface{}) (string, error) {
-//	// create expires time
-//	expTimeMs, err := strconv.Atoi(envVars.Jwt.TokenLife)
-//	if err != nil {
-//		fmt.Println(err)
-//	}
-//	exp := time.Now().Add(time.Millisecond * time.Duration(expTimeMs)).Unix()
-//
-//	// init claims
-//	claims := JwtCustomClaims{
-//		data,
-//		jwt.StandardClaims{
-//			ExpiresAt: exp,
-//		},
-//	}
-//
-//	// generate token with claims
-//	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-//	strToken, err := token.SignedString([]byte(envVars.Jwt.SecretKey))
-//
-//	return strToken, err
-//}
+	// create expires time
+	expTimeMs, err := strconv.Atoi(env.Jwt.TokenLife)
+	if err != nil {
+		fmt.Println(err)
+	}
+	exp := time.Now().Add(time.Millisecond * time.Duration(expTimeMs)).Unix()
 
-func GenerateToken(data map[string]interface{}) string {
-	// claims ...
-	claims := &JwtCustomClaims{
-		//data["id"].(primitive.ObjectID).Hex(),
+	// init claims
+	claims := JwtCustomClaims{
 		data,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Minute * 5).Unix(), // 1 minute expire
+			ExpiresAt: exp,
 		},
 	}
 
 	// generate token with claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	strToken, err := token.SignedString([]byte(env.Jwt.SecretKey))
 
-	// sign token
-	st, err := token.SignedString([]byte(envVars.Jwt.SecretKey))
-
-	// if err
-	if err != nil {
-		return ""
-	}
-
-	return st
+	return strToken, err
 }
 
 func GetJWTPayload(c echo.Context) (map[string]interface{}, error) {
 	// get jwt object from context
+	fmt.Println(c.Get("user"))
+
 	user := c.Get("user").(*jwt.Token)
+	fmt.Println(user.Raw)
 
 	claims := &JwtCustomClaims{}
 
