@@ -41,4 +41,12 @@ func ReplyCol() *mongo.Collection {
 	return db.Collection(replies)
 }
 
+func OrderCol() *mongo.Collection {
+	return db.Collection(orders)
+}
+
+func OrderItemCol() *mongo.Collection {
+	return db.Collection(orderItems)
+}
+
 // ...
