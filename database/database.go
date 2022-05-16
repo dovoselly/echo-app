@@ -4,10 +4,9 @@ import (
 	"context"
 	"echo-app/config"
 	"fmt"
-	"time"
-
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"time"
 )
 
 var db *mongo.Database

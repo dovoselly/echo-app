@@ -9,26 +9,40 @@ type (
 	Product struct {
 		Id          primitive.ObjectID `json:"_id" bson:"_id"`
 		Name        string             `json:"name" bson:"name"`
-		CategoryId  primitive.ObjectID `json:"category" bson:"category"`
+		CategoryId  primitive.ObjectID `json:"categoryId" bson:"categoryId"`
 		BrandId     primitive.ObjectID `json:"brandId" bson:"brandId"`
 		Price       uint               `json:"price" bson:"price"`
 		Description string             `json:"description" bson:"description"`
-		Images      string             `json:"images" bson:"images"`
+		Images      []string           `json:"images" bson:"images"`
 		Quantity    uint               `json:"quantity" bson:"quantity"`
 		Rest        uint               `json:"rest" bson:"rest"`
-		Status      uint               `json:"status" bson:"status"`
+		Status      string             `json:"status" bson:"status"`
 		CreatedAt   string             `json:"createdAt" bson:"createdAt"`
 		UpdatedAt   string             `json:"updatedAt" bson:"updatedAt"`
 	}
 
 	ProductQuery struct {
-		Page        int    `query:"page"`
-		Name        int    `query:"name"`
-		CatagoryId  string `query:"catagoryId"`
-		priceFromTo string `query:"priceFromTo"`
-		BrandId     string `query:"brandId"`
-		Price       string `query:"price"`
-		CreatedAt   string `query:"createdAt"`
+		Page       int64  `query:"page" binding:"required"`
+		Name       string `query:"name"`
+		CategoryId string `query:"categoryId"`
+		PriceFrom  string `query:"priceFrom"`
+		BrandId    string `query:"brandId"`
+		Sort       string `query:"sort"`
+	}
+
+	ProductResponse struct {
+		Id          primitive.ObjectID     `bson:"_id"`
+		Name        string                 `bson:"name"`
+		Category    map[string]interface{} `bson:"category"`
+		Brand       map[string]interface{} `bson:"brand"`
+		Price       uint                   `bson:"price"`
+		Description string                 `bson:"description"`
+		Images      []string               `bson:"images"`
+		Quantity    uint                   `bson:"quantity"`
+		Rest        uint                   `bson:"rest"`
+		Status      string                 `bson:"status"`
+		CreatedAt   string                 `bson:"createdAt"`
+		UpdatedAt   string                 `bson:"updatedAt"`
 	}
 )
 

@@ -8,4 +8,7 @@ func Routes(e *echo.Echo) {
 	category(e)
 	brand(e)
 	auth(e)
+	product(e)
+	review(e)
+	//admin(e)
 }

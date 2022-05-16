@@ -1,8 +1,6 @@
 package database
 
-import (
-	"go.mongodb.org/mongo-driver/mongo"
-)
+import "go.mongodb.org/mongo-driver/mongo"
 
 const (
 	admins     = "admins"
@@ -33,6 +31,14 @@ func CategoryCol() *mongo.Collection {
 
 func BrandCol() *mongo.Collection {
 	return db.Collection(brands)
+}
+
+func ReviewCol() *mongo.Collection {
+	return db.Collection(reviews)
+}
+
+func ReplyCol() *mongo.Collection {
+	return db.Collection(replies)
 }
 
 // ...
