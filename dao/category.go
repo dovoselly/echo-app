@@ -55,7 +55,7 @@ func GetCategoryByID(ID primitive.ObjectID) (models.CategoryBSON, error) {
 	return category, nil
 }
 
-func UpdateCategory(ID primitive.ObjectID, body models.CategoryUpdateBody) error {
+func UpdateCategoryByID(ID primitive.ObjectID, body models.CategoryUpdateBody) error {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
@@ -67,6 +67,24 @@ func UpdateCategory(ID primitive.ObjectID, body models.CategoryUpdateBody) error
 	_, err := categoryCol.UpdateOne(ctx, bson.M{"_id": ID}, bson.M{"$set": update})
 
 	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//
+func DeleteCategoryByID(ID primitive.ObjectID) error {
+	var (
+		categoryCol = database.CategoryCol()
+		ctx         = context.Background()
+	)
+
+	// filter
+	filter := bson.M{"_id": ID}
+
+	// DeleteOne
+	if _, err := categoryCol.DeleteOne(ctx, filter); err != nil {
 		return err
 	}
 

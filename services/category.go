@@ -19,7 +19,7 @@ func CreateCategory(categoryBody models.CategoryCreateBody) error {
 		UpdatedAt:   time.Now(),
 	}
 
-	// create bot
+	// create category
 	if err := dao.CreateCategory(category); err != nil {
 		return errors.New("can not create new category")
 	}
@@ -78,13 +78,26 @@ func GetCategoryByID(ID string) (models.CategoryResponse, error) {
 	return category, nil
 }
 
-func UpdateCategory(ID string, body models.CategoryUpdateBody) error {
+func UpdateCategoryByID(ID string, body models.CategoryUpdateBody) error {
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
-	err := dao.UpdateCategory(objID, body)
+	err := dao.UpdateCategoryByID(objID, body)
 	if err != nil {
 		return err
 	}
 	return nil
 
+}
+
+func DeleteCategoryByID(ID string) error {
+	// convert id string to objectID
+	objID, _ := primitive.ObjectIDFromHex(ID)
+
+	err := dao.DeleteCategoryByID(objID)
+	if err != nil {
+		return err
+	}
+
+	// success
+	return nil
 }
