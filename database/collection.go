@@ -31,4 +31,8 @@ func CategoryCol() *mongo.Collection {
 	return db.Collection(categories)
 }
 
+func BrandCol() *mongo.Collection {
+	return db.Collection(brands)
+}
+
 // ...
