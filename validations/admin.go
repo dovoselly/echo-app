@@ -28,3 +28,22 @@ func AdminLoginBody(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+// ValidateAdminUpdateBody
+func ValidateAdminUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var admin models.Admin
+
+		// bind request body
+		err := c.Bind(&admin)
+
+		if err != nil {
+			return utils.Response400(c, nil, err.Error())
+		}
+
+		// success
+		c.Set("adminRequestBody", admin)
+
+		return next(c)
+	}
+}
