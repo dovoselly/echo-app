@@ -22,7 +22,7 @@ func CategoryCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.Response400(c, nil, err.Error())
 		}
 
-		c.Set("categoryBody", body)
+		c.Set("body", body)
 
 		return next(c)
 	}
