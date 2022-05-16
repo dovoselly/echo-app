@@ -25,6 +25,10 @@ func AdminCol() *mongo.Collection {
 	return db.Collection(admins)
 }
 
+func ProductCol() *mongo.Collection {
+	return db.Collection(products)
+}
+
 func CategoryCol() *mongo.Collection {
 	return db.Collection(categories)
 }

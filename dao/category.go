@@ -73,7 +73,6 @@ func UpdateCategoryByID(ID primitive.ObjectID, body models.CategoryUpdateBody) e
 	return nil
 }
 
-//
 func DeleteCategoryByID(ID primitive.ObjectID) error {
 	var (
 		categoryCol = database.CategoryCol()

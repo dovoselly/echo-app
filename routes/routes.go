@@ -12,5 +12,6 @@ func Routes(e *echo.Echo) {
 	order(e)
 	product(e)
 	review(e)
+	reply(e)
 	//admin(e)
 }

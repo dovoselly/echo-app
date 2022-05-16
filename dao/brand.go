@@ -73,7 +73,6 @@ func UpdateBrandByID(ID primitive.ObjectID, body models.BrandUpdateBody) error {
 	return nil
 }
 
-//
 func DeleteBrandByID(ID primitive.ObjectID) error {
 	var (
 		brandCol = database.BrandCol()

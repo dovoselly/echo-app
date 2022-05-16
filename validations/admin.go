@@ -29,7 +29,6 @@ func AdminLoginBody(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-// ValidateAdminUpdateBody
 func ValidateAdminUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var admin models.Admin

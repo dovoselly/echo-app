@@ -5,6 +5,7 @@ import (
 	"echo-app/models"
 	"echo-app/utils"
 	"errors"
+	"fmt"
 )
 
 func AdminLogin(loginBody models.AdminLoginBody) (string, error) {
@@ -26,7 +27,11 @@ func AdminLogin(loginBody models.AdminLoginBody) (string, error) {
 	}
 
 	// return JWT token
-	return utils.GenerateToken(data), err
+	token, err := utils.GenerateToken(data)
+	if err != nil {
+		fmt.Printf(err.Error())
+	}
+	return token, err
 }
 
 func MyProfileAdmin(ID string) (models.Admin, error) {

@@ -7,7 +7,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// PlayerCreate ...
 func UserRegister(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var (

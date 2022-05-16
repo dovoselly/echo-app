@@ -1,15 +1,13 @@
 package utils
 
 import (
-	"echo-app/middlewares"
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func GetUserId(c echo.Context) (primitive.ObjectID, error) {
 	// GetJWTPayload
-	jwtPayload, err := middlewares.GetJWTPayload(c)
-
+	jwtPayload, err := GetJWTPayload(c)
 	if err != nil {
 		return primitive.NilObjectID, err
 	}

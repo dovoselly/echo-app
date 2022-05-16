@@ -23,7 +23,7 @@ type (
 		ID             primitive.ObjectID `json:"_id"`
 		Email          string             `json:"email"`
 		Username       string             `json:"username"`
-		Hassedpassword string             `json:"hassedpassword"`
+		Hashedpassword string             `json:"hashedpassword"`
 		Fullname       string             `json:"fullname"`
 		DateOfBirth    string             `json:"dateOfBirth"`
 		Avatar         string             `json:"avatar"`
@@ -33,7 +33,6 @@ type (
 		UpdatedAt      string             `json:"updatedAt"`
 	}
 
-	// AdminLogin
 	AdminLoginBody struct {
 		Username string `json:"username"`
 		Password string `json:"password"`

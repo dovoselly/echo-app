@@ -3,8 +3,9 @@ package routes
 import (
 	"echo-app/controllers"
 	"echo-app/validations"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
-
 
 func admin(e *echo.Echo) {
 	isLogin := middleware.JWT([]byte(envVars.Jwt.SecretKey))

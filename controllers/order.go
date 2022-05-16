@@ -15,7 +15,7 @@ func CreateOrder(c echo.Context) error {
 	)
 
 	// Get Id in token
-	ID, _err := utils.GetIdInToken(c)
+	ID, _err := utils.GetUserId(c)
 	if _err != nil {
 		return _err
 	}
@@ -30,7 +30,7 @@ func CreateOrder(c echo.Context) error {
 
 func GetAllOrdersByUserId(c echo.Context) error {
 	// Get Id in token
-	ID, _err := utils.GetIdInToken(c)
+	ID, _err := utils.GetUserId(c)
 	if _err != nil {
 		return _err
 	}
