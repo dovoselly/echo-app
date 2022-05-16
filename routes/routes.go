@@ -6,4 +6,6 @@ func Routes(e *echo.Echo) {
 	user(e)
 	admin(e)
 	category(e)
+	brand(e)
+	auth(e)
 }
