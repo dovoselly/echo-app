@@ -8,15 +8,15 @@ import (
 	"time"
 )
 
-func CreateCategory(categoryBody models.CategoryCreateBody) error {
+func CreateCategory(body models.CategoryCreateBody) error {
 	// category BSON
-
+	body.Status = "ENABLE"
 	category := models.CategoryBSON{
 		ID:          primitive.NewObjectID(),
-		Name:        categoryBody.Name,
-		Description: categoryBody.Description,
+		Name:        body.Name,
+		Description: body.Description,
+		Status:      body.Status,
 		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
 	}
 
 	// create category

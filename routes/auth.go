@@ -7,8 +7,6 @@ import (
 )
 
 func auth(e *echo.Echo) {
-	//adminRouter.POST("/admin-login", controllers.AdminLogin, validations.AdminLoginBody)
-
 	e.POST("/register", controllers.Register, validations.UserRegister)
 	e.POST("/admin/admin-login", controllers.AdminLogin, validations.AdminLoginBody)
 	// e.POST("/login", controllers.Login)
