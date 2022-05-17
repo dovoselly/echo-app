@@ -1,15 +1,13 @@
-package models
+package model
 
 import (
-	"time"
-
 	validation "github.com/go-ozzo/ozzo-validation"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 type (
-	BrandBSON struct {
+	CategoryBSON struct {
 		ID          primitive.ObjectID `bson:"_id"`
 		Name        string             `bson:"name"`
 		Description string             `bson:"description"`
@@ -17,8 +15,7 @@ type (
 		CreatedAt   time.Time          `bson:"createdAt"`
 		UpdatedAt   time.Time          `bson:"updatedAt"`
 	}
-
-	BrandResponse struct {
+	CategoryResponse struct {
 		ID          primitive.ObjectID `json:"_id"`
 		Name        string             `json:"name"`
 		Description string             `json:"description"`
@@ -27,27 +24,43 @@ type (
 		UpdatedAt   time.Time          `json:"updatedAt"`
 	}
 
-	BrandCreateBody struct {
+	CategoryCreateBody struct {
 		Name        string `json:"name"`
 		Description string `json:"description"`
+		Status      string `json:"status"`
 	}
 
-	BrandUpdateBody struct {
+	CategoryUpdateBody struct {
 		Name        string `json:"name"`
 		Description string `json:"description"`
 	}
 )
 
-func (c BrandCreateBody) Validate() error {
+func (c CategoryCreateBody) Validate() error {
 	return validation.ValidateStruct(&c,
 		validation.Field(&c.Name, validation.Required),
 		validation.Field(&c.Description, validation.Required),
 	)
 }
 
-func (c BrandUpdateBody) Validate() error {
+func (c CategoryUpdateBody) Validate() error {
 	return validation.ValidateStruct(&c,
 		validation.Field(&c.Name, validation.Required),
 		validation.Field(&c.Description, validation.Required),
 	)
 }
+
+// NewCategory ...
+//func (c CategoryCreateBody) NewCategory() Category {
+//	return Category{
+//		ID         : primitive.NewObjectID(),
+//		Name      : c.Name,
+//		Description string             `bson:"description"`
+//
+//		bool:
+//			boo
+//		Status     :  ,
+//		CreatedAt   :
+//		UpdatedAt   time.Time          `bson:"updatedAt"`
+//	}
+//}

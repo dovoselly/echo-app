@@ -3,16 +3,16 @@ package dao
 import (
 	"context"
 	"echo-app/database"
-	"echo-app/models"
+	"echo-app/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func AdminFindByUsername(username string) (models.Admin, error) {
+func AdminFindByUsername(username string) (model.Admin, error) {
 	var (
 		adminCol = database.AdminCol()
 		ctx      = context.Background()
-		admin    models.Admin
+		admin    model.Admin
 	)
 
 	// find
@@ -37,7 +37,7 @@ func InitAdminAccount() {
 	count, _ := adminCol.CountDocuments(ctx, bson.D{})
 
 	if count == 0 {
-		admin := models.Admin{
+		admin := model.Admin{
 			ID:             primitive.NewObjectID(),
 			Email:          "admin123@gmail.com",
 			Username:       "admin123",
@@ -51,11 +51,11 @@ func InitAdminAccount() {
 	}
 }
 
-func AdminProfileFindByID(ID string) (models.Admin, error) {
+func AdminProfileFindByID(ID string) (model.Admin, error) {
 	var (
 		adminCol     = database.AdminCol()
 		ctx          = context.Background()
-		adminProfile models.Admin
+		adminProfile model.Admin
 	)
 
 	// objectID
@@ -74,14 +74,14 @@ func AdminProfileFindByID(ID string) (models.Admin, error) {
 
 }
 
-func UpdateMyProfileAdmin(ID string, newProfile models.Admin) error {
+func UpdateMyProfileAdmin(ID string, newProfile model.Admin) error {
 	var (
 		adminCol = database.AdminCol()
 		ctx      = context.Background()
 	)
 
 	objID, _ := primitive.ObjectIDFromHex(ID)
-	update := models.Admin{
+	update := model.Admin{
 		FullName:    newProfile.FullName,
 		DateOfBirth: newProfile.DateOfBirth,
 		Gender:      newProfile.Gender,

@@ -1,17 +1,17 @@
-package services
+package service
 
 import (
 	"echo-app/dao"
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func CreateReply(userId primitive.ObjectID, reviewId primitive.ObjectID, body models.CreateReply) error {
+func CreateReply(userId primitive.ObjectID, reviewId primitive.ObjectID, body model.CreateReply) error {
 	//init insert data
-	insertData := models.Reply{
+	insertData := model.Reply{
 		UserId:    userId,
 		Content:   body.Content,
 		ReviewId:  reviewId,
@@ -22,10 +22,10 @@ func CreateReply(userId primitive.ObjectID, reviewId primitive.ObjectID, body mo
 	return err
 }
 
-func UpdateReply(userId primitive.ObjectID, replyId primitive.ObjectID, body models.CreateReply) (*mongo.UpdateResult, error) {
+func UpdateReply(userId primitive.ObjectID, replyId primitive.ObjectID, body model.CreateReply) (*mongo.UpdateResult, error) {
 	filter := bson.M{"_id": replyId, "userId": userId}
 
-	updateData := bson.M{"$set": models.Reply{
+	updateData := bson.M{"$set": model.Reply{
 		Content:   body.Content,
 		UpdatedAt: utils.CurrentDateTime(),
 	}}

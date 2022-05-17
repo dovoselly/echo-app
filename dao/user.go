@@ -3,13 +3,13 @@ package dao
 import (
 	"context"
 	"echo-app/database"
-	"echo-app/models"
+	"echo-app/model"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func UserRegister(doc models.UserBSON) (models.UserBSON, error) {
+func UserRegister(doc model.UserBSON) (model.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
@@ -20,11 +20,11 @@ func UserRegister(doc models.UserBSON) (models.UserBSON, error) {
 	return doc, err
 }
 
-func GetUserByUsername(username string) (models.UserBSON, error) {
+func GetUserByUsername(username string) (model.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
-		user    models.UserBSON
+		user    model.UserBSON
 	)
 
 	// filter
@@ -40,16 +40,16 @@ func GetUserByUsername(username string) (models.UserBSON, error) {
 	return user, nil
 }
 
-func GetUserById(ID primitive.ObjectID) (models.UserBSON, error) {
+func GetUserById(ID primitive.ObjectID) (model.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
-		user    models.UserBSON
+		user    model.UserBSON
 	)
 
 	err := userCol.FindOne(ctx, bson.M{"_id": ID}).Decode(&user)
 	if err != nil {
-		return models.UserBSON{}, err
+		return model.UserBSON{}, err
 	}
 	return user, nil
 
@@ -75,11 +75,11 @@ func UpdateUserPassword(ID primitive.ObjectID, newPassword string) error {
 	return nil
 }
 
-func GetInfoUser(ID primitive.ObjectID) (models.UserBSON, error) {
+func GetInfoUser(ID primitive.ObjectID) (model.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
-		user    models.UserBSON
+		user    model.UserBSON
 	)
 	filter := bson.M{"_id": ID}
 	err := userCol.FindOne(ctx, filter).Decode(&user)
@@ -90,7 +90,7 @@ func GetInfoUser(ID primitive.ObjectID) (models.UserBSON, error) {
 	return user, nil
 }
 
-func UpdateInfoUser(ID primitive.ObjectID, body models.UserInfoBSON) error {
+func UpdateInfoUser(ID primitive.ObjectID, body model.UserInfoBSON) error {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()

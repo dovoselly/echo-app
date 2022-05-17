@@ -1,10 +1,10 @@
-package services
+package service
 
 import (
 	"context"
 	"echo-app/dao"
 	"echo-app/database"
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/utils"
 	"errors"
 	"fmt"
@@ -12,11 +12,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
+func UserRegister(payload model.UserRegister) (model.UserBSON, error) {
 	var (
 		collection = database.UserCol()
 		ctx        = context.Background()
-		user       *models.UserResponse
+		user       *model.UserResponse
 	)
 
 	// check exist email and username
@@ -26,13 +26,13 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 
 	if user != nil {
 		if user.Email == payload.Email && user.Username == payload.Username {
-			return models.UserBSON{}, errors.New("email and username is already")
+			return model.UserBSON{}, errors.New("email and username is already")
 		}
 		if user.Email == payload.Email {
-			return models.UserBSON{}, errors.New("email is already")
+			return model.UserBSON{}, errors.New("email is already")
 		}
 		if user.Username == payload.Username {
-			return models.UserBSON{}, errors.New("username is already")
+			return model.UserBSON{}, errors.New("username is already")
 		}
 	}
 
@@ -53,7 +53,7 @@ func UserRegister(payload models.UserRegister) (models.UserBSON, error) {
 
 }
 
-func Login(user models.UserLogin) (string, error) {
+func Login(user model.UserLogin) (string, error) {
 
 	// FInd user by username
 	userBSON, err := dao.GetUserByUsername(user.Username)

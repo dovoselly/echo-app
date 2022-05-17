@@ -1,14 +1,14 @@
-package services
+package service
 
 import (
 	"echo-app/dao"
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/utils"
 	"errors"
 	"fmt"
 )
 
-func AdminLogin(loginBody models.AdminLoginBody) (string, error) {
+func AdminLogin(loginBody model.AdminLoginBody) (string, error) {
 	// find admin in db
 	admin, err := dao.AdminFindByUsername(loginBody.Username)
 
@@ -34,7 +34,7 @@ func AdminLogin(loginBody models.AdminLoginBody) (string, error) {
 	return token, err
 }
 
-func MyProfileAdmin(ID string) (models.Admin, error) {
+func MyProfileAdmin(ID string) (model.Admin, error) {
 	doc, err := dao.AdminProfileFindByID(ID)
 	if err != nil {
 		return doc, err
@@ -42,7 +42,7 @@ func MyProfileAdmin(ID string) (models.Admin, error) {
 	return doc, nil
 }
 
-func UpdateMyProfileAdmin(ID string, newProfile models.Admin) error {
+func UpdateMyProfileAdmin(ID string, newProfile model.Admin) error {
 	err := dao.UpdateMyProfileAdmin(ID, newProfile)
 	return err
 }

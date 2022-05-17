@@ -2,13 +2,13 @@ package dao
 
 import (
 	"echo-app/database"
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func CreateReply(insertData models.Reply) error {
+func CreateReply(insertData model.Reply) error {
 	_, err := database.ReplyCol().InsertOne(utils.Ctx, insertData)
 	return err
 }
