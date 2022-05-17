@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/service"
 	"echo-app/utils"
 
@@ -9,28 +9,36 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func ListProduct(c echo.Context) error {
+type Product struct{}
+
+func (p Product) ListProduct(c echo.Context) error {
 	//get query from middleware
+	var (
+		s = service.Product{}
+	)
 	queryInterface := c.Get("query")
-	query, ok := queryInterface.(models.ProductQuery)
+	query, ok := queryInterface.(model.ProductQuery)
 	if !ok {
 		return utils.Response404(c, nil, utils.InvalidData)
 	}
 
-	results, err := service.ListProduct(query)
+	results, err := s.ListProduct(query)
 	if err != nil {
 		return utils.Response200(c, results, err.Error())
 	}
 	return utils.Response200(c, results, "")
 }
 
-func ProductDetail(c echo.Context) error {
+func (p Product) ProductDetail(c echo.Context) error {
+	var (
+		s = service.Product{}
+	)
 	idString := c.Param("id")
 	id, err := primitive.ObjectIDFromHex(idString)
 	if err != nil {
 		return utils.Response404(c, nil, utils.InvalidData)
 	}
-	results, err := service.ProductDetail(id)
+	results, err := s.ProductDetail(id)
 	if err != nil {
 		return utils.Response200(c, results, err.Error())
 	}

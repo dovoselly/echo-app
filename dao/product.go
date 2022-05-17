@@ -9,19 +9,22 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func ListProduct(pipeline []bson.M) ([]model.ProductResponse, error) {
+type Product struct{}
+
+func (p Product) ListProduct(pipeline []bson.M) ([]model.ProductResponse, error) {
 	var listProduct []model.ProductResponse
 	cursor, err := database.ProductCol().Aggregate(utils.Ctx, pipeline)
 	if err != nil {
 		return listProduct, err
 	}
 
-	err = cursor.All(utils.CONTEXT, &listProduct)
+	err = cursor.All(utils.Ctx, &listProduct)
 	return listProduct, nil
 }
 
-func ProductDetail(id primitive.ObjectID) (*model.Product, error) {
-	var results *model.Product
+func (p Product) ProductDetail(id primitive.ObjectID) (*model.ProductResponse, error) {
+
+	var results *model.ProductResponse
 	err := database.ProductCol().FindOne(utils.Ctx, bson.M{"_id": id}).Decode(&results)
 
 	return results, err

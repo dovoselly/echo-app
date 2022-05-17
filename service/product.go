@@ -13,7 +13,12 @@ import (
 
 var limit int64 = 10
 
-func ListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
+type Product struct{}
+
+func (p Product) ListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
+	var (
+		d = dao.Product{}
+	)
 	//init filter
 	filter := bson.M{"status": "enable"}
 
@@ -32,11 +37,6 @@ func ListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
 			"$lte": priceFrom,
 		}
 	}
-
-	// options query
-	//optionsQuery := new(options.FindOptions)
-	//optionsQuery.SetSkip(query.Page * limit)
-	//optionsQuery.SetLimit(limit)
 
 	pipeline := []bson.M{
 		{"$match": filter},
@@ -74,12 +74,15 @@ func ListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
 		pipeline = append(pipeline, bson.M{"$sort": sortMap})
 	}
 
-	results, err := dao.ListProduct(pipeline)
+	results, err := d.ListProduct(pipeline)
 
 	return results, err
 }
 
-func ProductDetail(id primitive.ObjectID) (*model.Product, error) {
-	results, err := dao.ProductDetail(id)
+func (p Product) ProductDetail(id primitive.ObjectID) (*model.ProductResponse, error) {
+	var (
+		d = dao.Product{}
+	)
+	results, err := d.ProductDetail(id)
 	return results, err
 }
