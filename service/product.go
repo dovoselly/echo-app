@@ -13,10 +13,16 @@ import (
 
 var limit int64 = 10
 
-func ListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
-	//init filter
-	filter := bson.M{"status": "enable"}
+type Product struct{}
 
+func (p Product) GetListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
+	var (
+		d      = dao.Product{}
+		sort   = bson.M{}
+		filter = bson.M{"status": "enable"}
+	)
+
+	//init filter
 	if query.CategoryId != "" {
 		filter["categoryId"], _ = primitive.ObjectIDFromHex(query.CategoryId)
 	}
@@ -33,34 +39,9 @@ func ListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
 		}
 	}
 
-	// options query
-	//optionsQuery := new(options.FindOptions)
-	//optionsQuery.SetSkip(query.Page * limit)
-	//optionsQuery.SetLimit(limit)
-
-	pipeline := []bson.M{
-		{"$match": filter},
-		{"$lookup": bson.M{
-			"from":         "brands",
-			"localField":   "brandId",
-			"foreignField": "_id",
-			"as":           "brand",
-		}},
-		{"$lookup": bson.M{
-			"from":         "categories",
-			"localField":   "categoryId",
-			"foreignField": "_id",
-			"as":           "category",
-		}},
-		{"$skip": query.Page * limit},
-		{"$limit": limit},
-		{"$unwind": "$category"},
-		{"$unwind": "$brand"},
-	}
-
+	//init sort
 	if query.Sort != "" {
 		sortArr := strings.Split(query.Sort, ",")
-		sortMap := bson.M{}
 		for _, v := range sortArr {
 			var value int
 			if string([]rune(v)[1]) != "-" {
@@ -69,17 +50,20 @@ func ListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
 			} else {
 				value = 1
 			}
-			sortMap[v] = value
+			sort[v] = value
 		}
-		pipeline = append(pipeline, bson.M{"$sort": sortMap})
 	}
 
-	results, err := dao.ListProduct(pipeline)
+	results, err := d.GetListProduct(filter, query, sort)
 
 	return results, err
 }
 
-func ProductDetail(id primitive.ObjectID) (*model.Product, error) {
-	results, err := dao.ProductDetail(id)
+func (p Product) GetProductDetail(id string) (*model.ProductResponse, error) {
+	ojbId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	results, err := productDAO.GetProductDetail(ojbId)
 	return results, err
 }
