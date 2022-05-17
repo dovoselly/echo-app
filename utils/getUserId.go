@@ -12,7 +12,7 @@ func GetUserId(c echo.Context) (primitive.ObjectID, error) {
 		return primitive.NilObjectID, err
 	}
 
-	idString, ok := jwtPayload["id"].(string)
+	idString, ok := jwtPayload["_id"].(string)
 	if !ok {
 		return primitive.NilObjectID, err
 	}
