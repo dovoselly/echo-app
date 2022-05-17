@@ -2,7 +2,7 @@ package controller
 
 import (
 	"echo-app/models"
-	"echo-app/services"
+	"echo-app/service"
 	"echo-app/utils"
 
 	"github.com/labstack/echo/v4"
@@ -16,7 +16,7 @@ func Register(c echo.Context) error {
 	)
 
 	// Process data
-	rawData, err := services.UserRegister(body)
+	rawData, err := service.UserRegister(body)
 
 	if err != nil {
 
@@ -36,7 +36,7 @@ func Login(c echo.Context) error {
 	)
 
 	// process data
-	token, err := services.Login(user)
+	token, err := service.Login(user)
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}

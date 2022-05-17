@@ -2,7 +2,7 @@ package controller
 
 import (
 	"echo-app/models"
-	"echo-app/services"
+	"echo-app/service"
 	"echo-app/utils"
 	"net/http"
 
@@ -13,7 +13,7 @@ func CreateCategory(c echo.Context) error {
 	var body = c.Get("body").(models.CategoryCreateBody)
 
 	// process data
-	err := services.CreateCategory(body)
+	err := service.CreateCategory(body)
 
 	// if err
 	if err != nil {
@@ -24,7 +24,7 @@ func CreateCategory(c echo.Context) error {
 }
 
 func GetListCategory(c echo.Context) error {
-	categories, err := services.GetListCategory()
+	categories, err := service.GetListCategory()
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}
@@ -35,7 +35,7 @@ func GetCategoryByID(c echo.Context) error {
 	var strID = c.Get("id").(string)
 
 	// process
-	category, err := services.GetCategoryByID(strID)
+	category, err := service.GetCategoryByID(strID)
 
 	// if error
 	if err != nil {
@@ -52,7 +52,7 @@ func UpdateCategoryByID(c echo.Context) error {
 	)
 
 	// process data
-	err := services.UpdateCategoryByID(ID, body)
+	err := service.UpdateCategoryByID(ID, body)
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}
@@ -65,7 +65,7 @@ func DeleteCategoryByID(c echo.Context) error {
 	var id = c.Get("id").(string)
 
 	//process
-	err := services.DeleteCategoryByID(id)
+	err := service.DeleteCategoryByID(id)
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}

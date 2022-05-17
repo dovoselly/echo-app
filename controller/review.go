@@ -2,7 +2,7 @@ package controller
 
 import (
 	"echo-app/models"
-	"echo-app/services"
+	"echo-app/service"
 	"echo-app/utils"
 	"fmt"
 
@@ -24,7 +24,7 @@ func ListReview(c echo.Context) error {
 		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
-	results, err := services.ListReview(productId, query)
+	results, err := service.ListReview(productId, query)
 	if err != nil {
 		return utils.Response400(c, nil, utils.InvalidData)
 	}
@@ -49,7 +49,7 @@ func CreateReview(c echo.Context) error {
 		return utils.Response404(c, nil, utils.InvalidData)
 	}
 
-	err = services.CreateReview(userId, productId, payload)
+	err = service.CreateReview(userId, productId, payload)
 	if err != nil {
 		return utils.Response200(c, "", err.Error())
 	}

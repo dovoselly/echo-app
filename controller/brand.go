@@ -2,7 +2,7 @@ package controller
 
 import (
 	"echo-app/models"
-	"echo-app/services"
+	"echo-app/service"
 	"echo-app/utils"
 	"net/http"
 
@@ -13,7 +13,7 @@ func CreateBrand(c echo.Context) error {
 	var body = c.Get("body").(models.BrandCreateBody)
 
 	// process data
-	err := services.CreateBrand(body)
+	err := service.CreateBrand(body)
 
 	// if err
 	if err != nil {
@@ -24,7 +24,7 @@ func CreateBrand(c echo.Context) error {
 }
 
 func GetListBrand(c echo.Context) error {
-	brands, err := services.GetListBrand()
+	brands, err := service.GetListBrand()
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}
@@ -35,7 +35,7 @@ func GetBrandByID(c echo.Context) error {
 	var strID = c.Get("id").(string)
 
 	// process
-	brand, err := services.GetBrandByID(strID)
+	brand, err := service.GetBrandByID(strID)
 
 	// if error
 	if err != nil {
@@ -52,7 +52,7 @@ func UpdateBrand(c echo.Context) error {
 	)
 
 	// process data
-	err := services.UpdateBrandByID(ID, body)
+	err := service.UpdateBrandByID(ID, body)
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}
@@ -65,7 +65,7 @@ func DeleteBrandByID(c echo.Context) error {
 	var id = c.Get("id").(string)
 
 	//process
-	err := services.DeleteBrandByID(id)
+	err := service.DeleteBrandByID(id)
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}

@@ -3,11 +3,12 @@ package service
 import (
 	"echo-app/dao"
 	"echo-app/model"
-	"echo-app/utils"
+	"strconv"
+	"time"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"strconv"
 )
 
 func ListReview(productId primitive.ObjectID, query model.ReviewQuery) ([]model.Review, error) {
@@ -46,8 +47,8 @@ func CreateReview(userId primitive.ObjectID, productId primitive.ObjectID, body 
 		ProductId: productId,
 		Rating:    body.Rating,
 		Content:   body.Content,
-		CreatedAt: utils.CurrentDateTime(),
-		UpdatedAt: utils.CurrentDateTime(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 	err := dao.CreateReview(insertData)
 	return err

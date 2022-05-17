@@ -4,6 +4,7 @@ import (
 	"echo-app/database"
 	"echo-app/model"
 	"echo-app/utils"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -15,7 +16,7 @@ func ListReview(filter bson.M, options *options.FindOptions) ([]model.Review, er
 		return listReview, err
 	}
 
-	err = cursor.All(utils.Ctx, &listReview)
+	err = cursor.All(ctx, &listReview)
 	return listReview, err
 }
 
@@ -24,5 +25,6 @@ func CreateReview(insertData model.Review) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

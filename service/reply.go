@@ -4,6 +4,8 @@ import (
 	"echo-app/dao"
 	"echo-app/model"
 	"echo-app/utils"
+	"time"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -15,8 +17,8 @@ func CreateReply(userId primitive.ObjectID, reviewId primitive.ObjectID, body mo
 		UserId:    userId,
 		Content:   body.Content,
 		ReviewId:  reviewId,
-		CreatedAt: utils.CurrentDateTime(),
-		UpdatedAt: utils.CurrentDateTime(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 	err := dao.CreateReply(insertData)
 	return err

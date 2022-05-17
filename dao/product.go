@@ -4,6 +4,7 @@ import (
 	"echo-app/database"
 	"echo-app/model"
 	"echo-app/utils"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -15,7 +16,7 @@ func ListProduct(pipeline []bson.M) ([]model.ProductResponse, error) {
 		return listProduct, err
 	}
 
-	err = cursor.All(utils.Ctx, &listProduct)
+	err = cursor.All(utils.CONTEXT, &listProduct)
 	return listProduct, nil
 }
 

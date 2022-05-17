@@ -1,5 +1,7 @@
 package utils
 
+import "context"
+
 var (
 	CreateSuccessFully            = "Create successfully"
 	YouCannotEditThis             = "You cannot edit this"
@@ -11,4 +13,6 @@ var (
 	EmailOrUsernameIsAlreadyExist = "Email or username already exists"
 	LoginSuccessFully             = "Login successfully"
 	InvalidToken                  = "Invalid token"
+
+	Ctx = context.Background()
 )
