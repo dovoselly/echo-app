@@ -1,4 +1,4 @@
-package controllers
+package controller
 
 import (
 	"echo-app/models"
@@ -8,7 +8,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func ChangeUserPassword(c echo.Context) error {
+type User struct{}
+
+func (u User) ChangePassword(c echo.Context) error {
 	var (
 		body = c.Get("body").(models.UserChangePassword)
 	)
@@ -27,7 +29,7 @@ func ChangeUserPassword(c echo.Context) error {
 	return utils.Response200(c, id, "")
 }
 
-func GetUserInfo(c echo.Context) error {
+func (u User) GetInfo(c echo.Context) error {
 
 	// Get Id in token
 	ID, _err := utils.GetUserId(c)
@@ -46,7 +48,7 @@ func GetUserInfo(c echo.Context) error {
 	return utils.Response200(c, info, "")
 }
 
-func UpdateUserInfo(c echo.Context) error {
+func (u User) UpdateInfo(c echo.Context) error {
 	var (
 		body = c.Get("body").(models.UserUpdate)
 	)

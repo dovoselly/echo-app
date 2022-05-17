@@ -1,14 +1,15 @@
-package validations
+package validation
 
 import (
 	"echo-app/models"
 	"echo-app/utils"
+
 	"github.com/labstack/echo/v4"
 )
 
-func CategoryCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
+func BrandCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var body models.CategoryCreateBody
+		var body models.BrandCreateBody
 
 		// bind request data
 		if err := c.Bind(&body); err != nil {
@@ -28,9 +29,9 @@ func CategoryCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func CategoryUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
+func BrandUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var body models.CategoryUpdateBody
+		var body models.BrandUpdateBody
 
 		// bind request data
 		if err := c.Bind(&body); err != nil {

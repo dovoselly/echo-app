@@ -1,14 +1,16 @@
-package validations
+package validation
 
 import (
 	"echo-app/models"
 	"echo-app/utils"
+
 	"github.com/labstack/echo/v4"
 )
 
-func BrandCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
+// AdminLoginBody ...
+func AdminLoginBody(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var body models.BrandCreateBody
+		var body models.AdminLoginBody
 
 		// bind request data
 		if err := c.Bind(&body); err != nil {
@@ -22,29 +24,25 @@ func BrandCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.Response400(c, nil, err.Error())
 		}
 
-		c.Set("body", body)
+		c.Set("adminLoginBody", body)
 
 		return next(c)
 	}
 }
 
-func BrandUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
+func ValidateAdminUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var body models.BrandUpdateBody
+		var admin models.Admin
 
-		// bind request data
-		if err := c.Bind(&body); err != nil {
-			if err != nil {
-				return utils.Response400(c, nil, err.Error())
-			}
-		}
+		// bind request body
+		err := c.Bind(&admin)
 
-		// validate
-		if err := body.Validate(); err != nil {
+		if err != nil {
 			return utils.Response400(c, nil, err.Error())
 		}
 
-		c.Set("body", body)
+		// success
+		c.Set("adminRequestBody", admin)
 
 		return next(c)
 	}

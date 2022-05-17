@@ -1,4 +1,4 @@
-package validations
+package validation
 
 import (
 	"echo-app/models"
@@ -7,18 +7,18 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func UserRegister(next echo.HandlerFunc) echo.HandlerFunc {
+type User struct{}
+
+func (u User) Register(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var (
 			body models.UserRegister
 		)
-
 		// Validate
 		c.Bind(&body)
-		err := body.Validate()
 
 		//if err
-		if err != nil {
+		if err := body.Validate(); err != nil {
 			return utils.Response400(c, nil, err.Error())
 		}
 
@@ -28,17 +28,14 @@ func UserRegister(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func UserLogin(next echo.HandlerFunc) echo.HandlerFunc {
+func (u User) Login(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var (
-			body models.UserLogin
-		)
+		var body models.UserLogin
 
 		// Validate
 		c.Bind(&body)
-		err := body.Validate()
 
-		if err != nil {
+		if err := body.Validate(); err != nil {
 			return utils.Response400(c, nil, err.Error())
 		}
 		// Success
@@ -47,20 +44,15 @@ func UserLogin(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func ChangeUserPassword(next echo.HandlerFunc) echo.HandlerFunc {
+func (u User) ChangePassword(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// code
-		var (
-			body models.UserChangePassword
-		)
+		var body models.UserChangePassword
 
 		//validate
 		c.Bind(&body)
 
-		err := body.Validate()
-
 		// if err
-		if err != nil {
+		if err := body.Validate(); err != nil {
 			return utils.Response400(c, nil, err.Error())
 		}
 
@@ -70,11 +62,9 @@ func ChangeUserPassword(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func UpdateUerInfo(next echo.HandlerFunc) echo.HandlerFunc {
+func (u User) UpdateInfo(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var (
-			body models.UserUpdate
-		)
+		var body models.UserUpdate
 
 		// validate
 		c.Bind(&body)

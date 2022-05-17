@@ -1,8 +1,9 @@
-package validations
+package validation
 
 import (
 	"echo-app/models"
 	"echo-app/utils"
+
 	"github.com/labstack/echo/v4"
 )
 

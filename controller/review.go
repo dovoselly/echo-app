@@ -1,10 +1,11 @@
-package controllers
+package controller
 
 import (
 	"echo-app/models"
 	"echo-app/services"
 	"echo-app/utils"
 	"fmt"
+
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

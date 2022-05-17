@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"echo-app/utils"
+
 	"github.com/labstack/echo/v4"
 )
 

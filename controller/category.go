@@ -1,11 +1,12 @@
-package controllers
+package controller
 
 import (
 	"echo-app/models"
 	"echo-app/services"
 	"echo-app/utils"
-	"github.com/labstack/echo/v4"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
 func CreateCategory(c echo.Context) error {

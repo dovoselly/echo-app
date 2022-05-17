@@ -1,9 +1,10 @@
-package routes
+package route
 
 import (
 	"echo-app/config"
-	"echo-app/controllers"
-	"echo-app/validations"
+	"echo-app/controller"
+	"echo-app/validation"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -11,12 +12,12 @@ import (
 func reply(e *echo.Echo) {
 	reviewRoutes := e.Group("/reviews", middleware.JWT([]byte(config.GetEnv().Jwt.SecretKey)))
 	{
-		reviewRoutes.POST("/:id", controllers.CreateReply, validations.CreateReply)
+		reviewRoutes.POST("/:id", controller.CreateReply, validation.CreateReply)
 	}
 
 	replyRoutes := e.Group("/replies", middleware.JWT([]byte(config.GetEnv().Jwt.SecretKey)))
 	{
-		replyRoutes.PUT("/:id", controllers.UpdateReply, validations.CreateReply)
-		replyRoutes.DELETE("/:id", controllers.DeleteReply)
+		replyRoutes.PUT("/:id", controller.UpdateReply, validation.CreateReply)
+		replyRoutes.DELETE("/:id", controller.DeleteReply)
 	}
 }
