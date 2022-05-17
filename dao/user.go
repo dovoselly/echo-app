@@ -3,7 +3,7 @@ package dao
 import (
 	"context"
 	"echo-app/database"
-	"echo-app/models"
+	"echo-app/model"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -26,7 +26,7 @@ func (u User) GetByUsername(username string) (models.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
-		user    models.UserBSON
+		user    model.UserBSON
 	)
 
 	// filter
@@ -46,12 +46,12 @@ func (u User) GetById(ID primitive.ObjectID) (models.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
-		user    models.UserBSON
+		user    model.UserBSON
 	)
 
 	err := userCol.FindOne(ctx, bson.M{"_id": ID}).Decode(&user)
 	if err != nil {
-		return models.UserBSON{}, err
+		return model.UserBSON{}, err
 	}
 	return user, nil
 
@@ -81,7 +81,7 @@ func (u User) GetInfo(ID primitive.ObjectID) (models.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
-		user    models.UserBSON
+		user    model.UserBSON
 	)
 	filter := bson.M{"_id": ID}
 	err := userCol.FindOne(ctx, filter).Decode(&user)

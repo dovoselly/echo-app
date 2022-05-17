@@ -1,4 +1,4 @@
-package models
+package model
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation"

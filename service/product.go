@@ -2,7 +2,7 @@ package service
 
 import (
 	"echo-app/dao"
-	"echo-app/models"
+	"echo-app/model"
 	"fmt"
 	"strconv"
 	"strings"
@@ -13,7 +13,7 @@ import (
 
 var limit int64 = 10
 
-func ListProduct(query models.ProductQuery) ([]models.ProductResponse, error) {
+func ListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
 	//init filter
 	filter := bson.M{"status": "enable"}
 
@@ -79,7 +79,7 @@ func ListProduct(query models.ProductQuery) ([]models.ProductResponse, error) {
 	return results, err
 }
 
-func ProductDetail(id primitive.ObjectID) (*models.Product, error) {
+func ProductDetail(id primitive.ObjectID) (*model.Product, error) {
 	results, err := dao.ProductDetail(id)
 	return results, err
 }

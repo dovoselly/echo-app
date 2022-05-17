@@ -3,12 +3,12 @@ package dao
 import (
 	"context"
 	"echo-app/database"
-	"echo-app/models"
+	"echo-app/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateBrand(brand models.BrandBSON) error {
+func CreateBrand(brand model.BrandBSON) error {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()
@@ -20,11 +20,11 @@ func CreateBrand(brand models.BrandBSON) error {
 	return err
 }
 
-func GetListBrand() ([]models.BrandBSON, error) {
+func GetListBrand() ([]model.BrandBSON, error) {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()
-		brands   []models.BrandBSON
+		brands   []model.BrandBSON
 	)
 
 	cursor, err := brandCol.Find(ctx, bson.D{})
@@ -39,11 +39,11 @@ func GetListBrand() ([]models.BrandBSON, error) {
 	return brands, nil
 }
 
-func GetBrandByID(ID primitive.ObjectID) (models.BrandBSON, error) {
+func GetBrandByID(ID primitive.ObjectID) (model.BrandBSON, error) {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()
-		brand    models.BrandBSON
+		brand    model.BrandBSON
 	)
 
 	// find brand
@@ -55,7 +55,7 @@ func GetBrandByID(ID primitive.ObjectID) (models.BrandBSON, error) {
 	return brand, nil
 }
 
-func UpdateBrandByID(ID primitive.ObjectID, body models.BrandUpdateBody) error {
+func UpdateBrandByID(ID primitive.ObjectID, body model.BrandUpdateBody) error {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()

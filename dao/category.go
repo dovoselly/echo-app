@@ -3,12 +3,12 @@ package dao
 import (
 	"context"
 	"echo-app/database"
-	"echo-app/models"
+	"echo-app/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateCategory(category models.CategoryBSON) error {
+func CreateCategory(category model.CategoryBSON) error {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
@@ -20,11 +20,11 @@ func CreateCategory(category models.CategoryBSON) error {
 	return err
 }
 
-func GetListCategory() ([]models.CategoryBSON, error) {
+func GetListCategory() ([]model.CategoryBSON, error) {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
-		categories  []models.CategoryBSON
+		categories  []model.CategoryBSON
 	)
 
 	cursor, err := categoryCol.Find(ctx, bson.D{})
@@ -39,11 +39,11 @@ func GetListCategory() ([]models.CategoryBSON, error) {
 	return categories, nil
 }
 
-func GetCategoryByID(ID primitive.ObjectID) (models.CategoryBSON, error) {
+func GetCategoryByID(ID primitive.ObjectID) (model.CategoryBSON, error) {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
-		category    models.CategoryBSON
+		category    model.CategoryBSON
 	)
 
 	// find category
@@ -55,7 +55,7 @@ func GetCategoryByID(ID primitive.ObjectID) (models.CategoryBSON, error) {
 	return category, nil
 }
 
-func UpdateCategoryByID(ID primitive.ObjectID, body models.CategoryUpdateBody) error {
+func UpdateCategoryByID(ID primitive.ObjectID, body model.CategoryUpdateBody) error {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()

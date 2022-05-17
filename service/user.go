@@ -1,6 +1,7 @@
 package service
 
 import (
+	"echo-app/model"
 	"echo-app/models"
 	"echo-app/utils"
 
@@ -32,7 +33,7 @@ func (u User) ChangePassword(ID primitive.ObjectID, body models.UserChangePasswo
 
 func (u User) GetInfo(ID primitive.ObjectID) (models.UserInfo, error) {
 	var (
-		info models.UserInfo
+		info model.UserInfo
 	)
 
 	// get user
@@ -42,7 +43,7 @@ func (u User) GetInfo(ID primitive.ObjectID) (models.UserInfo, error) {
 	}
 
 	// convert to userInfo
-	info = models.UserInfo{
+	info = model.UserInfo{
 		ID:          user.ID,
 		FullName:    user.FullName,
 		Email:       user.Email,
@@ -59,7 +60,7 @@ func (u User) GetInfo(ID primitive.ObjectID) (models.UserInfo, error) {
 
 func (u User) UpdateInfo(ID primitive.ObjectID, body models.UserUpdate) error {
 
-	bodyBSON := models.UserInfoBSON{
+	bodyBSON := model.UserInfoBSON{
 		FullName:    body.FullName,
 		Email:       body.Email,
 		Phone:       body.Phone,

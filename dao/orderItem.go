@@ -3,14 +3,14 @@ package dao
 import (
 	"context"
 	"echo-app/database"
-	"echo-app/models"
+	"echo-app/model"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func GetAllOrderItemsByUserId() ([]models.OrderItemBSON, error) {
+func GetAllOrderItemsByUserId() ([]model.OrderItemBSON, error) {
 	var (
-		orderItems   []models.OrderItemBSON
+		orderItems   []model.OrderItemBSON
 		orderItemCol = database.OrderItemCol()
 
 		ctx = context.Background()
@@ -28,7 +28,7 @@ func GetAllOrderItemsByUserId() ([]models.OrderItemBSON, error) {
 	return orderItems, nil
 }
 
-func CreateOrderItems(body []models.OrderItemBSON) error {
+func CreateOrderItems(body []model.OrderItemBSON) error {
 	var (
 		orderItemCol = database.OrderItemCol()
 		ctx          = context.Background()

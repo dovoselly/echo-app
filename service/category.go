@@ -2,17 +2,17 @@ package service
 
 import (
 	"echo-app/dao"
-	"echo-app/models"
+	"echo-app/model"
 	"errors"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateCategory(body models.CategoryCreateBody) error {
+func CreateCategory(body model.CategoryCreateBody) error {
 	// category BSON
 	body.Status = "ENABLE"
-	category := models.CategoryBSON{
+	category := model.CategoryBSON{
 		ID:          primitive.NewObjectID(),
 		Name:        body.Name,
 		Description: body.Description,
@@ -28,9 +28,9 @@ func CreateCategory(body models.CategoryCreateBody) error {
 	return nil
 }
 
-func GetListCategory() ([]models.CategoryResponse, error) {
+func GetListCategory() ([]model.CategoryResponse, error) {
 
-	listCategory := make([]models.CategoryResponse, 0)
+	listCategory := make([]model.CategoryResponse, 0)
 
 	// get list category bson
 	categoriesBSON, err := dao.GetListCategory()
@@ -39,7 +39,7 @@ func GetListCategory() ([]models.CategoryResponse, error) {
 	}
 
 	for _, categoryBSON := range categoriesBSON {
-		categoryJSON := models.CategoryResponse{
+		categoryJSON := model.CategoryResponse{
 			ID:          categoryBSON.ID,
 			Name:        categoryBSON.Name,
 			Description: categoryBSON.Description,
@@ -52,9 +52,9 @@ func GetListCategory() ([]models.CategoryResponse, error) {
 
 }
 
-func GetCategoryByID(ID string) (models.CategoryResponse, error) {
+func GetCategoryByID(ID string) (model.CategoryResponse, error) {
 	var (
-		category models.CategoryResponse
+		category model.CategoryResponse
 	)
 
 	// to objectID
@@ -63,7 +63,7 @@ func GetCategoryByID(ID string) (models.CategoryResponse, error) {
 	// get category by id
 	categoryBSON, err := dao.GetCategoryByID(objID)
 
-	category = models.CategoryResponse{
+	category = model.CategoryResponse{
 		ID:          categoryBSON.ID,
 		Name:        categoryBSON.Name,
 		Description: categoryBSON.Description,
@@ -79,7 +79,7 @@ func GetCategoryByID(ID string) (models.CategoryResponse, error) {
 	return category, nil
 }
 
-func UpdateCategoryByID(ID string, body models.CategoryUpdateBody) error {
+func UpdateCategoryByID(ID string, body model.CategoryUpdateBody) error {
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
 	err := dao.UpdateCategoryByID(objID, body)
