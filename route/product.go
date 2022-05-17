@@ -1,18 +1,12 @@
 package route
 
 import (
-	"echo-app/controller"
-	"echo-app/validation"
 	"github.com/labstack/echo/v4"
 )
 
 func product(e *echo.Echo) {
-	var (
-		p = e.Group("/products")
-		c = controller.Product{}
-		v = validation.Product{}
-	)
+	var p = e.Group("/products")
 
-	p.GET("", c.GetListProduct, v.GetListProduct)
-	p.GET("/:id", c.GetProductDetail)
+	p.GET("", productCtrl.GetListProduct, productVal.GetListProduct)
+	p.GET("/:id", productCtrl.GetProductDetail)
 }

@@ -7,8 +7,10 @@ import (
 
 var (
 	// controller
-	userCtrl = controller.User{}
+	userCtrl    = controller.User{}
+	productCtrl = controller.Product{}
 
 	//validate
-	userVal = validation.User{}
+	userVal    = validation.User{}
+	productVal = validation.Product{}
 )
