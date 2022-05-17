@@ -27,7 +27,7 @@ type (
 	CategoryCreateBody struct {
 		Name        string `json:"name"`
 		Description string `json:"description"`
-		//Status      string `json:"status" default:"Enabled"`
+		Status      string `json:"status"`
 	}
 
 	CategoryUpdateBody struct {
