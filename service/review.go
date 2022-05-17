@@ -1,8 +1,8 @@
-package services
+package service
 
 import (
 	"echo-app/dao"
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func ListReview(productId primitive.ObjectID, query models.ReviewQuery) ([]models.Review, error) {
+func ListReview(productId primitive.ObjectID, query model.ReviewQuery) ([]model.Review, error) {
 	filter := bson.M{"productId": productId}
 
 	if query.Rating != "" {
@@ -38,9 +38,9 @@ func ListReview(productId primitive.ObjectID, query models.ReviewQuery) ([]model
 	return results, err
 }
 
-func CreateReview(userId primitive.ObjectID, productId primitive.ObjectID, body models.CreateReview) error {
+func CreateReview(userId primitive.ObjectID, productId primitive.ObjectID, body model.CreateReview) error {
 	//init insert data
-	insertData := models.Review{
+	insertData := model.Review{
 		ID:        primitive.NewObjectID(),
 		UserId:    userId,
 		ProductId: productId,

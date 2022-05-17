@@ -1,15 +1,15 @@
-package services
+package service
 
 import (
 	"echo-app/dao"
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/utils"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func ChangeUserPassword(ID primitive.ObjectID, body models.UserChangePassword) error {
+func ChangeUserPassword(ID primitive.ObjectID, body model.UserChangePassword) error {
 	// check currentPassword
 	userBSON, _ := dao.GetUserById(ID)
 	if utils.CheckPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
@@ -29,9 +29,9 @@ func ChangeUserPassword(ID primitive.ObjectID, body models.UserChangePassword) e
 	return nil
 }
 
-func GetUserInfo(ID primitive.ObjectID) (models.UserInfo, error) {
+func GetUserInfo(ID primitive.ObjectID) (model.UserInfo, error) {
 	var (
-		info models.UserInfo
+		info model.UserInfo
 	)
 
 	// get user
@@ -41,7 +41,7 @@ func GetUserInfo(ID primitive.ObjectID) (models.UserInfo, error) {
 	}
 
 	// convert to userInfo
-	info = models.UserInfo{
+	info = model.UserInfo{
 		ID:          user.ID,
 		FullName:    user.FullName,
 		Email:       user.Email,
@@ -56,9 +56,9 @@ func GetUserInfo(ID primitive.ObjectID) (models.UserInfo, error) {
 	return info, nil
 }
 
-func UpdateUserInfo(ID primitive.ObjectID, body models.UserUpdate) error {
+func UpdateUserInfo(ID primitive.ObjectID, body model.UserUpdate) error {
 
-	bodyBSON := models.UserInfoBSON{
+	bodyBSON := model.UserInfoBSON{
 		FullName:    body.FullName,
 		Email:       body.Email,
 		Phone:       body.Phone,

@@ -1,16 +1,16 @@
-package services
+package service
 
 import (
 	"echo-app/dao"
-	"echo-app/models"
+	"echo-app/model"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GetAllOrderByUserId(ID primitive.ObjectID) ([]models.OrderResponse, error) {
+func GetAllOrderByUserId(ID primitive.ObjectID) ([]model.OrderResponse, error) {
 
-	orders := make([]models.OrderResponse, 0)
+	orders := make([]model.OrderResponse, 0)
 
 	// get orders in db
 	ordersBSON, err := dao.GetAllOrdersByUserId(ID)
@@ -21,10 +21,10 @@ func GetAllOrderByUserId(ID primitive.ObjectID) ([]models.OrderResponse, error) 
 	// Convert to OrderJSON
 	for _, orderBSON := range ordersBSON {
 
-		orderItems := make([]models.OrderItemResponse, 0)
+		orderItems := make([]model.OrderItemResponse, 0)
 
 		for _, v := range orderBSON.Items {
-			orderItem := models.OrderItemResponse{
+			orderItem := model.OrderItemResponse{
 				ID:        v.ID,
 				ProductId: v.ProductId,
 				Price:     v.Price,
@@ -34,7 +34,7 @@ func GetAllOrderByUserId(ID primitive.ObjectID) ([]models.OrderResponse, error) 
 			orderItems = append(orderItems, orderItem)
 		}
 
-		orderJSON := models.OrderResponse{
+		orderJSON := model.OrderResponse{
 			ID:         orderBSON.ID,
 			UserId:     orderBSON.UserId,
 			DeliveryId: orderBSON.DeliveryId,
@@ -52,10 +52,10 @@ func GetAllOrderByUserId(ID primitive.ObjectID) ([]models.OrderResponse, error) 
 	return orders, nil
 }
 
-func CreateOrder(ID primitive.ObjectID, body models.OrderCreate) error {
+func CreateOrder(ID primitive.ObjectID, body model.OrderCreate) error {
 
 	// get list item insert to order-items db
-	listItemJson := make([]models.OrderItemBSON, 0)
+	listItemJson := make([]model.OrderItemBSON, 0)
 	for _, v := range body.Items {
 		listItemJson = append(listItemJson, v.ConvertToOrderItemBSON())
 	}
@@ -71,7 +71,7 @@ func CreateOrder(ID primitive.ObjectID, body models.OrderCreate) error {
 	}
 
 	body.Status = "PENDING"
-	orderBSON := models.OrderCreateBSON{
+	orderBSON := model.OrderCreateBSON{
 		ID:         primitive.NewObjectID(),
 		UserId:     ID,
 		DeliveryId: body.DeliveryId,

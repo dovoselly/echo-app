@@ -1,17 +1,17 @@
-package services
+package service
 
 import (
 	"echo-app/dao"
-	"echo-app/models"
+	"echo-app/model"
 	"errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
-func CreateBrand(brandBody models.BrandCreateBody) error {
+func CreateBrand(brandBody model.BrandCreateBody) error {
 	// category BSON
 
-	brand := models.BrandBSON{
+	brand := model.BrandBSON{
 		ID:          primitive.NewObjectID(),
 		Name:        brandBody.Name,
 		Description: brandBody.Description,
@@ -27,9 +27,9 @@ func CreateBrand(brandBody models.BrandCreateBody) error {
 	return nil
 }
 
-func GetListBrand() ([]models.BrandResponse, error) {
+func GetListBrand() ([]model.BrandResponse, error) {
 
-	listBrand := make([]models.BrandResponse, 0)
+	listBrand := make([]model.BrandResponse, 0)
 
 	// get list brand bson
 	brandsBSON, err := dao.GetListBrand()
@@ -38,7 +38,7 @@ func GetListBrand() ([]models.BrandResponse, error) {
 	}
 
 	for _, brandBSON := range brandsBSON {
-		brandJSON := models.BrandResponse{
+		brandJSON := model.BrandResponse{
 			ID:          brandBSON.ID,
 			Name:        brandBSON.Name,
 			Description: brandBSON.Description,
@@ -51,9 +51,9 @@ func GetListBrand() ([]models.BrandResponse, error) {
 
 }
 
-func GetBrandByID(ID string) (models.BrandResponse, error) {
+func GetBrandByID(ID string) (model.BrandResponse, error) {
 	var (
-		brand models.BrandResponse
+		brand model.BrandResponse
 	)
 
 	// to objectID
@@ -62,7 +62,7 @@ func GetBrandByID(ID string) (models.BrandResponse, error) {
 	// get brand by id
 	brandBSON, err := dao.GetBrandByID(objID)
 
-	brand = models.BrandResponse{
+	brand = model.BrandResponse{
 		ID:          brandBSON.ID,
 		Name:        brandBSON.Name,
 		Description: brandBSON.Description,
@@ -78,7 +78,7 @@ func GetBrandByID(ID string) (models.BrandResponse, error) {
 	return brand, nil
 }
 
-func UpdateBrandByID(ID string, body models.BrandUpdateBody) error {
+func UpdateBrandByID(ID string, body model.BrandUpdateBody) error {
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
 	err := dao.UpdateBrandByID(objID, body)
