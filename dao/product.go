@@ -9,10 +9,34 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+var limit int64 = 10
+
 type Product struct{}
 
-func (p Product) ListProduct(pipeline []bson.M) ([]model.ProductResponse, error) {
-	var listProduct []model.ProductResponse
+func (p Product) ListProduct(filter bson.M, query model.ProductQuery, sort bson.M) ([]model.ProductResponse, error) {
+	var (
+		listProduct []model.ProductResponse
+		pipeline    = []bson.M{
+			{"$match": filter},
+			{"$lookup": bson.M{
+				"from":         "brands",
+				"localField":   "brandId",
+				"foreignField": "_id",
+				"as":           "brand",
+			}},
+			{"$unwind": "$brand"},
+			{"$lookup": bson.M{
+				"from":         "categories",
+				"localField":   "categoryId",
+				"foreignField": "_id",
+				"as":           "category",
+			}},
+			{"$unwind": "$category"},
+			{"$skip": query.Page * limit},
+			{"$limit": limit},
+			{"sort": sort},
+		}
+	)
 	cursor, err := database.ProductCol().Aggregate(utils.Ctx, pipeline)
 	if err != nil {
 		return listProduct, err
@@ -23,9 +47,12 @@ func (p Product) ListProduct(pipeline []bson.M) ([]model.ProductResponse, error)
 }
 
 func (p Product) ProductDetail(id primitive.ObjectID) (*model.ProductResponse, error) {
+	var (
+		results *model.ProductResponse
+		filter  = bson.M{"_id": id}
+	)
 
-	var results *model.ProductResponse
-	err := database.ProductCol().FindOne(utils.Ctx, bson.M{"_id": id}).Decode(&results)
+	err := database.ProductCol().FindOne(utils.Ctx, filter).Decode(&results)
 
 	return results, err
 }

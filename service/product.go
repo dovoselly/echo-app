@@ -17,11 +17,12 @@ type Product struct{}
 
 func (p Product) ListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
 	var (
-		d = dao.Product{}
+		d      = dao.Product{}
+		sort   = bson.M{}
+		filter = bson.M{"status": "enable"}
 	)
-	//init filter
-	filter := bson.M{"status": "enable"}
 
+	//init filter
 	if query.CategoryId != "" {
 		filter["categoryId"], _ = primitive.ObjectIDFromHex(query.CategoryId)
 	}
@@ -38,29 +39,9 @@ func (p Product) ListProduct(query model.ProductQuery) ([]model.ProductResponse,
 		}
 	}
 
-	pipeline := []bson.M{
-		{"$match": filter},
-		{"$lookup": bson.M{
-			"from":         "brands",
-			"localField":   "brandId",
-			"foreignField": "_id",
-			"as":           "brand",
-		}},
-		{"$lookup": bson.M{
-			"from":         "categories",
-			"localField":   "categoryId",
-			"foreignField": "_id",
-			"as":           "category",
-		}},
-		{"$skip": query.Page * limit},
-		{"$limit": limit},
-		{"$unwind": "$category"},
-		{"$unwind": "$brand"},
-	}
-
+	//init sort
 	if query.Sort != "" {
 		sortArr := strings.Split(query.Sort, ",")
-		sortMap := bson.M{}
 		for _, v := range sortArr {
 			var value int
 			if string([]rune(v)[1]) != "-" {
@@ -69,20 +50,20 @@ func (p Product) ListProduct(query model.ProductQuery) ([]model.ProductResponse,
 			} else {
 				value = 1
 			}
-			sortMap[v] = value
+			sort[v] = value
 		}
-		pipeline = append(pipeline, bson.M{"$sort": sortMap})
 	}
 
-	results, err := d.ListProduct(pipeline)
+	results, err := d.ListProduct(filter, query, sort)
 
 	return results, err
 }
 
-func (p Product) ProductDetail(id primitive.ObjectID) (*model.ProductResponse, error) {
-	var (
-		d = dao.Product{}
-	)
-	results, err := d.ProductDetail(id)
+func (p Product) ProductDetail(id string) (*model.ProductResponse, error) {
+	ojbId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	results, err := productDAO.ProductDetail(ojbId)
 	return results, err
 }
