@@ -13,7 +13,7 @@ var limit int64 = 10
 
 type Product struct{}
 
-func (p Product) ListProduct(filter bson.M, query model.ProductQuery, sort bson.M) ([]model.ProductResponse, error) {
+func (p Product) GetListProduct(filter bson.M, query model.ProductQuery, sort bson.M) ([]model.ProductResponse, error) {
 	var (
 		listProduct []model.ProductResponse
 		pipeline    = []bson.M{
@@ -46,7 +46,7 @@ func (p Product) ListProduct(filter bson.M, query model.ProductQuery, sort bson.
 	return listProduct, nil
 }
 
-func (p Product) ProductDetail(id primitive.ObjectID) (*model.ProductResponse, error) {
+func (p Product) GetProductDetail(id primitive.ObjectID) (*model.ProductResponse, error) {
 	var (
 		results *model.ProductResponse
 		filter  = bson.M{"_id": id}

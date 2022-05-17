@@ -10,11 +10,11 @@ import (
 
 type Product struct{}
 
-func (p Product) ListProduct(c echo.Context) error {
+func (p Product) GetListProduct(c echo.Context) error {
 	//get query from middleware
 	query := c.Get("query").(model.ProductQuery)
 
-	results, err := productService.ListProduct(query)
+	results, err := productService.GetListProduct(query)
 	if err != nil {
 		fmt.Println(err.Error())
 		return utils.Response400(c, results, utils.InvalidData)
@@ -22,10 +22,10 @@ func (p Product) ListProduct(c echo.Context) error {
 	return utils.Response200(c, results, "")
 }
 
-func (p Product) ProductDetail(c echo.Context) error {
+func (p Product) GetProductDetail(c echo.Context) error {
 	id := c.Param("id")
 
-	results, err := productService.ProductDetail(id)
+	results, err := productService.GetProductDetail(id)
 	if err != nil {
 		return utils.Response400(c, results, utils.InvalidData)
 	}

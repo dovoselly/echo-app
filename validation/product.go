@@ -9,7 +9,7 @@ import (
 
 type Product struct{}
 
-func (p Product) ListProduct(next echo.HandlerFunc) echo.HandlerFunc {
+func (p Product) GetListProduct(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var query model.ProductQuery
 		if err := c.Bind(&query); err != nil {

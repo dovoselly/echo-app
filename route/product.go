@@ -13,6 +13,6 @@ func product(e *echo.Echo) {
 		v = validation.Product{}
 	)
 
-	p.GET("", c.ListProduct, v.ListProduct)
-	p.GET("/:id", c.ProductDetail)
+	p.GET("", c.GetListProduct, v.GetListProduct)
+	p.GET("/:id", c.GetProductDetail)
 }

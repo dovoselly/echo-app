@@ -15,7 +15,7 @@ var limit int64 = 10
 
 type Product struct{}
 
-func (p Product) ListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
+func (p Product) GetListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
 	var (
 		d      = dao.Product{}
 		sort   = bson.M{}
@@ -54,16 +54,16 @@ func (p Product) ListProduct(query model.ProductQuery) ([]model.ProductResponse,
 		}
 	}
 
-	results, err := d.ListProduct(filter, query, sort)
+	results, err := d.GetListProduct(filter, query, sort)
 
 	return results, err
 }
 
-func (p Product) ProductDetail(id string) (*model.ProductResponse, error) {
+func (p Product) GetProductDetail(id string) (*model.ProductResponse, error) {
 	ojbId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
 	}
-	results, err := productDAO.ProductDetail(ojbId)
+	results, err := productDAO.GetProductDetail(ojbId)
 	return results, err
 }
