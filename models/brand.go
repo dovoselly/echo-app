@@ -1,8 +1,9 @@
 package models
 
 import (
-	validation "github.com/go-ozzo/ozzo-validation"
 	"time"
+
+	validation "github.com/go-ozzo/ozzo-validation"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

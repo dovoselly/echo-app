@@ -13,6 +13,7 @@ import (
 func init() {
 	config.InitDotEnv()
 	database.Connect()
+	dao.InitAdminAccount()
 }
 
 func main() {
@@ -22,12 +23,7 @@ func main() {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
-
 	e.Use(middleware.Recover())
-	config.InitDotEnv()
-	database.Connect()
-
-	dao.InitAdminAccount()
 
 	routes.Routes(e)
 

@@ -3,10 +3,11 @@ package utils
 import (
 	"echo-app/config"
 	"fmt"
-	"github.com/golang-jwt/jwt"
-	"github.com/labstack/echo/v4"
 	"strconv"
 	"time"
+
+	"github.com/golang-jwt/jwt"
+	"github.com/labstack/echo/v4"
 )
 
 type JwtCustomClaims struct {

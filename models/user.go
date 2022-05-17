@@ -114,57 +114,49 @@ func (b UserRegister) ConvertToBSON() UserBSON {
 }
 
 // Validate form body
-func (payload UserRegister) Validate() error {
-	return validation.ValidateStruct(&payload,
-
+func (body UserRegister) Validate() error {
+	return validation.ValidateStruct(&body,
 		validation.Field(
-			&payload.Username,
+			&body.Username,
 			validation.Required.Error("Username is required"),
 			validation.Length(5, 30).Error("UserName is length: 5 -> 30"),
 		),
-
 		validation.Field(
-			&payload.Password,
+			&body.Password,
 			validation.Required.Error("Password is required"),
 			validation.Length(5, 30).Error("Password is length: 5 -> 30"),
 		),
-
 		validation.Field(
-			&payload.Email,
+			&body.Email,
 			validation.Required.Error("Email is required"),
 			is.Email.Error("Email invalidate"),
 		),
-
 		validation.Field(
-			&payload.FullName,
+			&body.FullName,
 			validation.Required.Error("Fullname is required"),
 			validation.Length(5, 30).Error("Fullname is length: 5 -> 30"),
 		),
-
 		validation.Field(
-			&payload.Gender,
+			&body.Gender,
 			validation.Required.Error("Gender is required"),
 			validation.In("female", "male"),
 		),
-
 		validation.Field(
-			&payload.DateOfBirth,
+			&body.DateOfBirth,
 			validation.Required.Error("DateOfBirth is required"),
 		),
 	)
 }
 
-func (payload UserLogin) Validate() error {
-	return validation.ValidateStruct(&payload,
-
+func (body UserLogin) Validate() error {
+	return validation.ValidateStruct(&body,
 		validation.Field(
-			&payload.Username,
+			&body.Username,
 			validation.Required.Error("Username is required"),
 			validation.Length(5, 30).Error("UserName is length: 5 -> 30"),
 		),
-
 		validation.Field(
-			&payload.Password,
+			&body.Password,
 			validation.Required.Error("Password is required"),
 			validation.Length(5, 30).Error("Password is length: 5 -> 30"),
 		),
@@ -173,13 +165,11 @@ func (payload UserLogin) Validate() error {
 
 func (body UserChangePassword) Validate() error {
 	return validation.ValidateStruct(&body,
-
 		validation.Field(
 			&body.CurrentPassword,
 			validation.Required.Error("CurrentPassword is required"),
 			validation.Length(5, 30).Error("CurrentPassword is length: 5 -> 30"),
 		),
-
 		validation.Field(
 			&body.NewPassword,
 			validation.Required.Error("NewPassword is required"),
@@ -195,7 +185,6 @@ func (body UserUpdate) Validate() error {
 			validation.Required.Error("FullName is required"),
 			validation.Length(5, 30).Error("FullName is length: 5 -> 30"),
 		),
-
 		validation.Field(
 			&body.Email,
 			validation.Required.Error("Email is required"),

@@ -68,7 +68,7 @@ func Login(user models.UserLogin) (string, error) {
 
 	// JWT payload
 	data := map[string]interface{}{
-		"id": userBSON.ID,
+		"_id": userBSON.ID,
 	}
 
 	// Generate user token

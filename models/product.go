@@ -6,6 +6,7 @@ import (
 )
 
 type (
+	// FIXME: Tách ra nhiều struct
 	Product struct {
 		Id          primitive.ObjectID `json:"_id" bson:"_id"`
 		Name        string             `json:"name" bson:"name"`

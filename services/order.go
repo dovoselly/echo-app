@@ -70,6 +70,7 @@ func CreateOrder(ID primitive.ObjectID, body models.OrderCreate) error {
 		ListIdItemJson = append(ListIdItemJson, v.ID)
 	}
 
+	body.Status = "PENDING"
 	orderBSON := models.OrderCreateBSON{
 		ID:         primitive.NewObjectID(),
 		UserId:     ID,

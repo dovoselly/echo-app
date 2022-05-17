@@ -42,17 +42,6 @@ func MyProfileAdmin(ID string) (models.Admin, error) {
 	return doc, nil
 }
 
-//func GetAdminProfileByID(id string) (models.Admin, error) {
-//	// to objectID
-//	objID, _ := primitive.ObjectIDFromHex(id)
-//
-//	admin, err := dao.GetAdminProfileFindByID(objID)
-//	if err != nil {
-//		return admin, err
-//	}
-//	return admin, nil
-//}
-
 func UpdateMyProfileAdmin(ID string, newProfile models.Admin) error {
 	err := dao.UpdateMyProfileAdmin(ID, newProfile)
 	return err
