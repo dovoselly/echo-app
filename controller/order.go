@@ -2,7 +2,7 @@ package controller
 
 import (
 	"echo-app/models"
-	"echo-app/services"
+	"echo-app/service"
 	"echo-app/utils"
 
 	"github.com/labstack/echo/v4"
@@ -20,7 +20,7 @@ func CreateOrder(c echo.Context) error {
 		return _err
 	}
 
-	err := services.CreateOrder(ID, body)
+	err := service.CreateOrder(ID, body)
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}
@@ -35,7 +35,7 @@ func GetAllOrdersByUserId(c echo.Context) error {
 		return _err
 	}
 
-	data, err := services.GetAllOrderByUserId(ID)
+	data, err := service.GetAllOrderByUserId(ID)
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}

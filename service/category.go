@@ -1,11 +1,12 @@
-package services
+package service
 
 import (
 	"echo-app/dao"
 	"echo-app/models"
 	"errors"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func CreateCategory(body models.CategoryCreateBody) error {

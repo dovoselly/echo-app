@@ -2,7 +2,7 @@ package controller
 
 import (
 	"echo-app/models"
-	"echo-app/services"
+	"echo-app/service"
 	"echo-app/utils"
 
 	"github.com/labstack/echo/v4"
@@ -21,8 +21,7 @@ func (u User) ChangePassword(c echo.Context) error {
 	}
 
 	// process
-	err := services.ChangeUserPassword(id, body)
-	if err != nil {
+	if err := service.ChangeUserPassword(id, body); err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}
 
@@ -38,8 +37,7 @@ func (u User) GetInfo(c echo.Context) error {
 	}
 
 	// process
-	info, err := services.GetUserInfo(ID)
-
+	info, err := service.GetUserInfo(ID)
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 
@@ -59,8 +57,7 @@ func (u User) UpdateInfo(c echo.Context) error {
 		return _err
 	}
 
-	err := services.UpdateUserInfo(ID, body)
-	if err != nil {
+	if err := service.UpdateUserInfo(ID, body); err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}
 	return utils.Response200(c, ID, "")

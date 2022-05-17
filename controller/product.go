@@ -2,7 +2,7 @@ package controller
 
 import (
 	"echo-app/models"
-	"echo-app/services"
+	"echo-app/service"
 	"echo-app/utils"
 
 	"github.com/labstack/echo/v4"
@@ -17,7 +17,7 @@ func ListProduct(c echo.Context) error {
 		return utils.Response404(c, nil, utils.InvalidData)
 	}
 
-	results, err := services.ListProduct(query)
+	results, err := service.ListProduct(query)
 	if err != nil {
 		return utils.Response200(c, results, err.Error())
 	}
@@ -30,7 +30,7 @@ func ProductDetail(c echo.Context) error {
 	if err != nil {
 		return utils.Response404(c, nil, utils.InvalidData)
 	}
-	results, err := services.ProductDetail(id)
+	results, err := service.ProductDetail(id)
 	if err != nil {
 		return utils.Response200(c, results, err.Error())
 	}

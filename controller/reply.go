@@ -2,7 +2,7 @@ package controller
 
 import (
 	"echo-app/models"
-	"echo-app/services"
+	"echo-app/service"
 	"echo-app/utils"
 
 	"github.com/labstack/echo/v4"
@@ -24,7 +24,7 @@ func CreateReply(c echo.Context) error {
 		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
-	err = services.CreateReply(userId, reviewId, payload)
+	err = service.CreateReply(userId, reviewId, payload)
 	return utils.Response200(c, nil, err.Error())
 }
 
@@ -46,7 +46,7 @@ func UpdateReply(c echo.Context) error {
 		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
-	results, err := services.UpdateReply(userId, replyId, body)
+	results, err := service.UpdateReply(userId, replyId, body)
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}
@@ -69,7 +69,7 @@ func DeleteReply(c echo.Context) error {
 		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
-	results, err := services.DeleteReply(userId, replyId)
+	results, err := service.DeleteReply(userId, replyId)
 
 	if results.DeletedCount == 0 {
 		return utils.Response400(c, nil, utils.InvalidData)
