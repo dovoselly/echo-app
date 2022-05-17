@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"echo-app/models"
-	"echo-app/services"
-	"echo-app/utils"
+	"echo-app/model"
+	"echo-app/service"
+	"echo-app/util"
 	"fmt"
 
 	"github.com/labstack/echo/v4"
@@ -15,43 +15,43 @@ func ListReview(c echo.Context) error {
 	productId, err := primitive.ObjectIDFromHex(productIdString)
 	fmt.Println(productIdString)
 	if err != nil {
-		return utils.Response400(c, nil, utils.InvalidData)
+		return util.Response400(c, nil, util.InvalidData)
 	}
 
 	queryInterface := c.Get("query")
-	query, ok := queryInterface.(models.ReviewQuery)
+	query, ok := queryInterface.(model.ReviewQuery)
 	if !ok {
-		return utils.Response400(c, nil, utils.InvalidData)
+		return util.Response400(c, nil, util.InvalidData)
 	}
 
-	results, err := services.ListReview(productId, query)
+	results, err := service.ListReview(productId, query)
 	if err != nil {
-		return utils.Response400(c, nil, utils.InvalidData)
+		return util.Response400(c, nil, util.InvalidData)
 	}
-	return utils.Response200(c, results, utils.CreateSuccessFully)
+	return util.Response200(c, results, util.CreateSuccessFully)
 }
 
 func CreateReview(c echo.Context) error {
-	userId, err := utils.GetUserId(c)
+	userId, err := util.GetUserId(c)
 	if err != nil {
-		return utils.Response404(c, nil, utils.InvalidData)
+		return util.Response404(c, nil, util.InvalidData)
 	}
 
 	payloadInterface := c.Get("body")
-	payload, ok := payloadInterface.(models.CreateReview)
+	payload, ok := payloadInterface.(model.CreateReview)
 	if !ok {
-		return utils.Response404(c, nil, utils.InvalidData)
+		return util.Response404(c, nil, util.InvalidData)
 	}
 
 	productIdString := c.Param("id")
 	productId, err := primitive.ObjectIDFromHex(productIdString)
 	if err != nil {
-		return utils.Response404(c, nil, utils.InvalidData)
+		return util.Response404(c, nil, util.InvalidData)
 	}
 
-	err = services.CreateReview(userId, productId, payload)
+	err = service.CreateReview(userId, productId, payload)
 	if err != nil {
-		return utils.Response200(c, "", err.Error())
+		return util.Response200(c, "", err.Error())
 	}
-	return utils.Response200(c, "", utils.CreateSuccessFully)
+	return util.Response200(c, "", util.CreateSuccessFully)
 }

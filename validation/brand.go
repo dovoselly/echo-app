@@ -1,26 +1,26 @@
 package validation
 
 import (
-	"echo-app/models"
-	"echo-app/utils"
+	"echo-app/model"
+	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
 )
 
 func BrandCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var body models.BrandCreateBody
+		var body model.BrandCreateBody
 
 		// bind request data
 		if err := c.Bind(&body); err != nil {
 			if err != nil {
-				return utils.Response400(c, nil, err.Error())
+				return util.Response400(c, nil, err.Error())
 			}
 		}
 
 		// validate
 		if err := body.Validate(); err != nil {
-			return utils.Response400(c, nil, err.Error())
+			return util.Response400(c, nil, err.Error())
 		}
 
 		c.Set("body", body)
@@ -31,18 +31,18 @@ func BrandCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
 
 func BrandUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var body models.BrandUpdateBody
+		var body model.BrandUpdateBody
 
 		// bind request data
 		if err := c.Bind(&body); err != nil {
 			if err != nil {
-				return utils.Response400(c, nil, err.Error())
+				return util.Response400(c, nil, err.Error())
 			}
 		}
 
 		// validate
 		if err := body.Validate(); err != nil {
-			return utils.Response400(c, nil, err.Error())
+			return util.Response400(c, nil, err.Error())
 		}
 
 		c.Set("body", body)

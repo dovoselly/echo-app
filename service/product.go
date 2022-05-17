@@ -78,7 +78,7 @@ func ListProduct(query model.ProductQuery) ([]model.ProductResponse, error) {
 	return results, err
 }
 
-func ProductDetail(id primitive.ObjectID) (*model.Product, error) {
+func ProductDetail(id primitive.ObjectID) (*model.ProductBSON, error) {
 	results, err := dao.ProductDetail(id)
 	return results, err
 }

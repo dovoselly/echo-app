@@ -12,7 +12,7 @@ func admin(e *echo.Echo) {
 	isLogin := middleware.JWT([]byte(envVars.Jwt.SecretKey))
 	adminRouter := e.Group("/admin", isLogin)
 	{
-		//adminRouter.POST("/admin-login", controller.AdminLogin, validations.AdminLoginBody)
+		//adminRouter.POST("/admin-login", controller.AdminLogin, validation.AdminLoginBody)
 		adminRouter.GET("/me", controller.MyProfileAdmin, isLogin)
 		adminRouter.PUT("/me", controller.UpdateMyProfileAdmin, isLogin, validation.ValidateAdminUpdateBody)
 		adminRouter.PATCH("/me/password", controller.ChangePasswordAdmin)

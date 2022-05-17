@@ -1,23 +1,23 @@
 package controller
 
 import (
-	"echo-app/models"
-	"echo-app/services"
-	"echo-app/utils"
+	"echo-app/model"
+	"echo-app/service"
+	"echo-app/util"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
 func AdminLogin(c echo.Context) error {
-	var admin = c.Get("adminLoginBody").(models.AdminLoginBody)
+	var admin = c.Get("adminLoginBody").(model.AdminLoginBody)
 
 	// process data
-	token, err := services.AdminLogin(admin)
+	token, err := service.AdminLogin(admin)
 
 	// if error
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
 	// token
@@ -25,21 +25,21 @@ func AdminLogin(c echo.Context) error {
 		"token":   token,
 		"isAdmin": true,
 	}
-	return utils.Response200(c, data, "")
+	return util.Response200(c, data, "")
 }
 
 func MyProfileAdmin(c echo.Context) error {
 	// jwtPayload get id
-	jwtPayload, _ := utils.GetJWTPayload(c)
+	jwtPayload, _ := util.GetJWTPayload(c)
 	// admin id
 	adminID := jwtPayload["id"].(string)
 
 	// get admin profile
-	profile, err := services.MyProfileAdmin(adminID)
+	profile, err := service.MyProfileAdmin(adminID)
 
 	// if err
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
 	data := map[string]interface{}{
@@ -47,25 +47,25 @@ func MyProfileAdmin(c echo.Context) error {
 	}
 
 	//success
-	return utils.Response200(c, data, "")
+	return util.Response200(c, data, "")
 }
 
 func UpdateMyProfileAdmin(c echo.Context) error {
-	var body = c.Get("adminRequestBody").(models.Admin)
+	var body = c.Get("adminRequestBody").(model.Admin)
 
 	// jwtPayload for get id
-	jwtPayload, _ := utils.GetJWTPayload(c)
+	jwtPayload, _ := util.GetJWTPayload(c)
 	id := jwtPayload["id"].(string)
 
 	// UpdateProfile
-	err := services.UpdateMyProfileAdmin(id, body)
+	err := service.UpdateMyProfileAdmin(id, body)
 
 	// if err
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
-	return utils.Response200(c, id, "")
+	return util.Response200(c, id, "")
 }
 
 //func AdminLogin(c echo.Context) error {

@@ -1,8 +1,8 @@
 package validation
 
 import (
-	"echo-app/models"
-	"echo-app/utils"
+	"echo-app/model"
+	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -10,12 +10,12 @@ import (
 func CreateOrder(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var (
-			body models.OrderCreate
+			body model.OrderCreate
 		)
 
 		// Validate
 		if err := c.Bind(&body); err != nil {
-			return utils.Response400(c, nil, err.Error())
+			return util.Response400(c, nil, err.Error())
 		}
 
 		// Success

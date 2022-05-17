@@ -1,7 +1,6 @@
 package model
 
 import (
-	validation "github.com/go-ozzo/ozzo-validation"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
@@ -47,10 +46,10 @@ type (
 	}
 )
 
-func (p Product) Validate() error {
-	return validation.ValidateStruct(&p,
-		validation.Field(&p.Name, validation.Required),
-		validation.Field(&p.Description, validation.Required),
-		validation.Field(&p.Images, validation.Length(1, 20)),
-	)
-}
+//func (p Product) Validate() error {
+//	return validation.ValidateStruct(&p,
+//		validation.Field(&p.Name, validation.Required),
+//		validation.Field(&p.Description, validation.Required),
+//		validation.Field(&p.Images, validation.Length(1, 20)),
+//	)
+//}

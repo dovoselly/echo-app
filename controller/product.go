@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"echo-app/models"
-	"echo-app/services"
-	"echo-app/utils"
+	"echo-app/model"
+	"echo-app/service"
+	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -12,27 +12,27 @@ import (
 func ListProduct(c echo.Context) error {
 	//get query from middleware
 	queryInterface := c.Get("query")
-	query, ok := queryInterface.(models.ProductQuery)
+	query, ok := queryInterface.(model.ProductQuery)
 	if !ok {
-		return utils.Response404(c, nil, utils.InvalidData)
+		return util.Response404(c, nil, util.InvalidData)
 	}
 
-	results, err := services.ListProduct(query)
+	results, err := service.ListProduct(query)
 	if err != nil {
-		return utils.Response200(c, results, err.Error())
+		return util.Response200(c, results, err.Error())
 	}
-	return utils.Response200(c, results, "")
+	return util.Response200(c, results, "")
 }
 
 func ProductDetail(c echo.Context) error {
 	idString := c.Param("id")
 	id, err := primitive.ObjectIDFromHex(idString)
 	if err != nil {
-		return utils.Response404(c, nil, utils.InvalidData)
+		return util.Response404(c, nil, util.InvalidData)
 	}
-	results, err := services.ProductDetail(id)
+	results, err := service.ProductDetail(id)
 	if err != nil {
-		return utils.Response200(c, results, err.Error())
+		return util.Response200(c, results, err.Error())
 	}
-	return utils.Response200(c, results, "")
+	return util.Response200(c, results, "")
 }

@@ -3,6 +3,7 @@ package model
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 type (
@@ -12,8 +13,8 @@ type (
 		ProductId primitive.ObjectID `json:"productId" bson:"productId"`
 		Rating    uint8              `json:"rating" bson:"rating"`
 		Content   string             `json:"content" bson:"content"`
-		CreatedAt string             `json:"createdAt" bson:"createdAt"`
-		UpdatedAt string             `json:"updatedAt" bson:"updatedAt"`
+		CreatedAt time.Time          `json:"createdAt" bson:"createdAt"`
+		UpdatedAt time.Time          `json:"updatedAt" bson:"updatedAt"`
 	}
 
 	ReviewQuery struct {
