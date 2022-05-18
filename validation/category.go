@@ -7,7 +7,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func CategoryCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
+type Category struct{}
+
+func (c Category) CreateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var body model.CategoryCreateBody
 
@@ -29,7 +31,7 @@ func CategoryCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func CategoryUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
+func (c Category) UpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var body model.CategoryUpdateBody
 

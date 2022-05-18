@@ -7,7 +7,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func BrandCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
+type Brand struct{}
+
+func (b Brand) BrandCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var body model.BrandCreateBody
 
@@ -29,7 +31,7 @@ func BrandCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func BrandUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
+func (b Brand) BrandUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var body model.BrandUpdateBody
 
