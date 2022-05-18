@@ -1,7 +1,7 @@
 package model
 
 import (
-	"echo-app/utils"
+	"echo-app/util"
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation"
@@ -107,7 +107,7 @@ func (u UserRegister) ConvertToBSON() UserBSON {
 		DateOfBirth: u.DateOfBirth,
 		Phone:       u.Phone,
 		Address:     u.Address,
-		Status:      utils.USER_STATUS_ACTIVE,
+		Status:      util.USER_STATUS_ACTIVE,
 		CreatedAt:   time.Now(),
 	}
 	return result

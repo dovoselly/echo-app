@@ -1,7 +1,7 @@
 package model
 
 import (
-	"echo-app/utils"
+	"echo-app/util"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -71,7 +71,7 @@ func (u OrderCreate) ConvertToBSON(items []primitive.ObjectID, userId primitive.
 		UserId:     userId,
 		DeliveryId: u.DeliveryId,
 		OrderCode:  u.OrderCode,
-		Status:     utils.ORDER_STATUS_PENDING,
+		Status:     util.ORDER_STATUS_PENDING,
 		TotalPrice: u.TotalPrice,
 		Note:       u.Note,
 		Payment:    u.Payment,
