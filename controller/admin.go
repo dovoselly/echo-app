@@ -29,7 +29,7 @@ func (a Admin) AdminLogin(c echo.Context) error {
 	return util.Response200(c, data, "")
 }
 
-func (a Admin) MyProfileAdmin(c echo.Context) error {
+func (a Admin) MyProfile(c echo.Context) error {
 	// jwtPayload get id
 	jwtPayload, _ := util.GetJWTPayload(c)
 	// admin id
@@ -51,7 +51,7 @@ func (a Admin) MyProfileAdmin(c echo.Context) error {
 	return util.Response200(c, data, "")
 }
 
-func (a Admin) UpdateMyProfileAdmin(c echo.Context) error {
+func (a Admin) UpdateMyProfile(c echo.Context) error {
 	var body = c.Get("body").(model.Admin)
 
 	// jwtPayload for get id
