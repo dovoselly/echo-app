@@ -4,11 +4,15 @@ import (
 	"echo-app/model"
 	"echo-app/service"
 	"echo-app/util"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+func CreateProduct(c echo.Context) error {
+	return c.JSON(http.StatusOK, "create products")
+}
 func ListProduct(c echo.Context) error {
 	//get query from middleware
 	queryInterface := c.Get("query")
