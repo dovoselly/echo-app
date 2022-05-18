@@ -3,10 +3,12 @@ package controller
 import "echo-app/service"
 
 var (
-	authService  = service.Auth{}
-	userService  = service.User{}
+	authService     = service.Auth{}
 	orderService = service.Order{}
-
-	productService = service.Product{}
-	reviewService  = service.Review{}
+	adminService    = service.Admin{}
+	categoryService = service.Category{}
+	brandService    = service.Brand{}
+	userService     = service.User{}
+	productService  = service.Product{}
+	reviewService   = service.Review{}
 )

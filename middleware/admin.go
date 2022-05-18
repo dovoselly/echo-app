@@ -9,6 +9,7 @@ import (
 func CheckAdminRole(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		jwtPayload, _ := util.GetJWTPayload(c)
+		//adminID := jwtPayload["id"].(string)
 
 		if jwtPayload["isAdmin"] == true {
 			return next(c)

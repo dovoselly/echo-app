@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/service"
 	"echo-app/util"
 
@@ -17,7 +17,7 @@ func CreateReply(c echo.Context) error {
 	}
 
 	payloadInterface := c.Get("payload")
-	payload := payloadInterface.(models.CreateReply)
+	payload := payloadInterface.(model.CreateReply)
 
 	userId, err := util.GetUserId(c)
 	if err != nil {
@@ -41,7 +41,7 @@ func UpdateReply(c echo.Context) error {
 	}
 
 	bodyInterface := c.Get("body")
-	body, ok := bodyInterface.(models.CreateReply)
+	body, ok := bodyInterface.(model.CreateReply)
 	if !ok {
 		return util.Response400(c, nil, util.InvalidData)
 	}

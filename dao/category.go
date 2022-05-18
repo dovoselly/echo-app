@@ -8,19 +8,21 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateCategory(category model.CategoryBSON) error {
+type Category struct{}
+
+func (Category) CreateCategory(body model.CategoryBSON) error {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
 	)
 
 	// InsertOne
-	_, err := categoryCol.InsertOne(ctx, category)
+	_, err := categoryCol.InsertOne(ctx, body)
 
 	return err
 }
 
-func GetListCategory() ([]model.CategoryBSON, error) {
+func (Category) GetListCategory() ([]model.CategoryBSON, error) {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
@@ -39,7 +41,7 @@ func GetListCategory() ([]model.CategoryBSON, error) {
 	return categories, nil
 }
 
-func GetCategoryByID(ID primitive.ObjectID) (model.CategoryBSON, error) {
+func (Category) GetCategoryByID(ID primitive.ObjectID) (model.CategoryBSON, error) {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
@@ -55,7 +57,7 @@ func GetCategoryByID(ID primitive.ObjectID) (model.CategoryBSON, error) {
 	return category, nil
 }
 
-func UpdateCategoryByID(ID primitive.ObjectID, body model.CategoryUpdateBody) error {
+func (Category) UpdateCategoryByID(ID primitive.ObjectID, body model.CategoryUpdateBody) error {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
@@ -73,7 +75,7 @@ func UpdateCategoryByID(ID primitive.ObjectID, body model.CategoryUpdateBody) er
 	return nil
 }
 
-func DeleteCategoryByID(ID primitive.ObjectID) error {
+func (Category) DeleteCategoryByID(ID primitive.ObjectID) error {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()

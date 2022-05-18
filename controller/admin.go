@@ -2,22 +2,22 @@ package controller
 
 import (
 	"echo-app/model"
-	"echo-app/service"
 	"echo-app/util"
-	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
-func AdminLogin(c echo.Context) error {
+type Admin struct{}
+
+func (Admin) AdminLogin(c echo.Context) error {
 	var admin = c.Get("adminLoginBody").(model.AdminLoginBody)
 
 	// process data
-	token, err := service.AdminLogin(admin)
+	token, err := adminService.AdminLogin(admin)
 
 	// if error
 	if err != nil {
-		return util.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, util.InvalidData)
 	}
 
 	// token
@@ -28,18 +28,18 @@ func AdminLogin(c echo.Context) error {
 	return util.Response200(c, data, "")
 }
 
-func MyProfileAdmin(c echo.Context) error {
+func (Admin) GetMyProfile(c echo.Context) error {
 	// jwtPayload get id
 	jwtPayload, _ := util.GetJWTPayload(c)
 	// admin id
 	adminID := jwtPayload["id"].(string)
 
 	// get admin profile
-	profile, err := service.MyProfileAdmin(adminID)
+	profile, err := adminService.GetMyProfile(adminID)
 
 	// if err
 	if err != nil {
-		return util.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, util.InvalidData)
 	}
 
 	data := map[string]interface{}{
@@ -50,7 +50,7 @@ func MyProfileAdmin(c echo.Context) error {
 	return util.Response200(c, data, "")
 }
 
-func UpdateMyProfileAdmin(c echo.Context) error {
+func (Admin) UpdateMyProfile(c echo.Context) error {
 	var body = c.Get("adminRequestBody").(model.Admin)
 
 	// jwtPayload for get id
@@ -58,20 +58,20 @@ func UpdateMyProfileAdmin(c echo.Context) error {
 	id := jwtPayload["id"].(string)
 
 	// UpdateProfile
-	err := service.UpdateMyProfileAdmin(id, body)
+	err := adminService.UpdateMyProfile(id, body)
 
 	// if err
 	if err != nil {
-		return util.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, util.InvalidData)
 	}
 
 	return util.Response200(c, id, "")
 }
 
-func ChangePasswordAdmin(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Change password admin")
-}
+//func AdminLogin(c echo.Context) error {
+//	return c.JSON(http.StatusOK, "Admin login")
+//}
 
-func ChangeAvatarAdmin(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Change avatar admin")
-}
+//func MyProfileAdmin(c echo.Context) error {
+//	return c.JSON(http.StatusOK, "Get Admin profile")
+//}
