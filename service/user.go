@@ -11,9 +11,10 @@ import (
 
 type User struct{}
 
-func (u User) ChangePassword(id primitive.ObjectID, body model.UserChangePassword) error {
+func (u User) ChangePassword(id string, body model.UserChangePassword) error {
+	objId, _ := primitive.ObjectIDFromHex(id)
 	// check currentPassword
-	userBSON, _ := userDAO.GetById(id)
+	userBSON, _ := userDAO.GetById(objId)
 	if u.checkPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
 		return errors.New(utils.CURRENT_PASSWORD_INCORRECT)
 	}
@@ -22,7 +23,7 @@ func (u User) ChangePassword(id primitive.ObjectID, body model.UserChangePasswor
 	newPassword, _ := u.hashPassword(body.NewPassword)
 
 	// update password
-	err := userDAO.UpdatePassword(id, newPassword)
+	err := userDAO.UpdatePassword(objId, newPassword)
 
 	if err != nil {
 		return err
@@ -31,13 +32,15 @@ func (u User) ChangePassword(id primitive.ObjectID, body model.UserChangePasswor
 	return nil
 }
 
-func (u User) GetInfo(id primitive.ObjectID) (model.UserInfo, error) {
+func (u User) GetInfo(id string) (model.UserInfo, error) {
 	var (
 		info model.UserInfo
 	)
 
+	objId, _ := primitive.ObjectIDFromHex(id)
+
 	// get user
-	user, err := userDAO.GetInfo(id)
+	user, err := userDAO.GetInfo(objId)
 	if err != nil {
 		return info, err
 	}
@@ -48,12 +51,13 @@ func (u User) GetInfo(id primitive.ObjectID) (model.UserInfo, error) {
 	return info, nil
 }
 
-func (u User) UpdateInfo(id primitive.ObjectID, body model.UserUpdate) error {
+func (u User) UpdateInfo(id string, body model.UserUpdate) error {
+	objId, _ := primitive.ObjectIDFromHex(id)
 	// convert userUpdate to userBson
 	bodyBSON := body.ConvertToBSON()
 
 	// update info
-	if err := userDAO.UpdateInfo(id, bodyBSON); err != nil {
+	if err := userDAO.UpdateInfo(objId, bodyBSON); err != nil {
 		return err
 	}
 

@@ -23,7 +23,7 @@ func (u User) ChangePassword(c echo.Context) error {
 
 	// process
 	if err := userService.ChangePassword(id, body); err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
 	return utils.Response200(c, bson.M{"id": id}, "")
@@ -39,7 +39,7 @@ func (u User) GetInfo(c echo.Context) error {
 	// process
 	info, err := userService.GetInfo(id)
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, utils.InvalidData)
 
 	}
 
@@ -59,7 +59,7 @@ func (u User) UpdateInfo(c echo.Context) error {
 
 	//process
 	if err := userService.UpdateInfo(id, body); err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
 	return utils.Response200(c, bson.M{"_id": id}, "")

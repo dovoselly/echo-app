@@ -1,7 +1,6 @@
 package dao
 
 import (
-	"context"
 	"echo-app/database"
 	"echo-app/model"
 	"echo-app/utils"
@@ -13,18 +12,15 @@ type OrderItem struct{}
 
 func (o OrderItem) GetByUserId() ([]model.OrderItemBSON, error) {
 	var (
-		orderItems   []model.OrderItemBSON
-		orderItemCol = database.OrderItemCol()
-
-		ctx = context.Background()
+		orderItems []model.OrderItemBSON
 	)
 
-	cursor, err := orderItemCol.Find(ctx, bson.M{})
+	cursor, err := database.OrderItemCol().Find(utils.Ctx, bson.M{})
 	if err != nil {
 		return orderItems, err
 	}
 
-	if err = cursor.All(context.Background(), &orderItems); err != nil {
+	if err = cursor.All(utils.Ctx, &orderItems); err != nil {
 		return orderItems, err
 	}
 

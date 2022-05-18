@@ -18,7 +18,7 @@ func (o Order) GetByUserId(c echo.Context) error {
 
 	data, err := orderService.GetByUserId(id)
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
 	return utils.Response200(c, data, "")
@@ -38,7 +38,7 @@ func (o Order) Create(c echo.Context) error {
 	// process
 	id, err := orderService.Create(objId, body)
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
 	return utils.Response200(c, id, "")
