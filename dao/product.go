@@ -8,6 +8,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+func CreateProduct() {
+}
 func ListProduct(pipeline []bson.M) ([]model.ProductResponse, error) {
 	var listProduct []model.ProductResponse
 	cursor, err := database.ProductCol().Aggregate(util.CONTEXT, pipeline)

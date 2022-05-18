@@ -8,7 +8,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func AdminFindByUsername(username string) (model.Admin, error) {
+type Admin struct{}
+
+// FindByUsername
+func (Admin) FindByUsername(username string) (model.Admin, error) {
 	var (
 		adminCol = database.AdminCol()
 		ctx      = context.Background()
@@ -28,7 +31,7 @@ func AdminFindByUsername(username string) (model.Admin, error) {
 	return admin, nil
 }
 
-func InitAdminAccount() {
+func (Admin) InitAdminAccount() {
 	var (
 		adminCol = database.AdminCol()
 		ctx      = context.Background()
@@ -51,7 +54,7 @@ func InitAdminAccount() {
 	}
 }
 
-func AdminProfileFindByID(ID string) (model.Admin, error) {
+func (Admin) ProfileFindByID(ID string) (model.Admin, error) {
 	var (
 		adminCol     = database.AdminCol()
 		ctx          = context.Background()
@@ -74,7 +77,7 @@ func AdminProfileFindByID(ID string) (model.Admin, error) {
 
 }
 
-func UpdateMyProfileAdmin(ID string, newProfile model.Admin) error {
+func (Admin) UpdateMyProfile(ID string, newProfile model.Admin) error {
 	var (
 		adminCol = database.AdminCol()
 		ctx      = context.Background()
