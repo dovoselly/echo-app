@@ -8,7 +8,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateBrand(brand model.BrandBSON) error {
+type Brand struct{}
+
+func (Brand) Create(brand model.BrandBSON) error {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()
@@ -20,7 +22,7 @@ func CreateBrand(brand model.BrandBSON) error {
 	return err
 }
 
-func GetListBrand() ([]model.BrandBSON, error) {
+func (Brand) GetList() ([]model.BrandBSON, error) {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()
@@ -39,7 +41,7 @@ func GetListBrand() ([]model.BrandBSON, error) {
 	return brands, nil
 }
 
-func GetBrandByID(ID primitive.ObjectID) (model.BrandBSON, error) {
+func (Brand) GetByID(ID primitive.ObjectID) (model.BrandBSON, error) {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()
@@ -55,7 +57,7 @@ func GetBrandByID(ID primitive.ObjectID) (model.BrandBSON, error) {
 	return brand, nil
 }
 
-func UpdateBrandByID(ID primitive.ObjectID, body model.BrandUpdateBody) error {
+func (Brand) UpdateByID(ID primitive.ObjectID, body model.BrandUpdateBody) error {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()
@@ -73,7 +75,7 @@ func UpdateBrandByID(ID primitive.ObjectID, body model.BrandUpdateBody) error {
 	return nil
 }
 
-func DeleteBrandByID(ID primitive.ObjectID) error {
+func (Brand) DeleteByID(ID primitive.ObjectID) error {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()

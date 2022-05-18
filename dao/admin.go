@@ -22,11 +22,13 @@ func (Admin) FindByUsername(username string) (model.Admin, error) {
 	filter := bson.M{
 		"username": username,
 	}
-	err := adminCol.FindOne(ctx, filter).Decode(&admin)
-
-	if err != nil {
+	if err := adminCol.FindOne(ctx, filter).Decode(&admin); err != nil {
 		return admin, err
 	}
+
+	//if err != nil {
+	//	return admin, err
+	//}
 
 	return admin, nil
 }
@@ -66,12 +68,14 @@ func (Admin) ProfileFindByID(ID string) (model.Admin, error) {
 
 	// find profile
 	filter := bson.M{"_id": objID}
-	err := adminCol.FindOne(ctx, filter).Decode(&adminProfile)
-
-	// if err
-	if err != nil {
+	if err := adminCol.FindOne(ctx, filter).Decode(&adminProfile); err != nil {
 		return adminProfile, err
 	}
+
+	//// if err
+	//if err != nil {
+	//	return adminProfile, err
+	//}
 
 	return adminProfile, nil
 
@@ -92,11 +96,13 @@ func (Admin) UpdateMyProfile(ID string, newProfile model.Admin) error {
 	}
 
 	// UpdateOne
-	_, err := adminCol.UpdateOne(ctx, bson.M{"_id": objID}, bson.M{"$set": update})
-
-	if err != nil {
+	if _, err := adminCol.UpdateOne(ctx, bson.M{"_id": objID}, bson.M{"$set": update}); err != nil {
 		return err
 	}
+
+	//if err != nil {
+	//	return err
+	//}
 
 	return nil
 }
