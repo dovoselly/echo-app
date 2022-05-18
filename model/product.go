@@ -47,7 +47,7 @@ type (
 	}
 )
 
-func (p Product) Validate() error {
+func (p ProductBSON) Validate() error {
 	return validation.ValidateStruct(&p,
 		validation.Field(&p.Name, validation.Required),
 		validation.Field(&p.Description, validation.Required),
