@@ -2,7 +2,6 @@ package route
 
 import (
 	"echo-app/config"
-	"echo-app/controller"
 	"echo-app/validation"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -17,12 +16,12 @@ func brand(e *echo.Echo) {
 
 	b.Use(middleware.JWT([]byte(env.Jwt.SecretKey)))
 
-	b.POST("", controller.CreateBrand, validation.BrandCreateBody)
-	b.GET("", controller.GetListBrand)
-	b.GET("/:id", controller.GetBrandByID, validation.ValidateID)
+	b.POST("", brandCtrl.Create, brandVal.BrandCreateBody)
+	b.GET("", brandCtrl.GetList)
+	b.GET("/:id", brandCtrl.GetByID, validation.ValidateID)
 
-	b.PUT("/:id", controller.UpdateCategoryByID, validation.ValidateID, validation.BrandUpdateBody)
-	b.DELETE("/:id", controller.DeleteBrandByID, validation.ValidateID)
-	b.PATCH("/:id/disable", controller.DisabledBrand)
-	b.PATCH("/:id/enabled", controller.EnabledBrand)
+	b.PUT("/:id", brandCtrl.UpdateByID, validation.ValidateID, brandVal.BrandUpdateBody)
+	b.DELETE("/:id", brandCtrl.DeleteByID, validation.ValidateID)
+	b.PATCH("/:id/disable", brandCtrl.Disabled)
+	b.PATCH("/:id/enabled", brandCtrl.Enabled)
 }
