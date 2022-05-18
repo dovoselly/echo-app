@@ -13,7 +13,8 @@ import (
 func init() {
 	config.InitDotEnv()
 	database.Connect()
-	dao.InitAdminAccount()
+	//.InitAdminAccount()
+	dao.Admin{}.InitAdminAccount()
 }
 
 func main() {
