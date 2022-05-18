@@ -21,8 +21,8 @@ func (u User) ChangePassword(c echo.Context) error {
 	}
 
 	// process
-	if err := service.ChangeUserPassword(id, body); err != nil {
-		return util.Response400(c, nil, err.Error())
+	if err := userService.ChangePassword(id, body); err != nil {
+		return util.Response400(c, nil, util.InvalidData)
 	}
 
 	return util.Response200(c, id, "")
@@ -39,7 +39,7 @@ func (u User) GetInfo(c echo.Context) error {
 	// process
 	info, err := service.GetUserInfo(ID)
 	if err != nil {
-		return util.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, util.InvalidData)
 
 	}
 
@@ -57,8 +57,9 @@ func (u User) UpdateInfo(c echo.Context) error {
 		return _err
 	}
 
-	if err := service.UpdateUserInfo(ID, body); err != nil {
-		return util.Response400(c, nil, err.Error())
+	//process
+	if err := userService.UpdateInfo(id, body); err != nil {
+		return util.Response400(c, nil, util.InvalidData)
 	}
 	return util.Response200(c, ID, "")
 }

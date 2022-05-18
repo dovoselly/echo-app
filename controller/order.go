@@ -10,6 +10,22 @@ import (
 
 func CreateOrder(c echo.Context) error {
 
+func (o Order) GetByUserId(c echo.Context) error {
+	// Get Id in token
+	id, err := utils.GetUserId(c)
+	if err != nil {
+		return err
+	}
+
+	data, err := orderService.GetByUserId(id)
+	if err != nil {
+		return utils.Response400(c, nil, utils.InvalidData)
+	}
+
+	return utils.Response200(c, data, "")
+}
+
+func (o Order) Create(c echo.Context) error {
 	var (
 		body = c.Get("body").(models.OrderCreate)
 	)
@@ -22,7 +38,7 @@ func CreateOrder(c echo.Context) error {
 
 	err := service.CreateOrder(ID, body)
 	if err != nil {
-		return util.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
 	return util.Response200(c, nil, "")

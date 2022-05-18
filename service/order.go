@@ -67,7 +67,7 @@ func CreateOrder(ID primitive.ObjectID, body model.OrderCreate) error {
 	// get list id insert to order db
 	ListIdItemJson := make([]primitive.ObjectID, 0)
 	for _, v := range listItemJson {
-		ListIdItemJson = append(ListIdItemJson, v.ID)
+		ListIdItemJson = append(ListIdItemJson, v.Id)
 	}
 
 	body.Status = "PENDING"
