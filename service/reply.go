@@ -3,10 +3,12 @@ package service
 import (
 	"echo-app/dao"
 	"echo-app/model"
+	"echo-app/utils"
+	"time"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"time"
 )
 
 func CreateReply(userId primitive.ObjectID, reviewId primitive.ObjectID, body model.CreateReply) error {
@@ -26,8 +28,8 @@ func UpdateReply(userId primitive.ObjectID, replyId primitive.ObjectID, body mod
 	filter := bson.M{"_id": replyId, "userId": userId}
 
 	updateData := bson.M{"$set": model.Reply{
-		Content: body.Content,
-		//UpdatedAt: time.Now(),
+		Content:   body.Content,
+		UpdatedAt: utils.CurrentDateTime(),
 	}}
 
 	results, err := dao.UpdateReply(filter, updateData)

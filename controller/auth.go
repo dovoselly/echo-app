@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"echo-app/model"
+	"echo-app/models"
 	"echo-app/service"
-	"echo-app/util"
+	"echo-app/utils"
 
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
@@ -12,7 +12,7 @@ import (
 func Register(c echo.Context) error {
 
 	var (
-		body = c.Get("body").(model.UserRegister)
+		body = c.Get("body").(models.UserRegister)
 	)
 
 	// Process data
@@ -20,11 +20,11 @@ func Register(c echo.Context) error {
 
 	if err != nil {
 
-		return util.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, err.Error())
 	}
 
 	// Success
-	return util.Response200(c, bson.M{
+	return utils.Response200(c, bson.M{
 		"_id":       rawData.ID,
 		"createdAt": rawData.CreatedAt,
 	}, "")
@@ -32,18 +32,18 @@ func Register(c echo.Context) error {
 
 func Login(c echo.Context) error {
 	var (
-		user = c.Get("body").(model.UserLogin)
+		user = c.Get("body").(models.UserLogin)
 	)
 
 	// process data
 	token, err := service.Login(user)
 	if err != nil {
-		return util.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, err.Error())
 	}
 
 	data := map[string]interface{}{
 		"token": token,
 	}
 
-	return util.Response200(c, data, "")
+	return utils.Response200(c, data, "")
 }

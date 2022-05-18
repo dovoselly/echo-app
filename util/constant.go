@@ -1,4 +1,4 @@
-package util
+package utils
 
 import "context"
 
@@ -14,5 +14,5 @@ var (
 	LoginSuccessFully             = "Login successfully"
 	InvalidToken                  = "Invalid token"
 
-	CONTEXT = context.Background()
+	Ctx = context.Background()
 )

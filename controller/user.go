@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"echo-app/model"
+	"echo-app/models"
 	"echo-app/service"
-	"echo-app/util"
+	"echo-app/utils"
 
 	"github.com/labstack/echo/v4"
 )
@@ -12,56 +12,53 @@ type User struct{}
 
 func (u User) ChangePassword(c echo.Context) error {
 	var (
-		body = c.Get("body").(model.UserChangePassword)
+		body = c.Get("body").(models.UserChangePassword)
 	)
 
-	id, _err := util.GetUserId(c)
+	id, _err := utils.GetUserId(c)
 	if _err != nil {
 		return _err
 	}
 
 	// process
-	err := service.ChangeUserPassword(id, body)
-	if err != nil {
-		return util.Response400(c, nil, err.Error())
+	if err := service.ChangeUserPassword(id, body); err != nil {
+		return utils.Response400(c, nil, err.Error())
 	}
 
-	return util.Response200(c, id, "")
+	return utils.Response200(c, id, "")
 }
 
 func (u User) GetInfo(c echo.Context) error {
 
 	// Get Id in token
-	ID, _err := util.GetUserId(c)
+	ID, _err := utils.GetUserId(c)
 	if _err != nil {
 		return _err
 	}
 
 	// process
 	info, err := service.GetUserInfo(ID)
-
 	if err != nil {
-		return util.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, err.Error())
 
 	}
 
-	return util.Response200(c, info, "")
+	return utils.Response200(c, info, "")
 }
 
 func (u User) UpdateInfo(c echo.Context) error {
 	var (
-		body = c.Get("body").(model.UserUpdate)
+		body = c.Get("body").(models.UserUpdate)
 	)
 
 	// Get Id in token
-	ID, _err := util.GetUserId(c)
+	ID, _err := utils.GetUserId(c)
 	if _err != nil {
 		return _err
 	}
 
-	err := service.UpdateUserInfo(ID, body)
-	if err != nil {
-		return util.Response400(c, nil, err.Error())
+	if err := service.UpdateUserInfo(ID, body); err != nil {
+		return utils.Response400(c, nil, err.Error())
 	}
-	return util.Response200(c, ID, "")
+	return utils.Response200(c, ID, "")
 }

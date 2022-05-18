@@ -2,25 +2,18 @@ package util
 
 import (
 	"github.com/labstack/echo/v4"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GetUserId(c echo.Context) (primitive.ObjectID, error) {
+func GetUserId(c echo.Context) (string, error) {
 	// GetJWTPayload
 	jwtPayload, err := GetJWTPayload(c)
 	if err != nil {
-		return primitive.NilObjectID, err
+		return "", err
 	}
 
-	idString, ok := jwtPayload["_id"].(string)
+	id, ok := jwtPayload["_id"].(string)
 	if !ok {
-		return primitive.NilObjectID, err
+		return "", err
 	}
-
-	id, err := primitive.ObjectIDFromHex(idString)
-	if err != nil {
-		return primitive.NilObjectID, err
-	}
-
 	return id, nil
 }

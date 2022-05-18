@@ -2,41 +2,32 @@ package controller
 
 import (
 	"echo-app/model"
-	"echo-app/service"
-	"echo-app/util"
-	"net/http"
+	"echo-app/utils"
+	"fmt"
 
 	"github.com/labstack/echo/v4"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateProduct(c echo.Context) error {
-	return c.JSON(http.StatusOK, "create products")
-}
-func ListProduct(c echo.Context) error {
+type Product struct{}
+
+func (p Product) GetListProduct(c echo.Context) error {
 	//get query from middleware
-	queryInterface := c.Get("query")
-	query, ok := queryInterface.(model.ProductQuery)
-	if !ok {
-		return util.Response404(c, nil, util.InvalidData)
-	}
+	query := c.Get("query").(model.ProductQuery)
 
-	results, err := service.ListProduct(query)
+	results, err := productService.GetListProduct(query)
 	if err != nil {
-		return util.Response200(c, results, err.Error())
+		fmt.Println(err.Error())
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
-	return util.Response200(c, results, "")
+	return utils.Response200(c, results, "")
 }
 
-func ProductDetail(c echo.Context) error {
-	idString := c.Param("id")
-	id, err := primitive.ObjectIDFromHex(idString)
+func (p Product) GetProductDetail(c echo.Context) error {
+	id := c.Param("id")
+
+	results, err := productService.GetProductDetail(id)
 	if err != nil {
-		return util.Response404(c, nil, util.InvalidData)
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
-	results, err := service.ProductDetail(id)
-	if err != nil {
-		return util.Response200(c, results, err.Error())
-	}
-	return util.Response200(c, results, "")
+	return utils.Response200(c, results, "")
 }

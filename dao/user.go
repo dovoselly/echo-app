@@ -9,7 +9,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func UserRegister(doc model.UserBSON) (model.UserBSON, error) {
+type User struct{}
+
+func (u User) Register(doc models.UserBSON) (models.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
@@ -20,7 +22,7 @@ func UserRegister(doc model.UserBSON) (model.UserBSON, error) {
 	return doc, err
 }
 
-func GetUserByUsername(username string) (model.UserBSON, error) {
+func (u User) GetByUsername(username string) (models.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
@@ -40,7 +42,7 @@ func GetUserByUsername(username string) (model.UserBSON, error) {
 	return user, nil
 }
 
-func GetUserById(ID primitive.ObjectID) (model.UserBSON, error) {
+func (u User) GetById(ID primitive.ObjectID) (models.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
@@ -55,7 +57,7 @@ func GetUserById(ID primitive.ObjectID) (model.UserBSON, error) {
 
 }
 
-func UpdateUserPassword(ID primitive.ObjectID, newPassword string) error {
+func (u User) UpdatePassword(ID primitive.ObjectID, newPassword string) error {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
@@ -75,7 +77,7 @@ func UpdateUserPassword(ID primitive.ObjectID, newPassword string) error {
 	return nil
 }
 
-func GetInfoUser(ID primitive.ObjectID) (model.UserBSON, error) {
+func (u User) GetInfo(ID primitive.ObjectID) (models.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
@@ -90,7 +92,7 @@ func GetInfoUser(ID primitive.ObjectID) (model.UserBSON, error) {
 	return user, nil
 }
 
-func UpdateInfoUser(ID primitive.ObjectID, body model.UserInfoBSON) error {
+func (u User) UpdateInfo(ID primitive.ObjectID, body models.UserInfoBSON) error {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()

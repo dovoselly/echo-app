@@ -2,56 +2,39 @@ package controller
 
 import (
 	"echo-app/model"
-	"echo-app/service"
-	"echo-app/util"
+	"echo-app/utils"
 	"fmt"
-
 	"github.com/labstack/echo/v4"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func ListReview(c echo.Context) error {
-	productIdString := c.Param("id")
-	productId, err := primitive.ObjectIDFromHex(productIdString)
-	fmt.Println(productIdString)
-	if err != nil {
-		return util.Response400(c, nil, util.InvalidData)
-	}
+type Review struct{}
 
-	queryInterface := c.Get("query")
-	query, ok := queryInterface.(model.ReviewQuery)
-	if !ok {
-		return util.Response400(c, nil, util.InvalidData)
-	}
+func (r Review) GetListReview(c echo.Context) error {
+	ID := c.Param("id")
 
-	results, err := service.ListReview(productId, query)
+	query := c.Get("query").(model.ReviewQuery)
+
+	results, err := reviewService.GetListReview(ID, query)
 	if err != nil {
-		return util.Response400(c, nil, util.InvalidData)
+		fmt.Println(err.Error())
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
-	return util.Response200(c, results, util.CreateSuccessFully)
+	return utils.Response200(c, results, "")
 }
 
-func CreateReview(c echo.Context) error {
-	userId, err := util.GetUserId(c)
+func (r Review) CreateReview(c echo.Context) error {
+	userId, err := utils.GetUserId(c)
 	if err != nil {
-		return util.Response404(c, nil, util.InvalidData)
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
-	payloadInterface := c.Get("body")
-	payload, ok := payloadInterface.(model.CreateReview)
-	if !ok {
-		return util.Response404(c, nil, util.InvalidData)
-	}
+	productId := c.Param("id")
 
-	productIdString := c.Param("id")
-	productId, err := primitive.ObjectIDFromHex(productIdString)
-	if err != nil {
-		return util.Response404(c, nil, util.InvalidData)
-	}
+	body := c.Get("body").(model.CreateReview)
 
-	err = service.CreateReview(userId, productId, payload)
+	result, err := reviewService.CreateReview(userId, productId, body)
 	if err != nil {
-		return util.Response200(c, "", err.Error())
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
-	return util.Response200(c, "", util.CreateSuccessFully)
+	return utils.Response200(c, result.InsertedID, utils.CreateSuccessFully)
 }

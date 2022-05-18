@@ -1,24 +1,23 @@
 package controller
 
 import (
-	"echo-app/model"
-	"echo-app/util"
+	"echo-app/models"
+	"echo-app/service"
+	"echo-app/utils"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
-type Admin struct{}
-
-func (a Admin) AdminLogin(c echo.Context) error {
-	var admin = c.Get("body").(model.AdminLoginBody)
+func AdminLogin(c echo.Context) error {
+	var admin = c.Get("adminLoginBody").(models.AdminLoginBody)
 
 	// process data
-	token, err := adminService.AdminLogin(admin)
+	token, err := service.AdminLogin(admin)
 
 	// if error
 	if err != nil {
-		return util.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, err.Error())
 	}
 
 	// token
@@ -26,21 +25,21 @@ func (a Admin) AdminLogin(c echo.Context) error {
 		"token":   token,
 		"isAdmin": true,
 	}
-	return util.Response200(c, data, "")
+	return utils.Response200(c, data, "")
 }
 
-func (a Admin) MyProfile(c echo.Context) error {
+func MyProfileAdmin(c echo.Context) error {
 	// jwtPayload get id
-	jwtPayload, _ := util.GetJWTPayload(c)
+	jwtPayload, _ := utils.GetJWTPayload(c)
 	// admin id
 	adminID := jwtPayload["id"].(string)
 
 	// get admin profile
-	profile, err := adminService.GetMyProfile(adminID)
+	profile, err := service.MyProfileAdmin(adminID)
 
 	// if err
 	if err != nil {
-		return util.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, err.Error())
 	}
 
 	data := map[string]interface{}{
@@ -48,31 +47,39 @@ func (a Admin) MyProfile(c echo.Context) error {
 	}
 
 	//success
-	return util.Response200(c, data, "")
+	return utils.Response200(c, data, "")
 }
 
-func (a Admin) UpdateMyProfile(c echo.Context) error {
-	var body = c.Get("body").(model.Admin)
+func UpdateMyProfileAdmin(c echo.Context) error {
+	var body = c.Get("adminRequestBody").(models.Admin)
 
 	// jwtPayload for get id
-	jwtPayload, _ := util.GetJWTPayload(c)
+	jwtPayload, _ := utils.GetJWTPayload(c)
 	id := jwtPayload["id"].(string)
 
 	// UpdateProfile
-	err := adminService.UpdateMyProfile(id, body)
+	err := service.UpdateMyProfileAdmin(id, body)
 
 	// if err
 	if err != nil {
-		return util.Response400(c, nil, err.Error())
+		return utils.Response400(c, nil, err.Error())
 	}
 
-	return util.Response200(c, id, "")
+	return utils.Response200(c, id, "")
 }
 
-func (a Admin) ChangePasswordAdmin(c echo.Context) error {
+//func AdminLogin(c echo.Context) error {
+//	return c.JSON(http.StatusOK, "Admin login")
+//}
+
+//func MyProfileAdmin(c echo.Context) error {
+//	return c.JSON(http.StatusOK, "Get Admin profile")
+//}
+
+func ChangePasswordAdmin(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Change password admin")
 }
 
-func (a Admin) ChangeAvatarAdmin(c echo.Context) error {
+func ChangeAvatarAdmin(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Change avatar admin")
 }

@@ -3,8 +3,9 @@ package service
 import (
 	"echo-app/model"
 	"errors"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Category struct{}
