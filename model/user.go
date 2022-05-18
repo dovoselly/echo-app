@@ -1,6 +1,7 @@
 package model
 
 import (
+	"echo-app/utils"
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation"
@@ -10,7 +11,7 @@ import (
 
 type (
 	UserBSON struct {
-		ID          primitive.ObjectID `bson:"_id"`
+		Id          primitive.ObjectID `bson:"_id"`
 		Email       string             `bson:"email" `
 		Username    string             `bson:"username"`
 		Password    string             `bson:"password"`
@@ -36,7 +37,7 @@ type (
 	}
 
 	UserResponse struct {
-		ID          primitive.ObjectID `json:"_id"`
+		Id          primitive.ObjectID `json:"_id"`
 		Email       string             `json:"email"`
 		Username    string             `json:"username"`
 		Password    string             `json:"password"`
@@ -83,12 +84,11 @@ type (
 	}
 
 	UserInfo struct {
-		ID          primitive.ObjectID `json:"_id"`
+		Id          primitive.ObjectID `json:"_id"`
 		FullName    string             `json:"fullName"`
 		Email       string             `json:"email"`
 		Username    string             `json:"username"`
 		DateOfBirth string             `json:"dateOfBirth"`
-		Avatar      string             `json:"avatar"`
 		Gender      string             `json:"gender"`
 		Phone       string             `json:"phone"`
 		Address     string             `json:"address"`
@@ -96,19 +96,45 @@ type (
 )
 
 // ConvertToBSON
-func (b UserRegister) ConvertToBSON() UserBSON {
+func (u UserRegister) ConvertToBSON() UserBSON {
 	result := UserBSON{
-		ID:          primitive.NewObjectID(),
-		Username:    b.Username,
-		Password:    b.Password,
-		Email:       b.Email,
-		FullName:    b.FullName,
-		Gender:      b.Gender,
-		DateOfBirth: b.DateOfBirth,
-		Phone:       b.Phone,
-		Address:     b.Address,
-		Status:      b.Status,
+		Id:          primitive.NewObjectID(),
+		Username:    u.Username,
+		Password:    u.Password,
+		Email:       u.Email,
+		FullName:    u.FullName,
+		Gender:      u.Gender,
+		DateOfBirth: u.DateOfBirth,
+		Phone:       u.Phone,
+		Address:     u.Address,
+		Status:      utils.USER_STATUS_ACTIVE,
 		CreatedAt:   time.Now(),
+	}
+	return result
+}
+
+func (u UserBSON) ConvertToJSON() UserInfo {
+	result := UserInfo{
+		Id:          u.Id,
+		FullName:    u.FullName,
+		Email:       u.Email,
+		Username:    u.Username,
+		Gender:      u.Gender,
+		DateOfBirth: u.DateOfBirth,
+		Phone:       u.Phone,
+		Address:     u.Address,
+	}
+	return result
+}
+
+func (u UserUpdate) ConvertToBSON() UserInfoBSON {
+	result := UserInfoBSON{
+		FullName:    u.FullName,
+		Email:       u.Email,
+		Phone:       u.Phone,
+		DateOfBirth: u.DateOfBirth,
+		Gender:      u.Gender,
+		Address:     u.Address,
 	}
 	return result
 }

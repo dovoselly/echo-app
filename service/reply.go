@@ -3,6 +3,7 @@ package service
 import (
 	"echo-app/dao"
 	"echo-app/model"
+	"echo-app/util"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -28,7 +29,7 @@ func UpdateReply(userId primitive.ObjectID, replyId primitive.ObjectID, body mod
 
 	updateData := bson.M{"$set": model.Reply{
 		Content:   body.Content,
-		UpdatedAt: time.Now(),
+		UpdatedAt: util.CurrentDateTime(),
 	}}
 
 	results, err := dao.UpdateReply(filter, updateData)

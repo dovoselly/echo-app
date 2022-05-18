@@ -2,7 +2,6 @@ package route
 
 import (
 	"echo-app/config"
-	"echo-app/controller"
 	"echo-app/validation"
 
 	"github.com/labstack/echo/v4"
@@ -16,7 +15,7 @@ func order(e *echo.Echo) {
 
 	user.Use(middleware.JWT([]byte(env.Jwt.SecretKey)))
 
-	user.GET("", controller.GetAllOrdersByUserId)
-	user.POST("", controller.CreateOrder, validation.CreateOrder)
+	user.GET("", orderCtrl.GetByUserId)
+	user.POST("", orderCtrl.Create, validation.CreateOrder)
 
 }

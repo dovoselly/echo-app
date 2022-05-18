@@ -8,6 +8,8 @@ import (
 
 var (
 	// controller
+	authCtrl     = controller.Auth{}
+	orderCtrl    = controller.Order{}
 	userCtrl     = controller.User{}
 	productCtrl  = controller.Product{}
 	reviewCtrl   = controller.Review{}
