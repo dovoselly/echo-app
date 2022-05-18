@@ -16,11 +16,11 @@ func (p Product) GetListProduct(query model.ProductQuery) ([]model.ProductRespon
 	return results, err
 }
 
-func (p Product) GetProductDetail(id string) (*model.ProductResponse, error) {
-	ojbId, err := primitive.ObjectIDFromHex(id)
+func (p Product) GetProductDetail(ID string) (*model.ProductResponse, error) {
+	ojbID, err := primitive.ObjectIDFromHex(ID)
 	if err != nil {
 		return nil, err
 	}
-	results, err := productDAO.GetProductDetail(ojbId)
+	results, err := productDAO.GetProductDetail(ojbID)
 	return results, err
 }
