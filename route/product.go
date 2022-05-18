@@ -8,9 +8,8 @@ import (
 )
 
 func product(e *echo.Echo) {
-	productRoutes := e.Group("/products")
-	{
-		productRoutes.GET("", controller.ListProduct, validation.ListProduct)
-		productRoutes.GET("/:id", controller.ProductDetail)
-	}
+	p := e.Group("/products")
+	p.POST("", controller.CreateProduct)
+	p.GET("", controller.ListProduct, validation.ListProduct)
+	p.GET("/:id", controller.ProductDetail)
 }

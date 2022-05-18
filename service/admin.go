@@ -1,23 +1,24 @@
 package service
 
 import (
-	"echo-app/dao"
 	"echo-app/model"
 	"echo-app/util"
 	"errors"
 	"fmt"
 )
 
-func AdminLogin(loginBody model.AdminLoginBody) (string, error) {
+type Admin struct{}
+
+func (a Admin) AdminLogin(body model.AdminLoginBody) (string, error) {
 	// find admin in db
-	admin, err := dao.AdminFindByUsername(loginBody.Username)
+	admin, err := adminDao.FindByUsername(body.Username)
 
 	if err != nil {
 		return "", err
 	}
 
 	// verify admin password
-	if admin.HashedPassword != loginBody.Password {
+	if admin.HashedPassword != body.Password {
 		return "", errors.New("wrong password")
 	}
 
@@ -34,15 +35,15 @@ func AdminLogin(loginBody model.AdminLoginBody) (string, error) {
 	return token, err
 }
 
-func MyProfileAdmin(ID string) (model.Admin, error) {
-	doc, err := dao.AdminProfileFindByID(ID)
+func (a Admin) GetMyProfile(ID string) (model.Admin, error) {
+	doc, err := adminDao.ProfileFindByID(ID)
 	if err != nil {
 		return doc, err
 	}
 	return doc, nil
 }
 
-func UpdateMyProfileAdmin(ID string, newProfile model.Admin) error {
-	err := dao.UpdateMyProfileAdmin(ID, newProfile)
+func (a Admin) UpdateMyProfile(ID string, newProfile model.Admin) error {
+	err := adminDao.UpdateMyProfile(ID, newProfile)
 	return err
 }
