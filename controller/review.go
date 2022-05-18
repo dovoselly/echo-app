@@ -2,7 +2,7 @@ package controller
 
 import (
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 	"fmt"
 	"github.com/labstack/echo/v4"
 )
@@ -17,15 +17,15 @@ func (r Review) GetListReview(c echo.Context) error {
 	results, err := reviewService.GetListReview(ID, query)
 	if err != nil {
 		fmt.Println(err.Error())
-		return utils.Response400(c, nil, utils.InvalidData)
+		return util.Response400(c, nil, util.InvalidData)
 	}
-	return utils.Response200(c, results, "")
+	return util.Response200(c, results, "")
 }
 
 func (r Review) CreateReview(c echo.Context) error {
-	userId, err := utils.GetUserId(c)
+	userId, err := util.GetUserId(c)
 	if err != nil {
-		return utils.Response400(c, nil, utils.InvalidData)
+		return util.Response400(c, nil, util.InvalidData)
 	}
 
 	productId := c.Param("id")
@@ -34,7 +34,7 @@ func (r Review) CreateReview(c echo.Context) error {
 
 	result, err := reviewService.CreateReview(userId, productId, body)
 	if err != nil {
-		return utils.Response400(c, nil, utils.InvalidData)
+		return util.Response400(c, nil, util.InvalidData)
 	}
-	return utils.Response200(c, result.InsertedID, utils.CreateSuccessFully)
+	return util.Response200(c, result.InsertedID, util.CreateSuccessFully)
 }

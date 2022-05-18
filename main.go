@@ -4,7 +4,7 @@ import (
 	"echo-app/config"
 	"echo-app/dao"
 	"echo-app/database"
-	"echo-app/routes"
+	"echo-app/route"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -13,7 +13,8 @@ import (
 func init() {
 	config.InitDotEnv()
 	database.Connect()
-	dao.InitAdminAccount()
+	//.InitAdminAccount()
+	dao.Admin{}.InitAdminAccount()
 }
 
 func main() {
@@ -25,7 +26,7 @@ func main() {
 	}))
 	e.Use(middleware.Recover())
 
-	routes.Routes(e)
+	route.Routes(e)
 
 	e.Logger.Fatal(e.Start(":" + config.GetEnv().Port))
 

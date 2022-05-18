@@ -8,15 +8,24 @@ import (
 
 var (
 	// controller
-	userCtrl    = controller.User{}
-	productCtrl = controller.Product{}
-	reviewCtrl  = controller.Review{}
-	replyCtrl   = controller.Reply{}
+	authCtrl     = controller.Auth{}
+	orderCtrl    = controller.Order{}
+	userCtrl     = controller.User{}
+	productCtrl  = controller.Product{}
+	reviewCtrl   = controller.Review{}
+	adminCtrl    = controller.Admin{}
+	categoryCtrl = controller.Category{}
+	brandCtrl    = controller.Brand{}
+	replyCtrl    = controller.Reply{}
 
 	//validate
-	userVal    = validation.User{}
-	productVal = validation.Product{}
-	reviewVal  = validation.Review{}
+	userVal     = validation.User{}
+	productVal  = validation.Product{}
+	reviewVal   = validation.Review{}
+	adminVal    = validation.Admin{}
+	categoryVal = validation.Category{}
+	brandVal    = validation.Brand{}
+	replyVal    = validation.Reply{}
 
 	//secret key
 	secretKeyBytes = []byte(config.GetEnv().Jwt.SecretKey)

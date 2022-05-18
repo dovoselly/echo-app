@@ -1,9 +1,9 @@
 package dao
 
 import (
-	"context"
 	"echo-app/database"
 	"echo-app/model"
+	"echo-app/util"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -11,96 +11,73 @@ import (
 
 type User struct{}
 
-func (u User) Register(doc models.UserBSON) (models.UserBSON, error) {
-	var (
-		userCol = database.UserCol()
-		ctx     = context.Background()
-	)
-
+func (u User) Register(doc model.UserBSON) (primitive.ObjectID, error) {
 	// Insert one
-	_, err := userCol.InsertOne(ctx, doc)
-	return doc, err
+	result, err := database.UserCol().InsertOne(util.Ctx, doc)
+	return result.InsertedID.(primitive.ObjectID), err
 }
 
-func (u User) GetByUsername(username string) (models.UserBSON, error) {
+func (u User) GetByUsername(username string) (model.UserBSON, error) {
 	var (
-		userCol = database.UserCol()
-		ctx     = context.Background()
-		user    model.UserBSON
+		user model.UserBSON
 	)
 
 	// filter
 	filter := bson.M{"username": username}
 
 	// FindOne
-	err := userCol.FindOne(ctx, filter).Decode(&user)
-
-	if err != nil {
+	if err := database.UserCol().FindOne(util.Ctx, filter).Decode(&user); err != nil {
 		return user, err
 	}
 
 	return user, nil
 }
 
-func (u User) GetById(ID primitive.ObjectID) (models.UserBSON, error) {
+func (u User) GetById(id primitive.ObjectID) (model.UserBSON, error) {
 	var (
-		userCol = database.UserCol()
-		ctx     = context.Background()
-		user    model.UserBSON
+		user model.UserBSON
 	)
 
-	err := userCol.FindOne(ctx, bson.M{"_id": ID}).Decode(&user)
+	err := database.UserCol().FindOne(util.Ctx, bson.M{"_id": id}).Decode(&user)
 	if err != nil {
 		return model.UserBSON{}, err
 	}
-	return user, nil
 
+	return user, nil
 }
 
-func (u User) UpdatePassword(ID primitive.ObjectID, newPassword string) error {
-	var (
-		userCol = database.UserCol()
-		ctx     = context.Background()
-	)
+func (u User) UpdatePassword(id primitive.ObjectID, newPassword string) error {
+	filter := bson.M{"_id": id}
+	update := bson.D{
+		{"$set", bson.D{{"password", newPassword}}},
+	}
 
-	_, err := userCol.UpdateOne(
-		ctx,
-		bson.M{"_id": ID},
-		bson.D{
-			{"$set", bson.D{{"password", newPassword}}},
-		},
-	)
-
-	if err != nil {
+	if _, err := database.UserCol().UpdateOne(util.Ctx, filter, update); err != nil {
 		return err
 	}
+
 	return nil
 }
 
-func (u User) GetInfo(ID primitive.ObjectID) (models.UserBSON, error) {
+func (u User) GetInfo(id primitive.ObjectID) (model.UserBSON, error) {
 	var (
-		userCol = database.UserCol()
-		ctx     = context.Background()
-		user    model.UserBSON
+		user model.UserBSON
 	)
-	filter := bson.M{"_id": ID}
-	err := userCol.FindOne(ctx, filter).Decode(&user)
-	if err != nil {
+
+	filter := bson.M{"_id": id}
+
+	if err := database.UserCol().FindOne(util.Ctx, filter).Decode(&user); err != nil {
 		return user, err
 	}
 
 	return user, nil
 }
 
-func (u User) UpdateInfo(ID primitive.ObjectID, body models.UserInfoBSON) error {
-	var (
-		userCol = database.UserCol()
-		ctx     = context.Background()
-	)
+func (u User) UpdateInfo(id primitive.ObjectID, body model.UserInfoBSON) error {
 
-	filter := bson.M{"_id": ID}
+	filter := bson.M{"_id": id}
 
-	_, err := userCol.UpdateOne(ctx, filter, bson.M{"$set": body})
+	_, err := database.UserCol().UpdateOne(util.Ctx, filter, bson.M{"$set": body})
 	if err != nil {
 		return err
 	}

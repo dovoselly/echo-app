@@ -1,93 +1,80 @@
 package service
 
 import (
-	"echo-app/dao"
 	"echo-app/model"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GetAllOrderByUserId(ID primitive.ObjectID) ([]model.OrderResponse, error) {
+type Order struct{}
 
-	orders := make([]model.OrderResponse, 0)
+func (o Order) GetByUserId(id string) ([]model.OrderResponse, error) {
+	var (
+		orders = make([]model.OrderResponse, 0)
+	)
+
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return orders, err
+	}
 
 	// get orders in db
-	ordersBSON, err := dao.GetAllOrdersByUserId(ID)
+	ordersBSON, err := orderDAO.GetByUserId(objId)
 	if err != nil {
 		return orders, err
 	}
 
 	// Convert to OrderJSON
 	for _, orderBSON := range ordersBSON {
-
 		orderItems := make([]model.OrderItemResponse, 0)
 
+		// convert items in order
 		for _, v := range orderBSON.Items {
-			orderItem := model.OrderItemResponse{
-				ID:        v.ID,
-				ProductId: v.ProductId,
-				Price:     v.Price,
-				Quantity:  v.Quantity,
-				Note:      v.Note,
-			}
+			orderItem := v.ConvertToJSON()
 			orderItems = append(orderItems, orderItem)
 		}
 
-		orderJSON := model.OrderResponse{
-			ID:         orderBSON.ID,
-			UserId:     orderBSON.UserId,
-			DeliveryId: orderBSON.DeliveryId,
-			OrderCode:  orderBSON.OrderCode,
-			Status:     orderBSON.Status,
-			TotalPrice: orderBSON.TotalPrice,
-			Note:       orderBSON.Note,
-			Payment:    orderBSON.Payment,
-			Items:      orderItems,
-		}
-
+		orderJSON := orderBSON.ConvertToJSON(orderItems)
 		orders = append(orders, orderJSON)
 	}
 
 	return orders, nil
 }
 
-func CreateOrder(ID primitive.ObjectID, body model.OrderCreate) error {
+func (o Order) Create(idUser string, body model.OrderCreate) (string, error) {
+	var (
+		orderBSON model.OrderCreateBSON
+	)
 
-	// get list item insert to order-items db
-	listItemJson := make([]model.OrderItemBSON, 0)
-	for _, v := range body.Items {
-		listItemJson = append(listItemJson, v.ConvertToOrderItemBSON())
+	objId, err := primitive.ObjectIDFromHex(idUser)
+	if err != nil {
+		return "", err
 	}
 
-	if err := dao.CreateOrderItems(listItemJson); err != nil {
-		return err
+	// insert to order-items db
+	listItemJson := make([]model.OrderItemBSON, 0)
+	for _, v := range body.Items {
+		listItemJson = append(listItemJson, v.ConvertToBSON())
+	}
+
+	if _, err := orderItemDAO.Create(listItemJson); err != nil {
+		return "", err
 	}
 
 	// get list id insert to order db
 	ListIdItemJson := make([]primitive.ObjectID, 0)
 	for _, v := range listItemJson {
-		ListIdItemJson = append(ListIdItemJson, v.ID)
+		ListIdItemJson = append(ListIdItemJson, v.Id)
 	}
 
-	body.Status = "PENDING"
-	orderBSON := model.OrderCreateBSON{
-		ID:         primitive.NewObjectID(),
-		UserId:     ID,
-		DeliveryId: body.DeliveryId,
-		OrderCode:  body.OrderCode,
-		Status:     body.Status,
-		TotalPrice: body.TotalPrice,
-		Note:       body.Note,
-		Payment:    body.Payment,
-		Items:      ListIdItemJson,
-		CreatedAt:  time.Now(),
-	}
+	// convert orderCreate to orderCreateBson
+	orderBSON = body.ConvertToBSON(ListIdItemJson, objId)
 
-	err := dao.CreateOrder(orderBSON)
+	// create
+	orderId, err := orderDAO.CreateOrder(orderBSON)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return orderId, nil
 }
