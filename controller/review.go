@@ -1,57 +1,40 @@
 package controller
 
 import (
-	"echo-app/models"
-	"echo-app/service"
+	"echo-app/model"
 	"echo-app/utils"
 	"fmt"
-
 	"github.com/labstack/echo/v4"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func ListReview(c echo.Context) error {
-	productIdString := c.Param("id")
-	productId, err := primitive.ObjectIDFromHex(productIdString)
-	fmt.Println(productIdString)
-	if err != nil {
-		return utils.Response400(c, nil, utils.InvalidData)
-	}
+type Review struct{}
 
-	queryInterface := c.Get("query")
-	query, ok := queryInterface.(models.ReviewQuery)
-	if !ok {
-		return utils.Response400(c, nil, utils.InvalidData)
-	}
+func (r Review) GetListReview(c echo.Context) error {
+	ID := c.Param("id")
 
-	results, err := service.ListReview(productId, query)
+	query := c.Get("query").(model.ReviewQuery)
+
+	results, err := reviewService.GetListReview(ID, query)
 	if err != nil {
+		fmt.Println(err.Error())
 		return utils.Response400(c, nil, utils.InvalidData)
 	}
-	return utils.Response200(c, results, utils.CreateSuccessFully)
+	return utils.Response200(c, results, "")
 }
 
-func CreateReview(c echo.Context) error {
+func (r Review) CreateReview(c echo.Context) error {
 	userId, err := utils.GetUserId(c)
 	if err != nil {
-		return utils.Response404(c, nil, utils.InvalidData)
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
-	payloadInterface := c.Get("body")
-	payload, ok := payloadInterface.(models.CreateReview)
-	if !ok {
-		return utils.Response404(c, nil, utils.InvalidData)
-	}
+	productId := c.Param("id")
 
-	productIdString := c.Param("id")
-	productId, err := primitive.ObjectIDFromHex(productIdString)
+	body := c.Get("body").(model.CreateReview)
+
+	result, err := reviewService.CreateReview(userId, productId, body)
 	if err != nil {
-		return utils.Response404(c, nil, utils.InvalidData)
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
-
-	err = service.CreateReview(userId, productId, payload)
-	if err != nil {
-		return utils.Response200(c, "", err.Error())
-	}
-	return utils.Response200(c, "", utils.CreateSuccessFully)
+	return utils.Response200(c, result.InsertedID, utils.CreateSuccessFully)
 }
