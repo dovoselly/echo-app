@@ -1,7 +1,7 @@
 package validation
 
 import (
-	"echo-app/util"
+	"echo-app/utils"
 
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -14,7 +14,7 @@ func ValidateID(next echo.HandlerFunc) echo.HandlerFunc {
 
 		// validate id
 		if _, err := primitive.ObjectIDFromHex(id); err != nil {
-			return util.Response400(c, nil, err.Error())
+			return utils.Response400(c, nil, err.Error())
 		}
 
 		c.Set("id", id)

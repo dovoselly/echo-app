@@ -2,7 +2,7 @@ package validation
 
 import (
 	"echo-app/model"
-	"echo-app/util"
+	"echo-app/utils"
 
 	"github.com/labstack/echo/v4"
 )
@@ -18,13 +18,13 @@ func (a Admin) AdminLogin(next echo.HandlerFunc) echo.HandlerFunc {
 		// bind request data
 		if err := c.Bind(&body); err != nil {
 			if err != nil {
-				return util.Response400(c, nil, err.Error())
+				return utils.Response400(c, nil, err.Error())
 			}
 		}
 
 		// validate
 		if err := body.Validate(); err != nil {
-			return util.Response400(c, nil, err.Error())
+			return utils.Response400(c, nil, err.Error())
 		}
 
 		c.Set("body", body)
@@ -41,7 +41,7 @@ func ValidateAdminUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
 		err := c.Bind(&admin)
 
 		if err != nil {
-			return util.Response400(c, nil, err.Error())
+			return utils.Response400(c, nil, err.Error())
 		}
 
 		// success

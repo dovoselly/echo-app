@@ -2,7 +2,7 @@ package validation
 
 import (
 	"echo-app/model"
-	"echo-app/util"
+	"echo-app/utils"
 
 	"github.com/labstack/echo/v4"
 )
@@ -11,11 +11,11 @@ func CreateReply(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var body model.CreateReply
 		if err := c.Bind(&body); err != nil {
-			return util.Response400(c, nil, util.InvalidData)
+			return utils.Response400(c, nil, utils.InvalidData)
 		}
 
 		if err := body.Validate(); err != nil {
-			return util.Response400(c, nil, util.InvalidData)
+			return utils.Response400(c, nil, utils.InvalidData)
 		}
 
 		c.Set("body", body)
