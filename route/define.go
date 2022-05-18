@@ -9,6 +9,8 @@ import (
 var (
 	// controller
 	userCtrl    = controller.User{}
+	authCtrl    = controller.Auth{}
+	orderCtrl   = controller.Order{}
 	productCtrl = controller.Product{}
 	reviewCtrl  = controller.Review{}
 

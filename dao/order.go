@@ -4,17 +4,17 @@ import (
 	"context"
 	"echo-app/database"
 	"echo-app/model"
+	"echo-app/utils"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GetAllOrdersByUserId(ID primitive.ObjectID) ([]model.OrderBSON, error) {
+type Order struct{}
 
+func (o Order) GetByUserId(ID primitive.ObjectID) ([]model.OrderBSON, error) {
 	var (
-		orders   []model.OrderBSON
-		orderCol = database.OrderCol()
-		ctx      = context.Background()
+		orders []model.OrderBSON
 	)
 
 	pipeline := []bson.M{
@@ -29,10 +29,8 @@ func GetAllOrdersByUserId(ID primitive.ObjectID) ([]model.OrderBSON, error) {
 		}},
 	}
 
-	cursor, err := orderCol.Aggregate(ctx, pipeline)
-
+	cursor, err := database.OrderCol().Aggregate(utils.Ctx, pipeline)
 	err = cursor.All(context.Background(), &orders)
-
 	if err != nil {
 		return orders, err
 	}
@@ -40,19 +38,11 @@ func GetAllOrdersByUserId(ID primitive.ObjectID) ([]model.OrderBSON, error) {
 	return orders, nil
 }
 
-func CreateOrder(body model.OrderCreateBSON) error {
-	var (
-		orderCol = database.OrderCol()
-		ctx      = context.Background()
-	)
-
-	// fmt.Println("BODY IN ORDER_DAO", body)
-
-	// create order
-	_, err := orderCol.InsertOne(ctx, body)
+func (o Order) CreateOrder(body model.OrderCreateBSON) (string, error) {
+	result, err := database.OrderCol().InsertOne(utils.Ctx, body)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return result.InsertedID.(string), nil
 }

@@ -1,44 +1,45 @@
 package controller
 
 import (
-	"echo-app/models"
-	"echo-app/service"
+	"echo-app/model"
 	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
 )
 
-func CreateOrder(c echo.Context) error {
+type Order struct{}
 
-	var (
-		body = c.Get("body").(models.OrderCreate)
-	)
-
+func (o Order) GetByUserId(c echo.Context) error {
 	// Get Id in token
-	ID, _err := util.GetUserId(c)
-	if _err != nil {
-		return _err
-	}
-
-	err := service.CreateOrder(ID, body)
+	id, err := util.GetUserId(c)
 	if err != nil {
-		return util.Response400(c, nil, err.Error())
+		return err
 	}
 
-	return util.Response200(c, nil, "")
-}
-
-func GetAllOrdersByUserId(c echo.Context) error {
-	// Get Id in token
-	ID, _err := util.GetUserId(c)
-	if _err != nil {
-		return _err
-	}
-
-	data, err := service.GetAllOrderByUserId(ID)
+	data, err := orderService.GetByUserId(id)
 	if err != nil {
-		return util.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, util.InvalidData)
 	}
 
 	return util.Response200(c, data, "")
+}
+
+func (o Order) Create(c echo.Context) error {
+	var (
+		body = c.Get("body").(model.OrderCreate)
+	)
+
+	// get id user in token
+	objId, err := util.GetUserId(c)
+	if err != nil {
+		return err
+	}
+
+	// process
+	id, err := orderService.Create(objId, body)
+	if err != nil {
+		return util.Response400(c, nil, util.InvalidData)
+	}
+
+	return util.Response200(c, id, "")
 }

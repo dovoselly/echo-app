@@ -1,7 +1,7 @@
 package validation
 
 import (
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
@@ -12,7 +12,7 @@ type User struct{}
 func (u User) Register(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var (
-			body models.UserRegister
+			body model.UserRegister
 		)
 		// Validate
 		c.Bind(&body)
@@ -30,7 +30,7 @@ func (u User) Register(next echo.HandlerFunc) echo.HandlerFunc {
 
 func (u User) Login(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var body models.UserLogin
+		var body model.UserLogin
 
 		// Validate
 		c.Bind(&body)
@@ -46,7 +46,7 @@ func (u User) Login(next echo.HandlerFunc) echo.HandlerFunc {
 
 func (u User) ChangePassword(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var body models.UserChangePassword
+		var body model.UserChangePassword
 
 		//validate
 		c.Bind(&body)
@@ -64,7 +64,7 @@ func (u User) ChangePassword(next echo.HandlerFunc) echo.HandlerFunc {
 
 func (u User) UpdateInfo(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var body models.UserUpdate
+		var body model.UserUpdate
 
 		// validate
 		c.Bind(&body)

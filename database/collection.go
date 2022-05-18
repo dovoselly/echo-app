@@ -52,5 +52,11 @@ func OrderCol() *mongo.Collection {
 func OrderItemCol() *mongo.Collection {
 	return db.Collection(orderItems)
 }
+func CartCol() *mongo.Collection {
+	return db.Collection(carts)
+}
+func CartItemCol() *mongo.Collection {
+	return db.Collection(cartItems)
+}
 
 // ...
