@@ -9,20 +9,19 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-var envVars = config.GetEnv()
-
 func category(e *echo.Echo) {
-	isLogin := middleware.JWT([]byte(envVars.Jwt.SecretKey))
-	categoryRouter := e.Group("/admin/categories", isLogin)
-	{
-		categoryRouter.POST("", controller.CreateCategory, validation.CategoryCreateBody)
-		categoryRouter.GET("", controller.GetListCategory)
-		categoryRouter.GET("/:id", controller.GetCategoryByID, validation.ValidateID)
+	var env = config.GetEnv()
 
-		categoryRouter.PUT("/:id", controller.UpdateCategoryByID, validation.ValidateID, validation.CategoryUpdateBody)
-		categoryRouter.DELETE("/:id", controller.DeleteCategoryByID, validation.ValidateID)
-		categoryRouter.PATCH("/:id/disable", controller.DisabledCategory)
-		categoryRouter.PATCH("/:id/enabled", controller.EnabledCategory)
+	c := e.Group("/admin/categories")
 
-	}
+	c.Use(middleware.JWT([]byte(env.Jwt.SecretKey)))
+
+	c.POST("", controller.CreateCategory, validation.CategoryCreateBody)
+	c.GET("", controller.GetListCategory)
+	c.GET("/:id", controller.GetCategoryByID, validation.ValidateID)
+
+	c.PUT("/:id", controller.UpdateCategoryByID, validation.ValidateID, validation.CategoryUpdateBody)
+	c.DELETE("/:id", controller.DeleteCategoryByID, validation.ValidateID)
+	c.PATCH("/:id/disable", controller.DisabledCategory)
+	c.PATCH("/:id/enabled", controller.EnabledCategory)
 }

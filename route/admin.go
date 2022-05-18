@@ -1,21 +1,18 @@
 package route
 
 import (
-	"echo-app/controller"
-	"echo-app/validation"
-
+	"echo-app/config"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func admin(e *echo.Echo) {
-	isLogin := middleware.JWT([]byte(envVars.Jwt.SecretKey))
-	adminRouter := e.Group("/admin", isLogin)
-	{
-		//adminRouter.POST("/admin-login", controller.AdminLogin, validation.AdminLoginBody)
-		adminRouter.GET("/me", controller.MyProfileAdmin, isLogin)
-		adminRouter.PUT("/me", controller.UpdateMyProfileAdmin, isLogin, validation.ValidateAdminUpdateBody)
-		adminRouter.PATCH("/me/password", controller.ChangePasswordAdmin)
-		adminRouter.PATCH("/me/avatar", controller.ChangeAvatarAdmin)
-	}
+	var env = config.GetEnv()
+
+	isLogin := middleware.JWT([]byte(env.Jwt.SecretKey))
+	a := e.Group("/admin", isLogin)
+	a.GET("/me", adminCtrl.MyProfileAdmin, isLogin)
+	a.PUT("/me", adminCtrl.UpdateMyProfileAdmin, isLogin, adminVal.AdminLogin)
+	a.PATCH("/me/password", adminCtrl.ChangePasswordAdmin)
+	a.PATCH("/me/avatar", adminCtrl.ChangeAvatarAdmin)
 }
