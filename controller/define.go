@@ -8,4 +8,5 @@ var (
 	orderService = service.Order{}
 
 	productService = service.Product{}
+	reviewService  = service.Review{}
 )

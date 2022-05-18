@@ -2,7 +2,7 @@ package service
 
 import (
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -16,7 +16,7 @@ func (u User) ChangePassword(id string, body model.UserChangePassword) error {
 	// check currentPassword
 	userBSON, _ := userDAO.GetById(objId)
 	if u.checkPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
-		return errors.New(utils.CURRENT_PASSWORD_INCORRECT)
+		return errors.New(util.CURRENT_PASSWORD_INCORRECT)
 	}
 
 	// hash password before update

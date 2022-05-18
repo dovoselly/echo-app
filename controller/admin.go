@@ -3,7 +3,7 @@ package controller
 import (
 	"echo-app/model"
 	"echo-app/service"
-	"echo-app/utils"
+	"echo-app/util"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -17,7 +17,7 @@ func AdminLogin(c echo.Context) error {
 
 	// if error
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
 	// token
@@ -25,12 +25,12 @@ func AdminLogin(c echo.Context) error {
 		"token":   token,
 		"isAdmin": true,
 	}
-	return utils.Response200(c, data, "")
+	return util.Response200(c, data, "")
 }
 
 func MyProfileAdmin(c echo.Context) error {
 	// jwtPayload get id
-	jwtPayload, _ := utils.GetJWTPayload(c)
+	jwtPayload, _ := util.GetJWTPayload(c)
 	// admin id
 	adminID := jwtPayload["id"].(string)
 
@@ -39,7 +39,7 @@ func MyProfileAdmin(c echo.Context) error {
 
 	// if err
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
 	data := map[string]interface{}{
@@ -47,14 +47,14 @@ func MyProfileAdmin(c echo.Context) error {
 	}
 
 	//success
-	return utils.Response200(c, data, "")
+	return util.Response200(c, data, "")
 }
 
 func UpdateMyProfileAdmin(c echo.Context) error {
 	var body = c.Get("adminRequestBody").(model.Admin)
 
 	// jwtPayload for get id
-	jwtPayload, _ := utils.GetJWTPayload(c)
+	jwtPayload, _ := util.GetJWTPayload(c)
 	id := jwtPayload["id"].(string)
 
 	// UpdateProfile
@@ -62,10 +62,10 @@ func UpdateMyProfileAdmin(c echo.Context) error {
 
 	// if err
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
-	return utils.Response200(c, id, "")
+	return util.Response200(c, id, "")
 }
 
 func ChangePasswordAdmin(c echo.Context) error {

@@ -2,7 +2,7 @@ package controller
 
 import (
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
@@ -18,11 +18,11 @@ func (a Auth) Register(c echo.Context) error {
 	// Process data
 	id, err := authService.Register(body)
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
 	// Success
-	return utils.Response200(c, bson.M{"_id": id}, "")
+	return util.Response200(c, bson.M{"_id": id}, "")
 }
 
 func (a Auth) Login(c echo.Context) error {
@@ -33,12 +33,12 @@ func (a Auth) Login(c echo.Context) error {
 	// process data
 	token, err := authService.Login(user)
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
 	data := map[string]interface{}{
 		"token": token,
 	}
 
-	return utils.Response200(c, data, "")
+	return util.Response200(c, data, "")
 }
