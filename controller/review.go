@@ -5,45 +5,36 @@ import (
 	"echo-app/utils"
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Review struct{}
 
 func (r Review) GetListReview(c echo.Context) error {
-	productId := c.Param("id")
+	ID := c.Param("id")
 
 	query := c.Get("query").(model.ReviewQuery)
 
-	results, err := reviewService.GetListReview(productId, query)
+	results, err := reviewService.GetListReview(ID, query)
 	if err != nil {
 		fmt.Println(err.Error())
 		return utils.Response400(c, nil, utils.InvalidData)
 	}
-	return utils.Response200(c, results, utils.CreateSuccessFully)
+	return utils.Response200(c, results, "")
 }
 
 func (r Review) CreateReview(c echo.Context) error {
 	userId, err := utils.GetUserId(c)
 	if err != nil {
-		return utils.Response404(c, nil, utils.InvalidData)
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
 
-	payloadInterface := c.Get("body")
-	payload, ok := payloadInterface.(model.CreateReview)
-	if !ok {
-		return utils.Response404(c, nil, utils.InvalidData)
-	}
+	productId := c.Param("id")
 
-	productIdString := c.Param("id")
-	productId, err := primitive.ObjectIDFromHex(productIdString)
+	body := c.Get("body").(model.CreateReview)
+
+	result, err := reviewService.CreateReview(userId, productId, body)
 	if err != nil {
-		return utils.Response404(c, nil, utils.InvalidData)
+		return utils.Response400(c, nil, utils.InvalidData)
 	}
-
-	result, err := reviewService.CreateReview(userId, productId, payload)
-	if err != nil {
-		return utils.Response400(c, "", err.Error())
-	}
-	return utils.Response200(c, result, utils.CreateSuccessFully)
+	return utils.Response200(c, result.InsertedID, utils.CreateSuccessFully)
 }

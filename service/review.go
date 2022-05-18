@@ -20,12 +20,19 @@ func (Review) GetListReview(ID string, query model.ReviewQuery) ([]model.ReviewR
 	return results, err
 }
 
-func (Review) CreateReview(userId primitive.ObjectID, productId primitive.ObjectID, body model.CreateReview) (*mongo.InsertOneResult, error) {
+func (Review) CreateReview(userId string, productId string, body model.CreateReview) (*mongo.InsertOneResult, error) {
 	//init insert data
+	userOjbID, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		return &mongo.InsertOneResult{}, nil
+	}
+
+	productOjbID, err := primitive.ObjectIDFromHex(productId)
+
 	insertData := model.ReviewBSON{
 		ID:        primitive.NewObjectID(),
-		UserId:    userId,
-		ProductId: productId,
+		UserId:    userOjbID,
+		ProductId: productOjbID,
 		Rating:    body.Rating,
 		Content:   body.Content,
 		CreatedAt: time.Now(),
