@@ -3,7 +3,7 @@ package service
 import (
 	"echo-app/dao"
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 	"errors"
 	"fmt"
 )
@@ -27,7 +27,7 @@ func AdminLogin(loginBody model.AdminLoginBody) (string, error) {
 	}
 
 	// return JWT token
-	token, err := utils.GenerateToken(data)
+	token, err := util.GenerateToken(data)
 	if err != nil {
 		fmt.Printf(err.Error())
 	}

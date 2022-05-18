@@ -3,7 +3,7 @@ package dao
 import (
 	"echo-app/database"
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 	"fmt"
 	"strconv"
 	"strings"
@@ -77,12 +77,12 @@ func (p Product) GetListProduct(query model.ProductQuery) ([]model.ProductRespon
 		{"sort": sort},
 	}
 
-	cursor, err := database.ProductCol().Aggregate(utils.Ctx, pipeline)
+	cursor, err := database.ProductCol().Aggregate(util.Ctx, pipeline)
 	if err != nil {
 		return listProduct, err
 	}
 
-	err = cursor.All(utils.Ctx, &listProduct)
+	err = cursor.All(util.Ctx, &listProduct)
 	return listProduct, nil
 }
 
@@ -92,7 +92,7 @@ func (p Product) GetProductDetail(id primitive.ObjectID) (*model.ProductResponse
 		filter  = bson.M{"_id": id}
 	)
 
-	err := database.ProductCol().FindOne(utils.Ctx, filter).Decode(&results)
+	err := database.ProductCol().FindOne(util.Ctx, filter).Decode(&results)
 
 	return results, err
 }

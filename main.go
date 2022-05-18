@@ -4,7 +4,7 @@ import (
 	"echo-app/config"
 	"echo-app/dao"
 	"echo-app/database"
-	"echo-app/routes"
+	"echo-app/route"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -25,7 +25,7 @@ func main() {
 	}))
 	e.Use(middleware.Recover())
 
-	routes.Routes(e)
+	route.Routes(e)
 
 	e.Logger.Fatal(e.Start(":" + config.GetEnv().Port))
 

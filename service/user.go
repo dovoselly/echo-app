@@ -3,7 +3,7 @@ package service
 import (
 	"echo-app/model"
 	"echo-app/models"
-	"echo-app/utils"
+	"echo-app/util"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -14,12 +14,12 @@ type User struct{}
 func (u User) ChangePassword(ID primitive.ObjectID, body models.UserChangePassword) error {
 	// check currentPassword
 	userBSON, _ := userDAO.GetById(ID)
-	if utils.CheckPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
+	if util.CheckPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
 		return errors.New("CurrentPassword is incorrect")
 	}
 
 	// HashPassword truoc khi update
-	newPassword, _ := utils.HashPassword(body.NewPassword)
+	newPassword, _ := util.HashPassword(body.NewPassword)
 
 	// update password
 	err := userDAO.UpdatePassword(ID, newPassword)

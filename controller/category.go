@@ -3,7 +3,7 @@ package controller
 import (
 	"echo-app/models"
 	"echo-app/service"
-	"echo-app/utils"
+	"echo-app/util"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -17,18 +17,18 @@ func CreateCategory(c echo.Context) error {
 
 	// if err
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
-	return utils.Response200(c, body, "")
+	return util.Response200(c, body, "")
 }
 
 func GetListCategory(c echo.Context) error {
 	categories, err := service.GetListCategory()
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
-	return utils.Response200(c, categories, "")
+	return util.Response200(c, categories, "")
 }
 
 func GetCategoryByID(c echo.Context) error {
@@ -39,10 +39,10 @@ func GetCategoryByID(c echo.Context) error {
 
 	// if error
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
-	return utils.Response200(c, category, "")
+	return util.Response200(c, category, "")
 }
 
 func UpdateCategoryByID(c echo.Context) error {
@@ -54,10 +54,10 @@ func UpdateCategoryByID(c echo.Context) error {
 	// process data
 	err := service.UpdateCategoryByID(ID, body)
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
-	return utils.Response200(c, nil, "")
+	return util.Response200(c, nil, "")
 
 }
 
@@ -67,10 +67,10 @@ func DeleteCategoryByID(c echo.Context) error {
 	//process
 	err := service.DeleteCategoryByID(id)
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
-	return utils.Response200(c, nil, "")
+	return util.Response200(c, nil, "")
 }
 
 func DisabledCategory(c echo.Context) error {
