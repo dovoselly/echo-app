@@ -11,12 +11,12 @@ type Order struct{}
 
 func (o Order) GetByUserId(c echo.Context) error {
 	// Get Id in token
-	ID, err := utils.GetUserId(c)
+	id, err := utils.GetUserId(c)
 	if err != nil {
 		return err
 	}
 
-	data, err := orderService.GetByUserId(ID)
+	data, err := orderService.GetByUserId(id)
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}
@@ -24,19 +24,19 @@ func (o Order) GetByUserId(c echo.Context) error {
 	return utils.Response200(c, data, "")
 }
 
-func (o Order) CreateOrder(c echo.Context) error {
+func (o Order) Create(c echo.Context) error {
 	var (
 		body = c.Get("body").(model.OrderCreate)
 	)
 
 	// get id user in token
-	idUser, err := utils.GetUserId(c)
+	objId, err := utils.GetUserId(c)
 	if err != nil {
 		return err
 	}
 
 	// process
-	id, err := orderService.CreateOrder(idUser, body)
+	id, err := orderService.Create(objId, body)
 	if err != nil {
 		return utils.Response400(c, nil, err.Error())
 	}

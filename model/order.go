@@ -9,7 +9,7 @@ import (
 
 type (
 	OrderBSON struct {
-		ID         primitive.ObjectID `bson:"_id"`
+		Id         primitive.ObjectID `bson:"_id"`
 		UserId     primitive.ObjectID `bson:"userId"`
 		DeliveryId primitive.ObjectID `bson:"deliveryId"`
 		OrderCode  string             `bson:"orderCode"`
@@ -22,7 +22,7 @@ type (
 		UpdatedAt  time.Time          `bson:"updatedAt"`
 	}
 	OrderCreateBSON struct {
-		ID         primitive.ObjectID   `bson:"_id"`
+		Id         primitive.ObjectID   `bson:"_id"`
 		UserId     primitive.ObjectID   `bson:"userId"`
 		DeliveryId primitive.ObjectID   `bson:"deliveryId"`
 		OrderCode  string               `bson:"orderCode"`
@@ -36,7 +36,7 @@ type (
 	}
 
 	OrderResponse struct {
-		ID         primitive.ObjectID  `json:"_id"`
+		Id         primitive.ObjectID  `json:"_id"`
 		UserId     primitive.ObjectID  `json:"userId"`
 		DeliveryId primitive.ObjectID  `json:"deliveryId"`
 		OrderCode  string              `json:"orderCode"`
@@ -65,10 +65,10 @@ type (
 	}
 )
 
-func (u OrderCreate) ConvertToBSON(items []primitive.ObjectID) OrderCreateBSON {
+func (u OrderCreate) ConvertToBSON(items []primitive.ObjectID, userId primitive.ObjectID) OrderCreateBSON {
 	result := OrderCreateBSON{
-		ID:         primitive.NewObjectID(),
-		UserId:     u.UserId,
+		Id:         primitive.NewObjectID(),
+		UserId:     userId,
 		DeliveryId: u.DeliveryId,
 		OrderCode:  u.OrderCode,
 		Status:     utils.ORDER_STATUS_PENDING,
@@ -78,6 +78,21 @@ func (u OrderCreate) ConvertToBSON(items []primitive.ObjectID) OrderCreateBSON {
 		Items:      items,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
+	}
+	return result
+}
+
+func (o OrderBSON) ConvertToJSON(items []OrderItemResponse) OrderResponse {
+	result := OrderResponse{
+		Id:         o.Id,
+		UserId:     o.UserId,
+		DeliveryId: o.DeliveryId,
+		OrderCode:  o.OrderCode,
+		Status:     o.Status,
+		TotalPrice: o.TotalPrice,
+		Note:       o.Note,
+		Payment:    o.Payment,
+		Items:      items,
 	}
 	return result
 }

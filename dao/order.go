@@ -12,12 +12,9 @@ import (
 
 type Order struct{}
 
-func (o Order) GetAllByUserId(ID primitive.ObjectID) ([]model.OrderBSON, error) {
-
+func (o Order) GetByUserId(ID primitive.ObjectID) ([]model.OrderBSON, error) {
 	var (
-		orders   []model.OrderBSON
-		orderCol = database.OrderCol()
-		ctx      = context.Background()
+		orders []model.OrderBSON
 	)
 
 	pipeline := []bson.M{
@@ -32,10 +29,8 @@ func (o Order) GetAllByUserId(ID primitive.ObjectID) ([]model.OrderBSON, error) 
 		}},
 	}
 
-	cursor, err := orderCol.Aggregate(ctx, pipeline)
-
+	cursor, err := database.OrderCol().Aggregate(utils.Ctx, pipeline)
 	err = cursor.All(context.Background(), &orders)
-
 	if err != nil {
 		return orders, err
 	}
@@ -43,12 +38,11 @@ func (o Order) GetAllByUserId(ID primitive.ObjectID) ([]model.OrderBSON, error) 
 	return orders, nil
 }
 
-func (o Order) CreateOrder(body model.OrderCreateBSON) (primitive.ObjectID, error) {
-	// create order
+func (o Order) CreateOrder(body model.OrderCreateBSON) (string, error) {
 	result, err := database.OrderCol().InsertOne(utils.Ctx, body)
 	if err != nil {
-		return primitive.ObjectID{}, err
+		return "", err
 	}
 
-	return result.InsertedID.(primitive.ObjectID), nil
+	return result.InsertedID.(string), nil
 }

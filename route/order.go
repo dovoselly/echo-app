@@ -16,6 +16,6 @@ func order(e *echo.Echo) {
 	user.Use(middleware.JWT([]byte(env.Jwt.SecretKey)))
 
 	user.GET("", orderCtrl.GetByUserId)
-	user.POST("", orderCtrl.CreateOrder, validation.CreateOrder)
+	user.POST("", orderCtrl.Create, validation.CreateOrder)
 
 }

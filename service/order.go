@@ -8,63 +8,57 @@ import (
 
 type Order struct{}
 
-func (o Order) GetByUserId(ID primitive.ObjectID) ([]model.OrderResponse, error) {
+func (o Order) GetByUserId(id string) ([]model.OrderResponse, error) {
+	var (
+		orders = make([]model.OrderResponse, 0)
+	)
 
-	orders := make([]model.OrderResponse, 0)
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return orders, err
+	}
 
 	// get orders in db
-	ordersBSON, err := orderDAO.GetAllByUserId(ID)
+	ordersBSON, err := orderDAO.GetByUserId(objId)
 	if err != nil {
 		return orders, err
 	}
 
 	// Convert to OrderJSON
 	for _, orderBSON := range ordersBSON {
-
 		orderItems := make([]model.OrderItemResponse, 0)
 
+		// convert items in order
 		for _, v := range orderBSON.Items {
-			orderItem := model.OrderItemResponse{
-				ID:        v.ID,
-				ProductId: v.ProductId,
-				Price:     v.Price,
-				Quantity:  v.Quantity,
-				Note:      v.Note,
-			}
+			orderItem := v.ConvertToJSON()
 			orderItems = append(orderItems, orderItem)
 		}
 
-		orderJSON := model.OrderResponse{
-			ID:         orderBSON.ID,
-			UserId:     orderBSON.UserId,
-			DeliveryId: orderBSON.DeliveryId,
-			OrderCode:  orderBSON.OrderCode,
-			Status:     orderBSON.Status,
-			TotalPrice: orderBSON.TotalPrice,
-			Note:       orderBSON.Note,
-			Payment:    orderBSON.Payment,
-			Items:      orderItems,
-		}
-
+		orderJSON := orderBSON.ConvertToJSON(orderItems)
 		orders = append(orders, orderJSON)
 	}
 
 	return orders, nil
 }
 
-func (o Order) CreateOrder(id primitive.ObjectID, body model.OrderCreate) (primitive.ObjectID, error) {
+func (o Order) Create(idUser string, body model.OrderCreate) (string, error) {
 	var (
 		orderBSON model.OrderCreateBSON
 	)
 
+	objId, err := primitive.ObjectIDFromHex(idUser)
+	if err != nil {
+		return "", err
+	}
+
 	// insert to order-items db
 	listItemJson := make([]model.OrderItemBSON, 0)
 	for _, v := range body.Items {
-		listItemJson = append(listItemJson, v.ConvertToOrderItemBSON())
+		listItemJson = append(listItemJson, v.ConvertToBSON())
 	}
 
-	if err := orderItemDAO.CreateOrderItems(listItemJson); err != nil {
-		return id, err
+	if _, err := orderItemDAO.Create(listItemJson); err != nil {
+		return "", err
 	}
 
 	// get list id insert to order db
@@ -74,13 +68,13 @@ func (o Order) CreateOrder(id primitive.ObjectID, body model.OrderCreate) (primi
 	}
 
 	// convert orderCreate to orderCreateBson
-	orderBSON = body.ConvertToBSON(ListIdItemJson)
+	orderBSON = body.ConvertToBSON(ListIdItemJson, objId)
 
 	// create
-	id, err := orderDAO.CreateOrder(orderBSON)
+	orderId, err := orderDAO.CreateOrder(orderBSON)
 	if err != nil {
-		return primitive.ObjectID{}, err
+		return "", err
 	}
 
-	return id, nil
+	return orderId, nil
 }
