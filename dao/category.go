@@ -10,19 +10,19 @@ import (
 
 type Category struct{}
 
-func (Category) Create(category model.CategoryBSON) error {
+func (Category) CreateCategory(body model.CategoryBSON) error {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
 	)
 
 	// InsertOne
-	_, err := categoryCol.InsertOne(ctx, category)
+	_, err := categoryCol.InsertOne(ctx, body)
 
 	return err
 }
 
-func (Category) GetList() ([]model.CategoryBSON, error) {
+func (Category) GetListCategory() ([]model.CategoryBSON, error) {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
@@ -41,7 +41,7 @@ func (Category) GetList() ([]model.CategoryBSON, error) {
 	return categories, nil
 }
 
-func (Category) GetByID(ID primitive.ObjectID) (model.CategoryBSON, error) {
+func (Category) GetCategoryByID(ID primitive.ObjectID) (model.CategoryBSON, error) {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
@@ -57,7 +57,7 @@ func (Category) GetByID(ID primitive.ObjectID) (model.CategoryBSON, error) {
 	return category, nil
 }
 
-func (Category) UpdateByID(ID primitive.ObjectID, body model.CategoryUpdateBody) error {
+func (Category) UpdateCategoryByID(ID primitive.ObjectID, body model.CategoryUpdateBody) error {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()
@@ -75,7 +75,7 @@ func (Category) UpdateByID(ID primitive.ObjectID, body model.CategoryUpdateBody)
 	return nil
 }
 
-func (Category) DeleteByID(ID primitive.ObjectID) error {
+func (Category) DeleteCategoryByID(ID primitive.ObjectID) error {
 	var (
 		categoryCol = database.CategoryCol()
 		ctx         = context.Background()

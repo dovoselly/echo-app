@@ -10,7 +10,7 @@ import (
 
 type Category struct{}
 
-func (Category) Create(c echo.Context) error {
+func (Category) CreateCategory(c echo.Context) error {
 	var body = c.Get("body").(model.CategoryCreateBody)
 
 	// process data
@@ -21,7 +21,7 @@ func (Category) Create(c echo.Context) error {
 	return util.Response200(c, body, "")
 }
 
-func (Category) GetList(c echo.Context) error {
+func (Category) GetListCategory(c echo.Context) error {
 	categories, err := categoryService.GetListCategory()
 	if err != nil {
 		return util.Response400(c, nil, err.Error())
@@ -35,7 +35,7 @@ func (Category) GetList(c echo.Context) error {
 
 }
 
-func (Category) GetByID(c echo.Context) error {
+func (Category) GetCategoryByID(c echo.Context) error {
 	var strID = c.Get("id").(string)
 
 	// process
@@ -49,7 +49,7 @@ func (Category) GetByID(c echo.Context) error {
 	return util.Response200(c, category, "")
 }
 
-func (Category) UpdateByID(c echo.Context) error {
+func (Category) UpdateCategoryByID(c echo.Context) error {
 	var (
 		ID   = c.Get("id").(string)
 		body = c.Get("body").(model.CategoryUpdateBody)
@@ -65,7 +65,7 @@ func (Category) UpdateByID(c echo.Context) error {
 
 }
 
-func (Category) DeleteByID(c echo.Context) error {
+func (Category) DeleteCategoryByID(c echo.Context) error {
 	var id = c.Get("id").(string)
 
 	//process
@@ -77,10 +77,10 @@ func (Category) DeleteByID(c echo.Context) error {
 	return util.Response200(c, nil, "")
 }
 
-func (Category) Disabled(c echo.Context) error {
+func (Category) DisabledCategory(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Disabled category")
 }
 
-func (Category) Enabled(c echo.Context) error {
+func (Category) EnabledCategory(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Enabled category")
 }

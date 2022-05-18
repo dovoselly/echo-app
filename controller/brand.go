@@ -10,11 +10,11 @@ import (
 
 type Brand struct{}
 
-func (Brand) Create(c echo.Context) error {
+func (Brand) CreateBrand(c echo.Context) error {
 	var body = c.Get("body").(model.BrandCreateBody)
 
 	// process data
-	err := brandService.Create(body)
+	err := brandService.CreateBrand(body)
 
 	// if err
 	if err != nil {
@@ -24,7 +24,7 @@ func (Brand) Create(c echo.Context) error {
 	return util.Response200(c, body, "")
 }
 
-func (Brand) GetList(c echo.Context) error {
+func (Brand) GetListBrand(c echo.Context) error {
 	brands, err := brandService.GetList()
 	if err != nil {
 		return util.Response400(c, nil, err.Error())
@@ -32,7 +32,7 @@ func (Brand) GetList(c echo.Context) error {
 	return util.Response200(c, brands, "")
 }
 
-func (Brand) GetByID(c echo.Context) error {
+func (Brand) GetBrandByID(c echo.Context) error {
 	var strID = c.Get("id").(string)
 
 	// process
@@ -46,7 +46,7 @@ func (Brand) GetByID(c echo.Context) error {
 	return util.Response200(c, brand, "")
 }
 
-func (Brand) UpdateByID(c echo.Context) error {
+func (Brand) UpdateBrandByID(c echo.Context) error {
 	var (
 		ID   = c.Get("id").(string)
 		body = c.Get("body").(model.BrandUpdateBody)
@@ -62,7 +62,7 @@ func (Brand) UpdateByID(c echo.Context) error {
 
 }
 
-func (Brand) DeleteByID(c echo.Context) error {
+func (Brand) DeleteBrandByID(c echo.Context) error {
 	var id = c.Get("id").(string)
 
 	//process
@@ -74,9 +74,9 @@ func (Brand) DeleteByID(c echo.Context) error {
 	return util.Response200(c, nil, "")
 }
 
-func (Brand) Disabled(c echo.Context) error {
+func (Brand) DisabledBrand(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Disabled brand")
 }
-func (Brand) Enabled(c echo.Context) error {
+func (Brand) EnabledBrand(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Enabled brand")
 }

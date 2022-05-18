@@ -9,19 +9,19 @@ import (
 
 type Brand struct{}
 
-func (b Brand) Create(brandBody model.BrandCreateBody) error {
+func (b Brand) CreateBrand(body model.BrandCreateBody) error {
 	// brand BSON
 
 	brand := model.BrandBSON{
 		ID:          primitive.NewObjectID(),
-		Name:        brandBody.Name,
-		Description: brandBody.Description,
+		Name:        body.Name,
+		Description: body.Description,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 	}
 
 	// create brand
-	if err := brandDao.Create(brand); err != nil {
+	if err := brandDao.CreateBrand(brand); err != nil {
 		return errors.New("can not create new brand")
 	}
 
@@ -33,7 +33,7 @@ func (b Brand) GetList() ([]model.BrandResponse, error) {
 	listBrand := make([]model.BrandResponse, 0)
 
 	// get list brand bson
-	brandsBSON, err := brandDao.GetList()
+	brandsBSON, err := brandDao.GetListBrand()
 	if err != nil {
 		return listBrand, err
 	}
@@ -61,7 +61,7 @@ func (b Brand) GetByID(ID string) (model.BrandResponse, error) {
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
 	// get brand by id
-	brandBSON, err := brandDao.GetByID(objID)
+	brandBSON, err := brandDao.GetBrandByID(objID)
 
 	brand = model.BrandResponse{
 		ID:          brandBSON.ID,
@@ -82,7 +82,7 @@ func (b Brand) GetByID(ID string) (model.BrandResponse, error) {
 func (b Brand) UpdateByID(ID string, body model.BrandUpdateBody) error {
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
-	err := brandDao.UpdateByID(objID, body)
+	err := brandDao.UpdateBrandByID(objID, body)
 	if err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ func (b Brand) DeleteByID(ID string) error {
 	// convert id string to objectID
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
-	err := brandDao.DeleteByID(objID)
+	err := brandDao.DeleteBrandByID(objID)
 	if err != nil {
 		return err
 	}

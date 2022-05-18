@@ -10,7 +10,7 @@ import (
 
 type Brand struct{}
 
-func (Brand) Create(brand model.BrandBSON) error {
+func (Brand) CreateBrand(brand model.BrandBSON) error {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()
@@ -22,7 +22,7 @@ func (Brand) Create(brand model.BrandBSON) error {
 	return err
 }
 
-func (Brand) GetList() ([]model.BrandBSON, error) {
+func (Brand) GetListBrand() ([]model.BrandBSON, error) {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()
@@ -41,7 +41,7 @@ func (Brand) GetList() ([]model.BrandBSON, error) {
 	return brands, nil
 }
 
-func (Brand) GetByID(ID primitive.ObjectID) (model.BrandBSON, error) {
+func (Brand) GetBrandByID(ID primitive.ObjectID) (model.BrandBSON, error) {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()
@@ -57,7 +57,7 @@ func (Brand) GetByID(ID primitive.ObjectID) (model.BrandBSON, error) {
 	return brand, nil
 }
 
-func (Brand) UpdateByID(ID primitive.ObjectID, body model.BrandUpdateBody) error {
+func (Brand) UpdateBrandByID(ID primitive.ObjectID, body model.BrandUpdateBody) error {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()
@@ -75,7 +75,7 @@ func (Brand) UpdateByID(ID primitive.ObjectID, body model.BrandUpdateBody) error
 	return nil
 }
 
-func (Brand) DeleteByID(ID primitive.ObjectID) error {
+func (Brand) DeleteBrandByID(ID primitive.ObjectID) error {
 	var (
 		brandCol = database.BrandCol()
 		ctx      = context.Background()

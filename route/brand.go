@@ -16,12 +16,12 @@ func brand(e *echo.Echo) {
 
 	b.Use(middleware.JWT([]byte(env.Jwt.SecretKey)))
 
-	b.POST("", brandCtrl.Create, brandVal.BrandCreateBody)
-	b.GET("", brandCtrl.GetList)
-	b.GET("/:id", brandCtrl.GetByID, validation.ValidateID)
+	b.POST("", brandCtrl.CreateBrand, brandVal.BrandCreateBody)
+	b.GET("", brandCtrl.GetListBrand)
+	b.GET("/:id", brandCtrl.GetBrandByID, validation.ValidateID)
 
-	b.PUT("/:id", brandCtrl.UpdateByID, validation.ValidateID, brandVal.BrandUpdateBody)
-	b.DELETE("/:id", brandCtrl.DeleteByID, validation.ValidateID)
-	b.PATCH("/:id/disable", brandCtrl.Disabled)
-	b.PATCH("/:id/enabled", brandCtrl.Enabled)
+	b.PUT("/:id", brandCtrl.UpdateBrandByID, validation.ValidateID, brandVal.BrandUpdateBody)
+	b.DELETE("/:id", brandCtrl.DeleteBrandByID, validation.ValidateID)
+	b.PATCH("/:id/disable", brandCtrl.DisabledBrand)
+	b.PATCH("/:id/enabled", brandCtrl.EnabledBrand)
 }
