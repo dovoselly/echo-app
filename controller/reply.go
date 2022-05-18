@@ -2,19 +2,15 @@ package controller
 
 import (
 	"echo-app/model"
-	"echo-app/service"
 	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateReply(c echo.Context) error {
-	reviewIdString := c.Param("id")
-	reviewId, err := primitive.ObjectIDFromHex(reviewIdString)
-	if err != nil {
-		return util.Response400(c, nil, util.InvalidData)
-	}
+type Reply struct{}
+
+func (Reply) CreateReply(c echo.Context) error {
+	reviewId := c.Param("id")
 
 	payloadInterface := c.Get("payload")
 	payload := payloadInterface.(model.CreateReply)
@@ -24,56 +20,41 @@ func CreateReply(c echo.Context) error {
 		return util.Response400(c, nil, util.InvalidData)
 	}
 
-	err = service.CreateReply(userId, reviewId, payload)
-	return util.Response200(c, nil, err.Error())
-}
-
-func UpdateReply(c echo.Context) error {
-	replyIdString := c.Param("id")
-	replyId, err := primitive.ObjectIDFromHex(replyIdString)
+	InsertedId, err := replyService.CreateReply(userId, reviewId, payload)
 	if err != nil {
 		return util.Response400(c, nil, util.InvalidData)
 	}
+	return util.Response200(c, InsertedId, util.UpdateSuccessFully)
+}
+
+func (Reply) UpdateReply(c echo.Context) error {
+	replyId := c.Param("id")
 
 	userId, err := util.GetUserId(c)
 	if err != nil {
 		return util.Response400(c, nil, util.InvalidData)
 	}
 
-	bodyInterface := c.Get("body")
-	body, ok := bodyInterface.(model.CreateReply)
-	if !ok {
+	body := c.Get("body").(model.CreateReply)
+
+	results, err := replyService.UpdateReply(userId, replyId, body)
+	if err != nil || results.MatchedCount == 0 {
 		return util.Response400(c, nil, util.InvalidData)
 	}
-
-	results, err := service.UpdateReply(userId, replyId, body)
-	if err != nil {
-		return util.Response400(c, nil, err.Error())
-	}
-	if results.MatchedCount == 0 {
-		return util.Response400(c, nil, util.InvalidData)
-	}
-
-	return util.Response200(c, nil, util.UpdateSuccessFully)
+	return util.Response200(c, replyId, util.UpdateSuccessFully)
 }
 
-func DeleteReply(c echo.Context) error {
-	replyIdString := c.Param("id")
-	replyId, err := primitive.ObjectIDFromHex(replyIdString)
-	if err != nil {
-		return util.Response400(c, nil, util.InvalidData)
-	}
+func (Reply) DeleteReply(c echo.Context) error {
+	replyId := c.Param("id")
 
 	userId, err := util.GetUserId(c)
 	if err != nil {
 		return util.Response400(c, nil, util.InvalidData)
 	}
 
-	results, err := service.DeleteReply(userId, replyId)
-
-	if results.DeletedCount == 0 {
+	results, err := replyService.DeleteReply(userId, replyId)
+	if err != nil || results.DeletedCount == 0 {
 		return util.Response400(c, nil, util.InvalidData)
 	}
-
 	return util.Response200(c, nil, util.DeleteSuccessFully)
 }

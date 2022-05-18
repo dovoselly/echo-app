@@ -1,44 +1,70 @@
 package service
 
 import (
-	"echo-app/dao"
 	"echo-app/model"
-	"echo-app/util"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func CreateReply(userId primitive.ObjectID, reviewId primitive.ObjectID, body model.CreateReply) error {
+type Reply struct{}
+
+func (Reply) CreateReply(userId string, reviewId string, body model.CreateReply) (string, error) {
+	userOjbID, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		return "", err
+	}
+
+	reviewOjbID, err := primitive.ObjectIDFromHex(reviewId)
+	if err != nil {
+		return "", err
+	}
+
 	//init insert data
 	insertData := model.Reply{
-		UserId:    userId,
+		UserId:    userOjbID,
 		Content:   body.Content,
-		ReviewId:  reviewId,
+		ReviewId:  reviewOjbID,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	err := dao.CreateReply(insertData)
-	return err
+
+	insertedId, err := replyDAO.CreateReply(insertData)
+	return insertedId, err
 }
 
-func UpdateReply(userId primitive.ObjectID, replyId primitive.ObjectID, body model.CreateReply) (*mongo.UpdateResult, error) {
-	filter := bson.M{"_id": replyId, "userId": userId}
+func (Reply) UpdateReply(userId string, replyId string, body model.CreateReply) (*mongo.UpdateResult, error) {
+	userOjbID, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		return nil, err
+	}
 
-	updateData := bson.M{"$set": model.Reply{
+	replyOjbID, err := primitive.ObjectIDFromHex(replyId)
+	if err != nil {
+		return nil, err
+	}
+
+	updateData := model.Reply{
 		Content:   body.Content,
-		UpdatedAt: util.CurrentDateTime(),
-	}}
+		UpdatedAt: time.Now(),
+	}
 
-	results, err := dao.UpdateReply(filter, updateData)
+	results, err := replyDAO.UpdateReply(userOjbID, replyOjbID, updateData)
 	return results, err
 }
 
-func DeleteReply(userId primitive.ObjectID, replyId primitive.ObjectID) (*mongo.DeleteResult, error) {
-	filter := bson.M{"_id": replyId, "userId": userId}
+func (Reply) DeleteReply(userId string, replyId string) (*mongo.DeleteResult, error) {
+	userOjbID, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		return nil, err
+	}
 
-	results, err := dao.DeleteReply(filter)
+	replyOjbID, err := primitive.ObjectIDFromHex(replyId)
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := replyDAO.DeleteReply(userOjbID, replyOjbID)
 	return results, err
 }

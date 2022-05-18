@@ -13,4 +13,5 @@ var (
 	//cartItem     = dao.CartItem{}
 	productDAO = dao.Product{}
 	reviewDAO  = dao.Review{}
+	replyDAO   = dao.Reply{}
 )
