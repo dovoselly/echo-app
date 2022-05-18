@@ -6,4 +6,5 @@ var (
 	userDAO    = dao.User{}
 	productDAO = dao.Product{}
 	reviewDAO  = dao.Review{}
+	replyDAO   = dao.Reply{}
 )

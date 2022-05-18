@@ -11,6 +11,7 @@ var (
 	userCtrl    = controller.User{}
 	productCtrl = controller.Product{}
 	reviewCtrl  = controller.Review{}
+	replyCtrl   = controller.Reply{}
 
 	//validate
 	userVal    = validation.User{}
