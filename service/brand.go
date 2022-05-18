@@ -1,15 +1,16 @@
 package service
 
 import (
-	"echo-app/dao"
 	"echo-app/model"
 	"errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
-func CreateBrand(brandBody model.BrandCreateBody) error {
-	// category BSON
+type Brand struct{}
+
+func (b Brand) Create(brandBody model.BrandCreateBody) error {
+	// brand BSON
 
 	brand := model.BrandBSON{
 		ID:          primitive.NewObjectID(),
@@ -20,19 +21,19 @@ func CreateBrand(brandBody model.BrandCreateBody) error {
 	}
 
 	// create brand
-	if err := dao.CreateBrand(brand); err != nil {
+	if err := brandDao.Create(brand); err != nil {
 		return errors.New("can not create new brand")
 	}
 
 	return nil
 }
 
-func GetListBrand() ([]model.BrandResponse, error) {
+func (b Brand) GetList() ([]model.BrandResponse, error) {
 
 	listBrand := make([]model.BrandResponse, 0)
 
 	// get list brand bson
-	brandsBSON, err := dao.GetListBrand()
+	brandsBSON, err := brandDao.GetList()
 	if err != nil {
 		return listBrand, err
 	}
@@ -51,7 +52,7 @@ func GetListBrand() ([]model.BrandResponse, error) {
 
 }
 
-func GetBrandByID(ID string) (model.BrandResponse, error) {
+func (b Brand) GetByID(ID string) (model.BrandResponse, error) {
 	var (
 		brand model.BrandResponse
 	)
@@ -60,7 +61,7 @@ func GetBrandByID(ID string) (model.BrandResponse, error) {
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
 	// get brand by id
-	brandBSON, err := dao.GetBrandByID(objID)
+	brandBSON, err := brandDao.GetByID(objID)
 
 	brand = model.BrandResponse{
 		ID:          brandBSON.ID,
@@ -78,10 +79,10 @@ func GetBrandByID(ID string) (model.BrandResponse, error) {
 	return brand, nil
 }
 
-func UpdateBrandByID(ID string, body model.BrandUpdateBody) error {
+func (b Brand) UpdateByID(ID string, body model.BrandUpdateBody) error {
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
-	err := dao.UpdateBrandByID(objID, body)
+	err := brandDao.UpdateByID(objID, body)
 	if err != nil {
 		return err
 	}
@@ -89,11 +90,11 @@ func UpdateBrandByID(ID string, body model.BrandUpdateBody) error {
 
 }
 
-func DeleteBrandByID(ID string) error {
+func (b Brand) DeleteByID(ID string) error {
 	// convert id string to objectID
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
-	err := dao.DeleteBrandByID(objID)
+	err := brandDao.DeleteByID(objID)
 	if err != nil {
 		return err
 	}
