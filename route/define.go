@@ -7,7 +7,9 @@ import (
 
 var (
 	// controller
-	userCtrl = controller.User{}
+	userCtrl  = controller.User{}
+	authCtrl  = controller.Auth{}
+	orderCtrl = controller.Order{}
 
 	//validate
 	userVal = validation.User{}

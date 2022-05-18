@@ -1,7 +1,7 @@
 package validation
 
 import (
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/utils"
 
 	"github.com/labstack/echo/v4"
@@ -10,7 +10,7 @@ import (
 func CreateOrder(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var (
-			body models.OrderCreate
+			body model.OrderCreate
 		)
 
 		// Validate

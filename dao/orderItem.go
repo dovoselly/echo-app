@@ -8,7 +8,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func GetAllOrderItemsByUserId() ([]model.OrderItemBSON, error) {
+type OrderItem struct{}
+
+func (o OrderItem) GetByUserId() ([]model.OrderItemBSON, error) {
 	var (
 		orderItems   []model.OrderItemBSON
 		orderItemCol = database.OrderItemCol()
@@ -28,7 +30,7 @@ func GetAllOrderItemsByUserId() ([]model.OrderItemBSON, error) {
 	return orderItems, nil
 }
 
-func CreateOrderItems(body []model.OrderItemBSON) error {
+func (o OrderItem) CreateOrderItems(body []model.OrderItemBSON) error {
 	var (
 		orderItemCol = database.OrderItemCol()
 		ctx          = context.Background()

@@ -1,19 +1,19 @@
 package service
 
 import (
-	"echo-app/dao"
 	"echo-app/model"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GetAllOrderByUserId(ID primitive.ObjectID) ([]model.OrderResponse, error) {
+type Order struct{}
+
+func (o Order) GetByUserId(ID primitive.ObjectID) ([]model.OrderResponse, error) {
 
 	orders := make([]model.OrderResponse, 0)
 
 	// get orders in db
-	ordersBSON, err := dao.GetAllOrdersByUserId(ID)
+	ordersBSON, err := orderDAO.GetAllByUserId(ID)
 	if err != nil {
 		return orders, err
 	}
@@ -52,16 +52,19 @@ func GetAllOrderByUserId(ID primitive.ObjectID) ([]model.OrderResponse, error) {
 	return orders, nil
 }
 
-func CreateOrder(ID primitive.ObjectID, body model.OrderCreate) error {
+func (o Order) CreateOrder(id primitive.ObjectID, body model.OrderCreate) (primitive.ObjectID, error) {
+	var (
+		orderBSON model.OrderCreateBSON
+	)
 
-	// get list item insert to order-items db
+	// insert to order-items db
 	listItemJson := make([]model.OrderItemBSON, 0)
 	for _, v := range body.Items {
 		listItemJson = append(listItemJson, v.ConvertToOrderItemBSON())
 	}
 
-	if err := dao.CreateOrderItems(listItemJson); err != nil {
-		return err
+	if err := orderItemDAO.CreateOrderItems(listItemJson); err != nil {
+		return id, err
 	}
 
 	// get list id insert to order db
@@ -70,24 +73,14 @@ func CreateOrder(ID primitive.ObjectID, body model.OrderCreate) error {
 		ListIdItemJson = append(ListIdItemJson, v.ID)
 	}
 
-	body.Status = "PENDING"
-	orderBSON := model.OrderCreateBSON{
-		ID:         primitive.NewObjectID(),
-		UserId:     ID,
-		DeliveryId: body.DeliveryId,
-		OrderCode:  body.OrderCode,
-		Status:     body.Status,
-		TotalPrice: body.TotalPrice,
-		Note:       body.Note,
-		Payment:    body.Payment,
-		Items:      ListIdItemJson,
-		CreatedAt:  time.Now(),
-	}
+	// convert orderCreate to orderCreateBson
+	orderBSON = body.ConvertToBSON(ListIdItemJson)
 
-	err := dao.CreateOrder(orderBSON)
+	// create
+	id, err := orderDAO.CreateOrder(orderBSON)
 	if err != nil {
-		return err
+		return primitive.ObjectID{}, err
 	}
 
-	return nil
+	return id, nil
 }

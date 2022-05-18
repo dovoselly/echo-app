@@ -1,81 +1,62 @@
 package service
 
 import (
-	"context"
-	"echo-app/database"
 	"echo-app/model"
 	"echo-app/utils"
 	"errors"
-	"fmt"
 
-	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"golang.org/x/crypto/bcrypt"
 )
 
-func UserRegister(payload model.UserRegister) (model.UserBSON, error) {
-	var (
-		collection = database.UserCol()
-		ctx        = context.Background()
-		user       *model.UserResponse
-	)
+type Auth struct{}
 
-	// check exist email and username
-	errExist := collection.FindOne(ctx, bson.M{"$or": []bson.M{{"email": payload.Email}, {"username": payload.Username}}}).Decode(&user)
-
-	fmt.Println("error: ", errExist)
-
-	if user != nil {
-		if user.Email == payload.Email && user.Username == payload.Username {
-			return model.UserBSON{}, errors.New("email and username is already")
-		}
-		if user.Email == payload.Email {
-			return model.UserBSON{}, errors.New("email is already")
-		}
-		if user.Username == payload.Username {
-			return model.UserBSON{}, errors.New("username is already")
-		}
-	}
-
+func (u Auth) Register(body model.UserRegister) (primitive.ObjectID, error) {
 	// HashPassword
-	payload.Password, _ = utils.HashPassword(payload.Password)
-
-	// default status
-	payload.Status = "ACTIVE"
+	body.Password, _ = u.hashPassword(body.Password)
 
 	//Create user
-	doc, err := userDAO.Register(payload.ConvertToBSON())
+	id, err := userDAO.Register(body.ConvertToBSON())
 	if err != nil {
 		err = errors.New("khong the tao user")
-		return doc, err
+		return id, err
 	}
 
-	return doc, err
-
+	return id, err
 }
 
-func Login(user model.UserLogin) (string, error) {
-
-	// FInd user by username
+func (u Auth) Login(user model.UserLogin) (string, error) {
+	// get user
 	userBSON, err := userDAO.GetByUsername(user.Username)
 	if err != nil {
-		return "", errors.New("Email not existed in db")
+		return "", errors.New(utils.NOT_EXIST_USER)
 	}
 
 	// verify user password
-	if utils.CheckPasswordHash(user.Password, userBSON.Password) != nil {
-		return "", errors.New("Wrong password")
+	if u.checkPasswordHash(user.Password, userBSON.Password) != nil {
+		return "", errors.New(utils.WRONG_PASSWORD)
 	}
 
 	// JWT payload
 	data := map[string]interface{}{
-		"_id": userBSON.ID,
+		"_id": userBSON.Id,
 	}
 
 	// Generate user token
 	token, err := utils.GenerateToken(data)
 	if err != nil {
-		return "", errors.New("GenerateUserToken failed")
+		return "", errors.New(utils.GENERATE_TOKEN_FAILED)
 	}
 
 	return token, nil
+}
 
+func (u Auth) hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func (u Auth) checkPasswordHash(password, hash string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err
 }

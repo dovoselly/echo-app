@@ -1,6 +1,7 @@
 package model
 
 import (
+	"echo-app/utils"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -58,9 +59,25 @@ type (
 		Payment    PaymentType        `json:"payment"`
 		Items      []OrderItemCreate  `json:"items"`
 	}
-
 	PaymentType struct {
 		Method string `json:"method" bson:"method"`
 		Status bool   `json:"status" bson:"status"`
 	}
 )
+
+func (u OrderCreate) ConvertToBSON(items []primitive.ObjectID) OrderCreateBSON {
+	result := OrderCreateBSON{
+		ID:         primitive.NewObjectID(),
+		UserId:     u.UserId,
+		DeliveryId: u.DeliveryId,
+		OrderCode:  u.OrderCode,
+		Status:     utils.ORDER_STATUS_PENDING,
+		TotalPrice: u.TotalPrice,
+		Note:       u.Note,
+		Payment:    u.Payment,
+		Items:      items,
+		CreatedAt:  time.Now(),
+		UpdatedAt:  time.Now(),
+	}
+	return result
+}

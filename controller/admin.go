@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/service"
 	"echo-app/utils"
 	"net/http"
@@ -10,7 +10,7 @@ import (
 )
 
 func AdminLogin(c echo.Context) error {
-	var admin = c.Get("adminLoginBody").(models.AdminLoginBody)
+	var admin = c.Get("adminLoginBody").(model.AdminLoginBody)
 
 	// process data
 	token, err := service.AdminLogin(admin)
@@ -51,7 +51,7 @@ func MyProfileAdmin(c echo.Context) error {
 }
 
 func UpdateMyProfileAdmin(c echo.Context) error {
-	var body = c.Get("adminRequestBody").(models.Admin)
+	var body = c.Get("adminRequestBody").(model.Admin)
 
 	// jwtPayload for get id
 	jwtPayload, _ := utils.GetJWTPayload(c)
@@ -67,14 +67,6 @@ func UpdateMyProfileAdmin(c echo.Context) error {
 
 	return utils.Response200(c, id, "")
 }
-
-//func AdminLogin(c echo.Context) error {
-//	return c.JSON(http.StatusOK, "Admin login")
-//}
-
-//func MyProfileAdmin(c echo.Context) error {
-//	return c.JSON(http.StatusOK, "Get Admin profile")
-//}
 
 func ChangePasswordAdmin(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Change password admin")
