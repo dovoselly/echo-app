@@ -2,7 +2,7 @@ package controller
 
 import (
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -15,23 +15,23 @@ func (Category) CreateCategory(c echo.Context) error {
 
 	// process data
 	if err := categoryService.CreateCategory(body); err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
-	return utils.Response200(c, body, "")
+	return util.Response200(c, body, "")
 }
 
 func (Category) GetListCategory(c echo.Context) error {
 	categories, err := categoryService.GetListCategory()
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
-	return utils.Response200(c, categories, "")
+	return util.Response200(c, categories, "")
 
 	//if categories, err := service.GetListCategory(); err != nil {
-	//	return utils.Response400(c, nil, err.Error())
+	//	return util.Response400(c, nil, err.Error())
 	//}
-	//return utils.Response200(c, categories, "")
+	//return util.Response200(c, categories, "")
 
 }
 
@@ -43,10 +43,10 @@ func (Category) GetCategoryByID(c echo.Context) error {
 
 	// if error
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
-	return utils.Response200(c, category, "")
+	return util.Response200(c, category, "")
 }
 
 func (Category) UpdateCategoryByID(c echo.Context) error {
@@ -58,10 +58,10 @@ func (Category) UpdateCategoryByID(c echo.Context) error {
 	// process data
 	err := categoryService.UpdateCategoryByID(ID, body)
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
-	return utils.Response200(c, nil, "")
+	return util.Response200(c, nil, "")
 
 }
 
@@ -71,10 +71,10 @@ func (Category) DeleteCategoryByID(c echo.Context) error {
 	//process
 	err := categoryService.DeleteCategoryByID(id)
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, err.Error())
 	}
 
-	return utils.Response200(c, nil, "")
+	return util.Response200(c, nil, "")
 }
 
 func (Category) DisabledCategory(c echo.Context) error {

@@ -2,7 +2,7 @@ package validation
 
 import (
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -15,7 +15,7 @@ func CreateOrder(next echo.HandlerFunc) echo.HandlerFunc {
 
 		// Validate
 		if err := c.Bind(&body); err != nil {
-			return utils.Response400(c, nil, err.Error())
+			return util.Response400(c, nil, err.Error())
 		}
 
 		// Success

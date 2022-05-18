@@ -11,7 +11,7 @@ import (
 
 type User struct{}
 
-func (u User) Register(doc models.UserBSON) (models.UserBSON, error) {
+func (u User) Register(doc model.UserBSON) (model.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
@@ -22,7 +22,7 @@ func (u User) Register(doc models.UserBSON) (models.UserBSON, error) {
 	return doc, err
 }
 
-func (u User) GetByUsername(username string) (models.UserBSON, error) {
+func (u User) GetByUsername(username string) (model.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
@@ -42,7 +42,7 @@ func (u User) GetByUsername(username string) (models.UserBSON, error) {
 	return user, nil
 }
 
-func (u User) GetById(ID primitive.ObjectID) (models.UserBSON, error) {
+func (u User) GetById(ID primitive.ObjectID) (model.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
@@ -77,7 +77,7 @@ func (u User) UpdatePassword(ID primitive.ObjectID, newPassword string) error {
 	return nil
 }
 
-func (u User) GetInfo(ID primitive.ObjectID) (models.UserBSON, error) {
+func (u User) GetInfo(ID primitive.ObjectID) (model.UserBSON, error) {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()
@@ -92,7 +92,7 @@ func (u User) GetInfo(ID primitive.ObjectID) (models.UserBSON, error) {
 	return user, nil
 }
 
-func (u User) UpdateInfo(ID primitive.ObjectID, body models.UserInfoBSON) error {
+func (u User) UpdateInfo(ID primitive.ObjectID, body model.UserInfoBSON) error {
 	var (
 		userCol = database.UserCol()
 		ctx     = context.Background()

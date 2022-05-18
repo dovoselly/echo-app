@@ -2,7 +2,6 @@ package service
 
 import (
 	"echo-app/model"
-	"errors"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -10,7 +9,7 @@ import (
 
 type Brand struct{}
 
-func (b Brand) CreateBrand(body model.BrandCreateBody) error {
+func (b Brand) CreateBrand(body model.BrandCreateBody) (string, error) {
 	// brand BSON
 
 	brand := model.BrandBSON{
@@ -22,11 +21,12 @@ func (b Brand) CreateBrand(body model.BrandCreateBody) error {
 	}
 
 	// create brand
-	if err := brandDao.CreateBrand(brand); err != nil {
-		return errors.New("can not create new brand")
+	insertedID, err := brandDao.CreateBrand(brand)
+	if err != nil {
+		return "", err
 	}
 
-	return nil
+	return insertedID, nil
 }
 
 func (b Brand) GetList() ([]model.BrandResponse, error) {

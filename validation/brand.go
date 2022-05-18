@@ -2,7 +2,7 @@ package validation
 
 import (
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -16,13 +16,13 @@ func (b Brand) BrandCreateBody(next echo.HandlerFunc) echo.HandlerFunc {
 		// bind request data
 		if err := c.Bind(&body); err != nil {
 			if err != nil {
-				return utils.Response400(c, nil, err.Error())
+				return util.Response400(c, nil, err.Error())
 			}
 		}
 
 		// validate
 		if err := body.Validate(); err != nil {
-			return utils.Response400(c, nil, err.Error())
+			return util.Response400(c, nil, err.Error())
 		}
 
 		c.Set("body", body)
@@ -38,13 +38,13 @@ func (b Brand) BrandUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
 		// bind request data
 		if err := c.Bind(&body); err != nil {
 			if err != nil {
-				return utils.Response400(c, nil, err.Error())
+				return util.Response400(c, nil, err.Error())
 			}
 		}
 
 		// validate
 		if err := body.Validate(); err != nil {
-			return utils.Response400(c, nil, err.Error())
+			return util.Response400(c, nil, err.Error())
 		}
 
 		c.Set("body", body)

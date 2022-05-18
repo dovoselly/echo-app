@@ -2,7 +2,7 @@ package controller
 
 import (
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -14,22 +14,22 @@ func (Brand) CreateBrand(c echo.Context) error {
 	var body = c.Get("body").(model.BrandCreateBody)
 
 	// process data
-	err := brandService.CreateBrand(body)
+	InsertedID, err := brandService.CreateBrand(body)
 
 	// if err
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, util.InvalidData)
 	}
 
-	return utils.Response200(c, body, "")
+	return util.Response200(c, InsertedID, util.CreateSuccessFully)
 }
 
 func (Brand) GetListBrand(c echo.Context) error {
 	brands, err := brandService.GetList()
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, util.InvalidData)
 	}
-	return utils.Response200(c, brands, "")
+	return util.Response200(c, brands, "")
 }
 
 func (Brand) GetBrandByID(c echo.Context) error {
@@ -40,10 +40,10 @@ func (Brand) GetBrandByID(c echo.Context) error {
 
 	// if error
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, util.InvalidData)
 	}
 
-	return utils.Response200(c, brand, "")
+	return util.Response200(c, brand, "")
 }
 
 func (Brand) UpdateBrandByID(c echo.Context) error {
@@ -55,10 +55,10 @@ func (Brand) UpdateBrandByID(c echo.Context) error {
 	// process data
 	err := brandService.UpdateByID(ID, body)
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, util.InvalidData)
 	}
 
-	return utils.Response200(c, nil, "")
+	return util.Response200(c, nil, "")
 
 }
 
@@ -68,10 +68,10 @@ func (Brand) DeleteBrandByID(c echo.Context) error {
 	//process
 	err := brandService.DeleteByID(id)
 	if err != nil {
-		return utils.Response400(c, nil, err.Error())
+		return util.Response400(c, nil, util.InvalidData)
 	}
 
-	return utils.Response200(c, nil, "")
+	return util.Response200(c, nil, "")
 }
 
 func (Brand) DisabledBrand(c echo.Context) error {

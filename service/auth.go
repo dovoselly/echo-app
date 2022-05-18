@@ -4,7 +4,7 @@ import (
 	"context"
 	"echo-app/database"
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 	"errors"
 	"fmt"
 
@@ -36,7 +36,7 @@ func UserRegister(payload model.UserRegister) (model.UserBSON, error) {
 	}
 
 	// HashPassword
-	payload.Password, _ = utils.HashPassword(payload.Password)
+	payload.Password, _ = util.HashPassword(payload.Password)
 
 	// default status
 	payload.Status = "ACTIVE"
@@ -61,7 +61,7 @@ func Login(user model.UserLogin) (string, error) {
 	}
 
 	// verify user password
-	if utils.CheckPasswordHash(user.Password, userBSON.Password) != nil {
+	if util.CheckPasswordHash(user.Password, userBSON.Password) != nil {
 		return "", errors.New("Wrong password")
 	}
 
@@ -71,7 +71,7 @@ func Login(user model.UserLogin) (string, error) {
 	}
 
 	// Generate user token
-	token, err := utils.GenerateToken(data)
+	token, err := util.GenerateToken(data)
 	if err != nil {
 		return "", errors.New("GenerateUserToken failed")
 	}

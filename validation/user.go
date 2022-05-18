@@ -2,7 +2,7 @@ package validation
 
 import (
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -19,7 +19,7 @@ func (u User) Register(next echo.HandlerFunc) echo.HandlerFunc {
 
 		//if err
 		if err := body.Validate(); err != nil {
-			return utils.Response400(c, nil, err.Error())
+			return util.Response400(c, nil, err.Error())
 		}
 
 		// Success
@@ -36,7 +36,7 @@ func (u User) Login(next echo.HandlerFunc) echo.HandlerFunc {
 		c.Bind(&body)
 
 		if err := body.Validate(); err != nil {
-			return utils.Response400(c, nil, err.Error())
+			return util.Response400(c, nil, err.Error())
 		}
 		// Success
 		c.Set("body", body)
@@ -53,7 +53,7 @@ func (u User) ChangePassword(next echo.HandlerFunc) echo.HandlerFunc {
 
 		// if err
 		if err := body.Validate(); err != nil {
-			return utils.Response400(c, nil, err.Error())
+			return util.Response400(c, nil, err.Error())
 		}
 
 		// Success
@@ -70,7 +70,7 @@ func (u User) UpdateInfo(next echo.HandlerFunc) echo.HandlerFunc {
 		c.Bind(&body)
 
 		if err := body.Validate(); err != nil {
-			return utils.Response400(c, nil, err.Error())
+			return util.Response400(c, nil, err.Error())
 		}
 
 		// Success

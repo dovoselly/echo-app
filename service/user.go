@@ -2,8 +2,7 @@ package service
 
 import (
 	"echo-app/model"
-	"echo-app/models"
-	"echo-app/utils"
+	"echo-app/util"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -11,15 +10,15 @@ import (
 
 type User struct{}
 
-func (u User) ChangePassword(ID primitive.ObjectID, body models.UserChangePassword) error {
+func (u User) ChangePassword(ID primitive.ObjectID, body model.UserChangePassword) error {
 	// check currentPassword
 	userBSON, _ := userDAO.GetById(ID)
-	if utils.CheckPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
+	if util.CheckPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
 		return errors.New("CurrentPassword is incorrect")
 	}
 
 	// HashPassword truoc khi update
-	newPassword, _ := utils.HashPassword(body.NewPassword)
+	newPassword, _ := util.HashPassword(body.NewPassword)
 
 	// update password
 	err := userDAO.UpdatePassword(ID, newPassword)
@@ -31,7 +30,7 @@ func (u User) ChangePassword(ID primitive.ObjectID, body models.UserChangePasswo
 	return nil
 }
 
-func (u User) GetInfo(ID primitive.ObjectID) (models.UserInfo, error) {
+func (u User) GetInfo(ID primitive.ObjectID) (model.UserInfo, error) {
 	var (
 		info model.UserInfo
 	)
@@ -58,7 +57,7 @@ func (u User) GetInfo(ID primitive.ObjectID) (models.UserInfo, error) {
 	return info, nil
 }
 
-func (u User) UpdateInfo(ID primitive.ObjectID, body models.UserUpdate) error {
+func (u User) UpdateInfo(ID primitive.ObjectID, body model.UserUpdate) error {
 
 	bodyBSON := model.UserInfoBSON{
 		FullName:    body.FullName,

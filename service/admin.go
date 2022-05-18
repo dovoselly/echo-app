@@ -2,7 +2,7 @@ package service
 
 import (
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 	"errors"
 	"fmt"
 )
@@ -28,7 +28,7 @@ func (a Admin) AdminLogin(body model.AdminLoginBody) (string, error) {
 	}
 
 	// return JWT token
-	token, err := utils.GenerateToken(data)
+	token, err := util.GenerateToken(data)
 	if err != nil {
 		fmt.Printf(err.Error())
 	}

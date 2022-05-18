@@ -3,13 +3,15 @@ package dao
 import (
 	"context"
 	"echo-app/database"
+	"echo-app/model"
+	"echo-app/util"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func CreateReply(insertData model.Reply) error {
-	_, err := database.ReplyCol().InsertOne(utils.Ctx, insertData)
+	_, err := database.ReplyCol().InsertOne(util.Ctx, insertData)
 	return err
 }
 

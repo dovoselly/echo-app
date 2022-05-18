@@ -3,7 +3,7 @@ package dao
 import (
 	"echo-app/database"
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"strconv"
@@ -40,17 +40,17 @@ func (Review) GetListReview(ojbID primitive.ObjectID, query model.ReviewQuery) (
 		}
 		opts.SetSort(sortMap)
 	}
-	cursor, err := database.ReviewCol().Find(utils.Ctx, filter, opts)
+	cursor, err := database.ReviewCol().Find(util.Ctx, filter, opts)
 	if err != nil {
 		return listReview, err
 	}
 
-	err = cursor.All(utils.Ctx, &listReview)
+	err = cursor.All(util.Ctx, &listReview)
 	return listReview, err
 }
 
 func (Review) CreateReview(insertData model.ReviewBSON) (*mongo.InsertOneResult, error) {
-	result, err := database.ReviewCol().InsertOne(utils.Ctx, insertData)
+	result, err := database.ReviewCol().InsertOne(util.Ctx, insertData)
 	if err != nil {
 		return nil, err
 	}
