@@ -22,11 +22,12 @@ func (u User) ChangePassword(c echo.Context) error {
 	}
 
 	// process
-	if err := userService.ChangePassword(id, body); err != nil {
-		return util.Response400(c, nil, util.InvalidData)
+	msg, err := userService.ChangePassword(id, body)
+	if err != nil {
+		return util.Response400(c, nil, msg)
 	}
 
-	return util.Response200(c, bson.M{"id": id}, "")
+	return util.Response200(c, id, msg)
 }
 
 func (u User) GetInfo(c echo.Context) error {

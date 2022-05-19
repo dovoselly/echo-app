@@ -7,7 +7,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func CreateReply(next echo.HandlerFunc) echo.HandlerFunc {
+type Reply struct{}
+
+func (Reply) CreateReply(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var body model.CreateReply
 		if err := c.Bind(&body); err != nil {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"echo-app/database"
 	"echo-app/model"
-	"echo-app/utils"
+	"echo-app/util"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -29,7 +29,7 @@ func (o Order) GetByUserId(ID primitive.ObjectID) ([]model.OrderBSON, error) {
 		}},
 	}
 
-	cursor, err := database.OrderCol().Aggregate(utils.Ctx, pipeline)
+	cursor, err := database.OrderCol().Aggregate(util.Ctx, pipeline)
 	err = cursor.All(context.Background(), &orders)
 	if err != nil {
 		return orders, err
@@ -39,7 +39,7 @@ func (o Order) GetByUserId(ID primitive.ObjectID) ([]model.OrderBSON, error) {
 }
 
 func (o Order) CreateOrder(body model.OrderCreateBSON) (string, error) {
-	result, err := database.OrderCol().InsertOne(utils.Ctx, body)
+	result, err := database.OrderCol().InsertOne(util.Ctx, body)
 	if err != nil {
 		return "", err
 	}

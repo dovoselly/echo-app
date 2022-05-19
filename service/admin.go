@@ -11,7 +11,7 @@ type Admin struct{}
 
 func (a Admin) AdminLogin(body model.AdminLoginBody) (string, error) {
 	// find admin in db
-	admin, err := adminDao.FindByUsername(body.Username)
+	admin, err := adminDAO.FindByUsername(body.Username)
 
 	if err != nil {
 		return "", err
@@ -36,7 +36,7 @@ func (a Admin) AdminLogin(body model.AdminLoginBody) (string, error) {
 }
 
 func (a Admin) GetMyProfile(ID string) (model.Admin, error) {
-	doc, err := adminDao.ProfileFindByID(ID)
+	doc, err := adminDAO.ProfileFindByID(ID)
 	if err != nil {
 		return doc, err
 	}
@@ -44,6 +44,6 @@ func (a Admin) GetMyProfile(ID string) (model.Admin, error) {
 }
 
 func (a Admin) UpdateMyProfile(ID string, newProfile model.Admin) error {
-	err := adminDao.UpdateMyProfile(ID, newProfile)
+	err := adminDAO.UpdateMyProfile(ID, newProfile)
 	return err
 }

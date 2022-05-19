@@ -16,6 +16,7 @@ var (
 	adminCtrl    = controller.Admin{}
 	categoryCtrl = controller.Category{}
 	brandCtrl    = controller.Brand{}
+	replyCtrl    = controller.Reply{}
 
 	//validate
 	userVal     = validation.User{}
@@ -24,6 +25,7 @@ var (
 	adminVal    = validation.Admin{}
 	categoryVal = validation.Category{}
 	brandVal    = validation.Brand{}
+	replyVal    = validation.Reply{}
 
 	//secret key
 	secretKeyBytes = []byte(config.GetEnv().Jwt.SecretKey)

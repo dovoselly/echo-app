@@ -1,7 +1,7 @@
 package model
 
 import (
-	"echo-app/utils"
+	"echo-app/util"
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation"
@@ -11,7 +11,7 @@ import (
 
 type (
 	UserBSON struct {
-		Id          primitive.ObjectID `bson:"_id"`
+		ID          primitive.ObjectID `bson:"_id"`
 		Email       string             `bson:"email" `
 		Username    string             `bson:"username"`
 		Password    string             `bson:"password"`
@@ -37,7 +37,7 @@ type (
 	}
 
 	UserResponse struct {
-		Id          primitive.ObjectID `json:"_id"`
+		ID          primitive.ObjectID `json:"_id"`
 		Email       string             `json:"email"`
 		Username    string             `json:"username"`
 		Password    string             `json:"password"`
@@ -84,11 +84,12 @@ type (
 	}
 
 	UserInfo struct {
-		Id          primitive.ObjectID `json:"_id"`
+		ID          primitive.ObjectID `json:"_id"`
 		FullName    string             `json:"fullName"`
 		Email       string             `json:"email"`
 		Username    string             `json:"username"`
 		DateOfBirth string             `json:"dateOfBirth"`
+		Avatar      string             `json:"avatar"`
 		Gender      string             `json:"gender"`
 		Phone       string             `json:"phone"`
 		Address     string             `json:"address"`
@@ -98,7 +99,7 @@ type (
 // ConvertToBSON
 func (u UserRegister) ConvertToBSON() UserBSON {
 	result := UserBSON{
-		Id:          primitive.NewObjectID(),
+		ID:          primitive.NewObjectID(),
 		Username:    u.Username,
 		Password:    u.Password,
 		Email:       u.Email,
@@ -107,7 +108,7 @@ func (u UserRegister) ConvertToBSON() UserBSON {
 		DateOfBirth: u.DateOfBirth,
 		Phone:       u.Phone,
 		Address:     u.Address,
-		Status:      utils.USER_STATUS_ACTIVE,
+		Status:      util.UserStatusActive,
 		CreatedAt:   time.Now(),
 	}
 	return result
@@ -115,7 +116,7 @@ func (u UserRegister) ConvertToBSON() UserBSON {
 
 func (u UserBSON) ConvertToJSON() UserInfo {
 	result := UserInfo{
-		Id:          u.Id,
+		ID:          u.ID,
 		FullName:    u.FullName,
 		Email:       u.Email,
 		Username:    u.Username,
