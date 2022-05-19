@@ -108,7 +108,7 @@ func (u UserRegister) ConvertToBSON() UserBSON {
 		DateOfBirth: u.DateOfBirth,
 		Phone:       u.Phone,
 		Address:     u.Address,
-		Status:      util.USER_STATUS_ACTIVE,
+		Status:      util.UserStatusActive,
 		CreatedAt:   time.Now(),
 	}
 	return result

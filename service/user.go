@@ -4,35 +4,33 @@ import (
 	"echo-app/model"
 	"echo-app/util"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-
-	"github.com/pkg/errors"
 )
 
 type User struct{}
 
-func (u User) ChangePassword(ID string, body model.UserChangePassword) error {
+func (u User) ChangePassword(ID string, body model.UserChangePassword) (string, error) {
 	// check currentPassword
 	objId, err := primitive.ObjectIDFromHex(ID)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	userBSON, _ := userDAO.GetById(objId)
 	if util.CheckPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
-		return errors.New("CurrentPassword is incorrect")
+		return util.CurrentPasswordIsIncorrect, nil
 	}
 
-	// HashPassword truoc khi update
+	// HashPassword before update
 	newPassword, _ := util.HashPassword(body.NewPassword)
 
 	// update password
-	err = userDAO.UpdatePassword(objId, newPassword)
+	result, err := userDAO.UpdatePassword(objId, newPassword)
 
-	if err != nil {
-		return err
+	if err != nil || result.ModifiedCount < 1 {
+		return util.InvalidData, err
 	}
 
-	return nil
+	return util.UpdateSuccessFully, nil
 }
 
 func (u User) GetInfo(ID string) (model.UserInfo, error) {

@@ -4,6 +4,7 @@ import (
 	"echo-app/database"
 	"echo-app/model"
 	"echo-app/util"
+	"go.mongodb.org/mongo-driver/mongo"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -46,17 +47,18 @@ func (u User) GetById(id primitive.ObjectID) (model.UserBSON, error) {
 	return user, nil
 }
 
-func (u User) UpdatePassword(id primitive.ObjectID, newPassword string) error {
+func (u User) UpdatePassword(id primitive.ObjectID, newPassword string) (*mongo.UpdateResult, error) {
 	filter := bson.M{"_id": id}
 	update := bson.D{
 		{"$set", bson.D{{"password", newPassword}}},
 	}
 
-	if _, err := database.UserCol().UpdateOne(util.Ctx, filter, update); err != nil {
-		return err
+	result, err := database.UserCol().UpdateOne(util.Ctx, filter, update)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil
+	return result, nil
 }
 
 func (u User) GetInfo(id primitive.ObjectID) (model.UserBSON, error) {
