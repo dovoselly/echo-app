@@ -17,21 +17,21 @@ var (
 	Ctx = context.Background()
 
 	// Auth
-	NOT_EXIST_USER        = "user not existed in database"
-	WRONG_PASSWORD        = "Wrong password"
-	GENERATE_TOKEN_FAILED = "Generate token failed"
+	NotExistUser        = "user not existed in database"
+	WrongPassword       = "Wrong password"
+	GenerateTokenFailed = "Generate token failed"
 
 	// Status User
-	USER_STATUS_ACTIVE  = "ACTIVE"
-	USER_STATUS_BLOCKED = "BLOCKED"
+	UserStatusActive  = "ACTIVE"
+	UserStatusBlocked = "BLOCKED"
 
 	//
-	CURRENT_PASSWORD_INCORRECT = "CurrentPassword is incorrect"
+	CurrentPasswordIsIncorrect = "CurrentPassword is incorrect"
 
 	// Order
-	ORDER_STATUS_PENDING    = "PENDING"
-	ORDER_STATUS_CONFIRMED  = "CONFIRMED"
-	ORDER_STATUS_DELIVERING = "DELIVERING"
-	ORDER_STATUS_DELIVERED  = "DELIVERED"
-	ORDER_STATUS_CANCEL     = "CANCEL"
+	OrderStatusPending    = "PENDING"
+	OrderStatusConfirmed  = "CONFIRMED"
+	OrderStatusDelivering = "DELIVERING"
+	OrderStatusDelivered  = "DELIVERED"
+	OrderStatusCancel     = "CANCEL"
 )

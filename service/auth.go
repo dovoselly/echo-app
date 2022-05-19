@@ -29,12 +29,12 @@ func (u Auth) Login(user model.UserLogin) (string, error) {
 	// get user
 	userBSON, err := userDAO.GetByUsername(user.Username)
 	if err != nil {
-		return "", errors.New(util.NOT_EXIST_USER)
+		return "", errors.New(util.NotExistUser)
 	}
 
 	// verify user password
 	if u.checkPasswordHash(user.Password, userBSON.Password) != nil {
-		return "", errors.New(util.WRONG_PASSWORD)
+		return util.WrongPassword, nil
 	}
 
 	// JWT payload
@@ -45,7 +45,7 @@ func (u Auth) Login(user model.UserLogin) (string, error) {
 	// Generate user token
 	token, err := util.GenerateToken(data)
 	if err != nil {
-		return "", errors.New(util.GENERATE_TOKEN_FAILED)
+		return util.GenerateTokenFailed, nil
 	}
 
 	return token, nil

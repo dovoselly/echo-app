@@ -71,7 +71,7 @@ func (u OrderCreate) ConvertToBSON(items []primitive.ObjectID, userId primitive.
 		UserId:     userId,
 		DeliveryId: u.DeliveryId,
 		OrderCode:  u.OrderCode,
-		Status:     util.ORDER_STATUS_PENDING,
+		Status:     util.OrderStatusPending,
 		TotalPrice: u.TotalPrice,
 		Note:       u.Note,
 		Payment:    u.Payment,
