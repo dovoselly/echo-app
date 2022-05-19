@@ -8,7 +8,7 @@ import (
 
 type (
 	CartBSON struct {
-		ID        primitive.ObjectID `bson:"_id"`
+		Id        primitive.ObjectID `bson:"_id"`
 		UserId    primitive.ObjectID `bson:"userId"`
 		Items     []CartItemBSON     `bson:"items"`
 		CreatedAt time.Time          `bson:"createdAt"`
@@ -16,7 +16,7 @@ type (
 	}
 
 	CartCreateBSON struct {
-		ID        primitive.ObjectID   `bson:"_id"`
+		Id        primitive.ObjectID   `bson:"_id"`
 		UserId    primitive.ObjectID   `bson:"userId"`
 		Items     []primitive.ObjectID `bson:"items"`
 		CreatedAt time.Time            `bson:"createdAt"`
@@ -27,8 +27,9 @@ type (
 		UserId primitive.ObjectID `bson:"userId"`
 		Items  []CartItemsCreate  `bson:"items"`
 	}
+
 	CartResponse struct {
-		ID        primitive.ObjectID `bson:"_id"`
+		Id        primitive.ObjectID `bson:"_id"`
 		UserId    primitive.ObjectID `bson:"userId"`
 		Items     []CartItemResponse `bson:"items"`
 		CreatedAt time.Time          `bson:"createdAt"`
@@ -39,3 +40,14 @@ type (
 		Quantity int16 `bson:"quantity"`
 	}
 )
+
+func (c CartCreate) ConvertToBSON(items []primitive.ObjectID, userId primitive.ObjectID) CartCreateBSON {
+	result := CartCreateBSON{
+		Id:        primitive.NewObjectID(),
+		UserId:    userId,
+		Items:     items,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	return result
+}

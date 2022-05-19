@@ -9,9 +9,9 @@ var (
 	orderItemDAO = dao.OrderItem{}
 	categoryDAO  = dao.Category{}
 	brandDAO     = dao.Brand{}
-	//cartDAO      = dao.Cart{}
-	//cartItem     = dao.CartItem{}
-	productDAO = dao.Product{}
-	reviewDAO  = dao.Review{}
-	replyDAO   = dao.Reply{}
+	cartDAO      = dao.Cart{}
+	cartItemDAO  = dao.CartItem{}
+	productDAO   = dao.Product{}
+	reviewDAO    = dao.Review{}
+	replyDAO     = dao.Reply{}
 )

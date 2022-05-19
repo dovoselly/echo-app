@@ -12,4 +12,5 @@ var (
 	productService  = service.Product{}
 	reviewService   = service.Review{}
 	replyService    = service.Reply{}
+	cartService     = service.Cart{}
 )
