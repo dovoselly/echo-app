@@ -1,10 +1,8 @@
 package route
 
-import (
-	"github.com/labstack/echo/v4"
-)
+import "github.com/labstack/echo/v4"
 
-func Routes(e *echo.Echo) {
+func Route(e *echo.Echo) {
 	user(e)
 	admin(e)
 	category(e)
@@ -15,4 +13,5 @@ func Routes(e *echo.Echo) {
 	product(e)
 	review(e)
 	reply(e)
+	//admin(e)
 }

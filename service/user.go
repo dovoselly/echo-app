@@ -3,26 +3,30 @@ package service
 import (
 	"echo-app/model"
 	"echo-app/util"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/pkg/errors"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type User struct{}
 
-func (u User) ChangePassword(id string, body model.UserChangePassword) error {
-	objId, _ := primitive.ObjectIDFromHex(id)
+func (u User) ChangePassword(ID string, body model.UserChangePassword) error {
 	// check currentPassword
+	objId, err := primitive.ObjectIDFromHex(ID)
+	if err != nil {
+		return err
+	}
+
 	userBSON, _ := userDAO.GetById(objId)
-	if u.checkPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
-		return errors.New(utils.CURRENT_PASSWORD_INCORRECT)
+	if util.CheckPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
+		return errors.New("CurrentPassword is incorrect")
 	}
 
 	// HashPassword truoc khi update
 	newPassword, _ := util.HashPassword(body.NewPassword)
 
 	// update password
-	err := userDAO.UpdatePassword(objId, newPassword)
+	err = userDAO.UpdatePassword(objId, newPassword)
 
 	if err != nil {
 		return err
@@ -31,12 +35,15 @@ func (u User) ChangePassword(id string, body model.UserChangePassword) error {
 	return nil
 }
 
-func (u User) GetInfo(id string) (model.UserInfo, error) {
+func (u User) GetInfo(ID string) (model.UserInfo, error) {
 	var (
 		info model.UserInfo
 	)
 
-	objId, _ := primitive.ObjectIDFromHex(id)
+	objId, err := primitive.ObjectIDFromHex(ID)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
 
 	// get user
 	user, err := userDAO.GetInfo(objId)
@@ -60,10 +67,20 @@ func (u User) GetInfo(id string) (model.UserInfo, error) {
 	return info, nil
 }
 
-func (u User) UpdateInfo(id string, body model.UserUpdate) error {
-	objId, _ := primitive.ObjectIDFromHex(id)
-	// convert userUpdate to userBson
-	bodyBSON := body.ConvertToBSON()
+func (u User) UpdateInfo(ID string, body model.UserUpdate) error {
+	objId, err := primitive.ObjectIDFromHex(ID)
+	if err != nil {
+		return err
+	}
+
+	bodyBSON := model.UserInfoBSON{
+		FullName:    body.FullName,
+		Email:       body.Email,
+		Phone:       body.Phone,
+		DateOfBirth: body.DateOfBirth,
+		Gender:      body.Gender,
+		Address:     body.Address,
+	}
 
 	// update info
 	if err := userDAO.UpdateInfo(objId, bodyBSON); err != nil {

@@ -1,16 +1,19 @@
 package validation
 
 import (
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
 )
 
-// AdminLoginBody ...
-func AdminLoginBody(next echo.HandlerFunc) echo.HandlerFunc {
+// Admin
+type Admin struct{}
+
+// Login ...
+func (a Admin) AdminLogin(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var body models.AdminLoginBody
+		var body model.AdminLoginBody
 
 		// bind request data
 		if err := c.Bind(&body); err != nil {
@@ -24,7 +27,7 @@ func AdminLoginBody(next echo.HandlerFunc) echo.HandlerFunc {
 			return util.Response400(c, nil, err.Error())
 		}
 
-		c.Set("adminLoginBody", body)
+		c.Set("body", body)
 
 		return next(c)
 	}
@@ -32,7 +35,7 @@ func AdminLoginBody(next echo.HandlerFunc) echo.HandlerFunc {
 
 func ValidateAdminUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var admin models.Admin
+		var admin model.Admin
 
 		// bind request body
 		err := c.Bind(&admin)
@@ -42,7 +45,7 @@ func ValidateAdminUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		// success
-		c.Set("adminRequestBody", admin)
+		c.Set("body", admin)
 
 		return next(c)
 	}

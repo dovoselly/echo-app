@@ -2,27 +2,21 @@ package route
 
 import (
 	"echo-app/config"
-	"echo-app/controller"
 	"echo-app/validation"
-
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-var envVars = config.GetEnv()
-
 func category(e *echo.Echo) {
-	isLogin := middleware.JWT([]byte(envVars.Jwt.SecretKey))
-	categoryRouter := e.Group("/admin/categories", isLogin)
-	{
-		categoryRouter.POST("", controller.CreateCategory, validation.CategoryCreateBody)
-		categoryRouter.GET("", controller.GetListCategory)
-		categoryRouter.GET("/:id", controller.GetCategoryByID, validation.ValidateID)
+	var env = config.GetEnv()
+	c := e.Group("/admin/categories")
+	c.Use(middleware.JWT([]byte(env.Jwt.SecretKey)))
 
-		categoryRouter.PUT("/:id", controller.UpdateCategoryByID, validation.ValidateID, validation.CategoryUpdateBody)
-		categoryRouter.DELETE("/:id", controller.DeleteCategoryByID, validation.ValidateID)
-		categoryRouter.PATCH("/:id/disable", controller.DisabledCategory)
-		categoryRouter.PATCH("/:id/enabled", controller.EnabledCategory)
-
-	}
+	c.POST("", categoryCtrl.CreateCategory, categoryVal.CreateBody)
+	c.GET("", categoryCtrl.GetListCategory)
+	c.GET("/:id", categoryCtrl.GetCategoryByID, validation.ValidateID)
+	c.PUT("/:id", categoryCtrl.UpdateCategoryByID, validation.ValidateID, categoryVal.UpdateBody)
+	c.DELETE("/:id", categoryCtrl.DeleteCategoryByID, validation.ValidateID)
+	c.PATCH("/:id/disable", categoryCtrl.DisabledCategory)
+	c.PATCH("/:id/enabled", categoryCtrl.EnabledCategory)
 }

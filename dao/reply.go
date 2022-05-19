@@ -1,32 +1,34 @@
 package dao
 
 import (
-	"context"
 	"echo-app/database"
-
+	"echo-app/model"
+	"echo-app/util"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func CreateReply(insertData model.Reply) error {
-	_, err := database.ReplyCol().InsertOne(utils.Ctx, insertData)
-	return err
+type Reply struct{}
+
+func (Reply) CreateReply(insertData model.Reply) (string, error) {
+	result, err := database.ReplyCol().InsertOne(util.Ctx, insertData)
+	return result.InsertedID.(string), err
 }
 
-func UpdateReply(filter bson.M, updateData bson.M) (*mongo.UpdateResult, error) {
+func (Reply) UpdateReply(userOjbID primitive.ObjectID, replyOjbID primitive.ObjectID, updateData model.Reply) (*mongo.UpdateResult, error) {
 	var (
-		ctx = context.Background()
+		filter        = bson.M{"_id": replyOjbID, "userId": userOjbID}
+		updateDataSet = bson.M{"$set": updateData}
 	)
 
-	results, err := database.ReplyCol().UpdateOne(ctx, filter, updateData)
+	results, err := database.ReplyCol().UpdateOne(util.Ctx, filter, updateDataSet)
 	return results, err
 }
 
-func DeleteReply(filter bson.M) (*mongo.DeleteResult, error) {
-	var (
-		ctx = context.Background()
-	)
+func (Reply) DeleteReply(userOjbID primitive.ObjectID, replyOjbID primitive.ObjectID) (*mongo.DeleteResult, error) {
+	var filter = bson.M{"_id": replyOjbID, "userId": userOjbID}
 
-	results, err := database.ReplyCol().DeleteOne(ctx, filter)
+	results, err := database.ReplyCol().DeleteOne(util.Ctx, filter)
 	return results, err
 }

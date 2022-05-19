@@ -1,15 +1,17 @@
 package validation
 
 import (
-	"echo-app/models"
+	"echo-app/model"
 	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
 )
 
-func CreateReply(next echo.HandlerFunc) echo.HandlerFunc {
+type Reply struct{}
+
+func (Reply) CreateReply(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var body models.CreateReply
+		var body model.CreateReply
 		if err := c.Bind(&body); err != nil {
 			return util.Response400(c, nil, util.InvalidData)
 		}

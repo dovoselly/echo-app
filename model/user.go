@@ -1,6 +1,7 @@
 package model
 
 import (
+	"echo-app/util"
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation"
@@ -96,19 +97,45 @@ type (
 )
 
 // ConvertToBSON
-func (b UserRegister) ConvertToBSON() UserBSON {
+func (u UserRegister) ConvertToBSON() UserBSON {
 	result := UserBSON{
 		ID:          primitive.NewObjectID(),
-		Username:    b.Username,
-		Password:    b.Password,
-		Email:       b.Email,
-		FullName:    b.FullName,
-		Gender:      b.Gender,
-		DateOfBirth: b.DateOfBirth,
-		Phone:       b.Phone,
-		Address:     b.Address,
-		Status:      b.Status,
+		Username:    u.Username,
+		Password:    u.Password,
+		Email:       u.Email,
+		FullName:    u.FullName,
+		Gender:      u.Gender,
+		DateOfBirth: u.DateOfBirth,
+		Phone:       u.Phone,
+		Address:     u.Address,
+		Status:      util.USER_STATUS_ACTIVE,
 		CreatedAt:   time.Now(),
+	}
+	return result
+}
+
+func (u UserBSON) ConvertToJSON() UserInfo {
+	result := UserInfo{
+		ID:          u.ID,
+		FullName:    u.FullName,
+		Email:       u.Email,
+		Username:    u.Username,
+		Gender:      u.Gender,
+		DateOfBirth: u.DateOfBirth,
+		Phone:       u.Phone,
+		Address:     u.Address,
+	}
+	return result
+}
+
+func (u UserUpdate) ConvertToBSON() UserInfoBSON {
+	result := UserInfoBSON{
+		FullName:    u.FullName,
+		Email:       u.Email,
+		Phone:       u.Phone,
+		DateOfBirth: u.DateOfBirth,
+		Gender:      u.Gender,
+		Address:     u.Address,
 	}
 	return result
 }

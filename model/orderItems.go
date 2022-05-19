@@ -8,7 +8,7 @@ import (
 
 type (
 	OrderItemBSON struct {
-		ID        primitive.ObjectID `bson:"_id"`
+		Id        primitive.ObjectID `bson:"_id"`
 		ProductId primitive.ObjectID `bson:"productId"`
 		Quantity  int16              `bson:"quantity"`
 		Note      string             `bson:"note"`
@@ -18,7 +18,7 @@ type (
 	}
 
 	OrderItemResponse struct {
-		ID        primitive.ObjectID `json:"_id"`
+		Id        primitive.ObjectID `json:"_id"`
 		ProductId primitive.ObjectID `json:"productId"`
 		Quantity  int16              `json:"quantity"`
 		Note      string             `json:"note"`
@@ -33,13 +33,24 @@ type (
 	}
 )
 
-func (o OrderItemCreate) ConvertToOrderItemBSON() OrderItemBSON {
+func (o OrderItemCreate) ConvertToBSON() OrderItemBSON {
 	result := OrderItemBSON{
-		ID:        primitive.NewObjectID(),
+		Id:        primitive.NewObjectID(),
 		ProductId: o.ProductId,
 		Quantity:  o.Quantity,
 		Note:      o.Note,
 		Price:     o.Price,
 		CreatedAt: time.Now()}
+	return result
+}
+
+func (o OrderItemBSON) ConvertToJSON() OrderItemResponse {
+	result := OrderItemResponse{
+		Id:        o.Id,
+		ProductId: o.ProductId,
+		Price:     o.Price,
+		Quantity:  o.Quantity,
+		Note:      o.Note,
+	}
 	return result
 }
