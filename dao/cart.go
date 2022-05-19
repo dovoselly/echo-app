@@ -4,6 +4,8 @@ import (
 	"echo-app/database"
 	"echo-app/model"
 	"echo-app/util"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Cart struct{}
@@ -13,5 +15,6 @@ func (c Cart) Create(body model.CartCreateBSON) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return result.InsertedID.(string), err
+
+	return result.InsertedID.(primitive.ObjectID).Hex(), err
 }

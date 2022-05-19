@@ -15,4 +15,5 @@ func Routes(e *echo.Echo) {
 	product(e)
 	review(e)
 	reply(e)
+	cart(e)
 }
