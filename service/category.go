@@ -22,7 +22,7 @@ func (c Category) CreateCategory(body model.CategoryCreateBody) error {
 	}
 
 	// create category
-	if err := categoryDao.CreateCategory(category); err != nil {
+	if err := categoryDAO.CreateCategory(category); err != nil {
 		return errors.New("can not create new category")
 	}
 
@@ -34,7 +34,7 @@ func (c Category) GetListCategory() ([]model.CategoryResponse, error) {
 	listCategory := make([]model.CategoryResponse, 0)
 
 	// get list category bson
-	categoriesBSON, err := categoryDao.GetListCategory()
+	categoriesBSON, err := categoryDAO.GetListCategory()
 	if err != nil {
 		return listCategory, err
 	}
@@ -62,7 +62,7 @@ func (c Category) GetCategoryByID(ID string) (model.CategoryResponse, error) {
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
 	// get category by id
-	categoryBSON, err := categoryDao.GetCategoryByID(objID)
+	categoryBSON, err := categoryDAO.GetCategoryByID(objID)
 
 	category = model.CategoryResponse{
 		ID:          categoryBSON.ID,
@@ -83,7 +83,7 @@ func (c Category) GetCategoryByID(ID string) (model.CategoryResponse, error) {
 func (c Category) UpdateCategoryByID(ID string, body model.CategoryUpdateBody) error {
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
-	err := categoryDao.UpdateCategoryByID(objID, body)
+	err := categoryDAO.UpdateCategoryByID(objID, body)
 	if err != nil {
 		return err
 	}
@@ -95,7 +95,7 @@ func (c Category) DeleteCategoryByID(ID string) error {
 	// convert id string to objectID
 	objID, _ := primitive.ObjectIDFromHex(ID)
 
-	err := categoryDao.DeleteCategoryByID(objID)
+	err := categoryDAO.DeleteCategoryByID(objID)
 	if err != nil {
 		return err
 	}

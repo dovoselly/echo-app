@@ -3,27 +3,30 @@ package service
 import (
 	"echo-app/model"
 	"echo-app/util"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/pkg/errors"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct{}
 
-func (u User) ChangePassword(id string, body model.UserChangePassword) error {
-	objId, _ := primitive.ObjectIDFromHex(id)
+func (u User) ChangePassword(ID string, body model.UserChangePassword) error {
 	// check currentPassword
-	userBSON, _ := userDAO.GetById(objId)
-	if u.checkPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
-		return errors.New(util.CURRENT_PASSWORD_INCORRECT)
+	objId, err := primitive.ObjectIDFromHex(ID)
+	if err != nil {
+		return err
 	}
 
-	// hash password before update
-	newPassword, _ := u.hashPassword(body.NewPassword)
+	userBSON, _ := userDAO.GetById(objId)
+	if util.CheckPasswordHash(body.CurrentPassword, userBSON.Password) != nil {
+		return errors.New("CurrentPassword is incorrect")
+	}
+
+	// HashPassword truoc khi update
+	newPassword, _ := util.HashPassword(body.NewPassword)
 
 	// update password
-	err := userDAO.UpdatePassword(objId, newPassword)
+	err = userDAO.UpdatePassword(objId, newPassword)
 
 	if err != nil {
 		return err
@@ -32,12 +35,15 @@ func (u User) ChangePassword(id string, body model.UserChangePassword) error {
 	return nil
 }
 
-func (u User) GetInfo(id string) (model.UserInfo, error) {
+func (u User) GetInfo(ID string) (model.UserInfo, error) {
 	var (
 		info model.UserInfo
 	)
 
-	objId, _ := primitive.ObjectIDFromHex(id)
+	objId, err := primitive.ObjectIDFromHex(ID)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
 
 	// get user
 	user, err := userDAO.GetInfo(objId)
@@ -45,16 +51,36 @@ func (u User) GetInfo(id string) (model.UserInfo, error) {
 		return info, err
 	}
 
-	// convert userBson to userInfo
-	info = user.ConvertToJSON()
+	// convert to userInfo
+	info = model.UserInfo{
+		ID:          user.ID,
+		FullName:    user.FullName,
+		Email:       user.Email,
+		Username:    user.Username,
+		Avatar:      user.Avatar,
+		Gender:      user.Gender,
+		DateOfBirth: user.DateOfBirth,
+		Phone:       user.Phone,
+		Address:     user.Address,
+	}
 
 	return info, nil
 }
 
-func (u User) UpdateInfo(id string, body model.UserUpdate) error {
-	objId, _ := primitive.ObjectIDFromHex(id)
-	// convert userUpdate to userBson
-	bodyBSON := body.ConvertToBSON()
+func (u User) UpdateInfo(ID string, body model.UserUpdate) error {
+	objId, err := primitive.ObjectIDFromHex(ID)
+	if err != nil {
+		return err
+	}
+
+	bodyBSON := model.UserInfoBSON{
+		FullName:    body.FullName,
+		Email:       body.Email,
+		Phone:       body.Phone,
+		DateOfBirth: body.DateOfBirth,
+		Gender:      body.Gender,
+		Address:     body.Address,
+	}
 
 	// update info
 	if err := userDAO.UpdateInfo(objId, bodyBSON); err != nil {
@@ -62,14 +88,4 @@ func (u User) UpdateInfo(id string, body model.UserUpdate) error {
 	}
 
 	return nil
-}
-
-func (u User) hashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
-}
-
-func (u User) checkPasswordHash(password, hash string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err
 }
