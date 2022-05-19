@@ -8,20 +8,18 @@ import (
 
 type (
 	CartItemBSON struct {
-		ID        primitive.ObjectID `bson:"_id"`
+		Id        primitive.ObjectID `bson:"_id"`
 		ProductId primitive.ObjectID `bson:"productId"`
 		Quantity  uint               `bson:"quantity"`
-		Note      string             `bson:"note"`
 		Price     string             `bson:"price"`
 		CreatedAt time.Time          `bson:"createdAt"`
 		UpdatedAt time.Time          `bson:"updatedAt"`
 	}
 
 	CartItemResponse struct {
-		ID        primitive.ObjectID `json:"_id"`
+		Id        primitive.ObjectID `json:"_id"`
 		ProductId primitive.ObjectID `json:"productId"`
 		Quantity  uint               `json:"quantity"`
-		Note      string             `json:"note"`
 		Price     string             `json:"price"`
 		CreatedAt time.Time          `json:"createdAt"`
 		UpdatedAt time.Time          `json:"updatedAt"`
@@ -30,7 +28,18 @@ type (
 	CartItemsCreate struct {
 		ProductId primitive.ObjectID `json:"productId"`
 		Quantity  uint               `json:"quantity"`
-		Note      string             `json:"note"`
 		Price     string             `json:"price"`
 	}
 )
+
+func (c CartItemsCreate) ConvertToBSON() CartItemBSON {
+	result := CartItemBSON{
+		Id:        primitive.NewObjectID(),
+		ProductId: c.ProductId,
+		Quantity:  c.Quantity,
+		Price:     c.Price,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	return result
+}
