@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type User struct{}
@@ -19,10 +20,15 @@ func (u User) ChangePassword(c echo.Context) error {
 	id, err := util.GetUserId(c)
 	if err != nil {
 		return err
+
+	}
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
 	}
 
 	// process
-	msg, err := userService.ChangePassword(id, body)
+	msg, err := userService.ChangePassword(objID, body)
 	if err != nil {
 		return util.Response400(c, nil, msg)
 	}
@@ -36,9 +42,10 @@ func (u User) GetInfo(c echo.Context) error {
 	if err != nil {
 		return err
 	}
+	objID, err := primitive.ObjectIDFromHex(id)
 
 	// process
-	info, err := userService.GetInfo(id)
+	info, err := userService.GetInfo(objID)
 	if err != nil {
 		return util.Response400(c, nil, util.InvalidData)
 
@@ -57,9 +64,13 @@ func (u User) UpdateInfo(c echo.Context) error {
 	if err != nil {
 		return err
 	}
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
 
 	//process
-	if err := userService.UpdateInfo(id, body); err != nil {
+	if err := userService.UpdateInfo(objID, body); err != nil {
 		return util.Response400(c, nil, util.InvalidData)
 	}
 

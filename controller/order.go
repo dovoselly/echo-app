@@ -5,6 +5,8 @@ import (
 	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Order struct{}
@@ -15,8 +17,12 @@ func (o Order) GetByUserId(c echo.Context) error {
 	if err != nil {
 		return err
 	}
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
 
-	data, err := orderService.GetByUserId(id)
+	data, err := orderService.GetByUserId(objID)
 	if err != nil {
 		return util.Response400(c, nil, util.InvalidData)
 	}
@@ -30,16 +36,21 @@ func (o Order) Create(c echo.Context) error {
 	)
 
 	// get id user in token
-	objId, err := util.GetUserId(c)
+	UserID, err := util.GetUserId(c)
+	if err != nil {
+		return err
+	}
+
+	objID, err := primitive.ObjectIDFromHex(UserID)
 	if err != nil {
 		return err
 	}
 
 	// process
-	id, err := orderService.Create(objId, body)
+	orderID, err := orderService.Create(objID, body)
 	if err != nil {
 		return util.Response400(c, nil, util.InvalidData)
 	}
 
-	return util.Response200(c, id, "")
+	return util.Response200(c, bson.M{"_id": orderID}, "")
 }

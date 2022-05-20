@@ -27,16 +27,17 @@ func (o OrderItem) GetByUserId() ([]model.OrderItemBSON, error) {
 	return orderItems, nil
 }
 
-func (o OrderItem) Create(body []model.OrderItemBSON) (string, error) {
+func (o OrderItem) Create(body []model.OrderItemBSON) error {
 	var data []interface{}
 	for _, t := range body {
 		data = append(data, t)
 	}
+
 	// create order
 	_, err := database.OrderItemCol().InsertMany(util.Ctx, data)
 	if err != nil {
-		return "", err
+		return err
 	}
 
-	return "", nil
+	return nil
 }
