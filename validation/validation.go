@@ -18,7 +18,6 @@ func ValidateID(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		c.Set("id", id)
-
 		return next(c)
 	}
 }

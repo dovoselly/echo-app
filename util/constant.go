@@ -34,4 +34,8 @@ var (
 	OrderStatusDelivering = "DELIVERING"
 	OrderStatusDelivered  = "DELIVERED"
 	OrderStatusCancel     = "CANCEL"
+
+	// Category
+	CategoryStatusEnabled  = "ENABLE"
+	CategoryStatusDisabled = "DISABLE"
 )

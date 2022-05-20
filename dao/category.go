@@ -1,93 +1,84 @@
 package dao
 
 import (
-	"context"
 	"echo-app/database"
 	"echo-app/model"
+	"echo-app/util"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Category struct{}
 
-func (Category) CreateCategory(body model.CategoryBSON) error {
-	var (
-		categoryCol = database.CategoryCol()
-		ctx         = context.Background()
-	)
-
+func (ca Category) Create(body model.CategoryBSON) (string, error) {
 	// InsertOne
-	_, err := categoryCol.InsertOne(ctx, body)
-
-	return err
+	result, err := database.CategoryCol().InsertOne(util.Ctx, body)
+	if err != nil {
+		return "", err
+	}
+	return result.InsertedID.(primitive.ObjectID).Hex(), err
 }
 
-func (Category) GetListCategory() ([]model.CategoryBSON, error) {
+func (ca Category) GetList() ([]model.CategoryBSON, error) {
 	var (
-		categoryCol = database.CategoryCol()
-		ctx         = context.Background()
-		categories  []model.CategoryBSON
+		categories []model.CategoryBSON
 	)
 
-	cursor, err := categoryCol.Find(ctx, bson.D{})
+	cursor, err := database.CategoryCol().Find(util.Ctx, bson.D{})
 	if err != nil {
 		return categories, err
 	}
 
-	if err = cursor.All(ctx, &categories); err != nil {
+	if err = cursor.All(util.Ctx, &categories); err != nil {
 		return categories, nil
 	}
 
 	return categories, nil
 }
 
-func (Category) GetCategoryByID(ID primitive.ObjectID) (model.CategoryBSON, error) {
+func (ca Category) GetByID(id primitive.ObjectID) (model.CategoryBSON, error) {
 	var (
-		categoryCol = database.CategoryCol()
-		ctx         = context.Background()
-		category    model.CategoryBSON
+		category model.CategoryBSON
 	)
 
-	// find category
-	filter := bson.M{"_id": ID}
-	if err := categoryCol.FindOne(ctx, filter).Decode(&category); err != nil {
+	filter := bson.M{"_id": id}
+
+	if err := database.CategoryCol().FindOne(util.Ctx, filter).Decode(&category); err != nil {
 		return category, err
 	}
 
 	return category, nil
 }
 
-func (Category) UpdateCategoryByID(ID primitive.ObjectID, body model.CategoryUpdateBody) error {
-	var (
-		categoryCol = database.CategoryCol()
-		ctx         = context.Background()
-	)
-
+func (ca Category) UpdateByID(id primitive.ObjectID, body model.CategoryUpdateBody) (string, error) {
 	update := bson.M{"name": body.Name, "description": body.Description}
 
 	// UpdateOne
-	_, err := categoryCol.UpdateOne(ctx, bson.M{"_id": ID}, bson.M{"$set": update})
-
+	result, err := database.CategoryCol().UpdateOne(util.Ctx, bson.M{"_id": id}, bson.M{"$set": update})
 	if err != nil {
+		return "", err
+	}
+
+	return result.UpsertedID.(primitive.ObjectID).Hex(), err
+}
+
+func (ca Category) DeleteByID(id primitive.ObjectID) error {
+	// filter
+	filter := bson.M{"_id": id}
+
+	// DeleteOne
+	if _, err := database.CategoryCol().DeleteOne(util.Ctx, filter); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (Category) DeleteCategoryByID(ID primitive.ObjectID) error {
-	var (
-		categoryCol = database.CategoryCol()
-		ctx         = context.Background()
-	)
-
-	// filter
-	filter := bson.M{"_id": ID}
-
-	// DeleteOne
-	if _, err := categoryCol.DeleteOne(ctx, filter); err != nil {
-		return err
+func (ca Category) UpdateStatus(id primitive.ObjectID, status string) (string, error) {
+	result, err := database.CategoryCol().UpdateOne(util.Ctx, bson.M{"id": id}, bson.M{"status": status})
+	if err != nil {
+		return "", err
 	}
-
-	return nil
+	return result.UpsertedID.(primitive.ObjectID).Hex(), err
 }
