@@ -8,18 +8,13 @@ import (
 
 type Order struct{}
 
-func (o Order) GetByUserId(id string) ([]model.OrderResponse, error) {
+func (o Order) GetByUserId(id primitive.ObjectID) ([]model.OrderResponse, error) {
 	var (
 		orders = make([]model.OrderResponse, 0)
 	)
 
-	objId, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return orders, err
-	}
-
 	// get orders in db
-	ordersBSON, err := orderDAO.GetByUserId(objId)
+	ordersBSON, err := orderDAO.GetByUserId(id)
 	if err != nil {
 		return orders, err
 	}
@@ -41,40 +36,41 @@ func (o Order) GetByUserId(id string) ([]model.OrderResponse, error) {
 	return orders, nil
 }
 
-func (o Order) Create(idUser string, body model.OrderCreate) (string, error) {
+func (o Order) Create(id primitive.ObjectID, body model.OrderCreate) (string, error) {
 	var (
-		orderBSON model.OrderCreateBSON
+		orderBSON      model.OrderCreateBSON
+		listItemJson   = make([]model.OrderItemBSON, 0)
+		ListIDItemJson = make([]primitive.ObjectID, 0)
 	)
 
-	objId, err := primitive.ObjectIDFromHex(idUser)
-	if err != nil {
-		return "", err
-	}
-
 	// insert to order-items db
-	listItemJson := make([]model.OrderItemBSON, 0)
+
 	for _, v := range body.Items {
 		listItemJson = append(listItemJson, v.ConvertToBSON())
 	}
 
-	if _, err := orderItemDAO.Create(listItemJson); err != nil {
+	if err := o.createItems(listItemJson); err != nil {
 		return "", err
 	}
 
 	// get list id insert to order db
-	ListIdItemJson := make([]primitive.ObjectID, 0)
+
 	for _, v := range listItemJson {
-		ListIdItemJson = append(ListIdItemJson, v.Id)
+		ListIDItemJson = append(ListIDItemJson, v.Id)
 	}
 
 	// convert orderCreate to orderCreateBson
-	orderBSON = body.ConvertToBSON(ListIdItemJson, objId)
+	orderBSON = body.ConvertToBSON(ListIDItemJson, id)
 
 	// create
-	orderId, err := orderDAO.CreateOrder(orderBSON)
+	orderID, err := orderDAO.CreateOrder(orderBSON)
 	if err != nil {
 		return "", err
 	}
 
-	return orderId, nil
+	return orderID, nil
+}
+
+func (o Order) createItems(body []model.OrderItemBSON) error {
+	return orderItemDAO.Create(body)
 }

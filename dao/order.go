@@ -12,14 +12,14 @@ import (
 
 type Order struct{}
 
-func (o Order) GetByUserId(ID primitive.ObjectID) ([]model.OrderBSON, error) {
+func (o Order) GetByUserId(id primitive.ObjectID) ([]model.OrderBSON, error) {
 	var (
 		orders []model.OrderBSON
 	)
 
 	pipeline := []bson.M{
 		{
-			"$match": bson.M{"userId": ID},
+			"$match": bson.M{"userId": id},
 		},
 		{"$lookup": bson.M{
 			"from":         "orderItems",

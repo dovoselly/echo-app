@@ -4,6 +4,7 @@ import (
 	"echo-app/database"
 	"echo-app/model"
 	"echo-app/util"
+
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -34,14 +35,14 @@ func (u User) GetByUsername(username string) (model.UserBSON, error) {
 	return user, nil
 }
 
-func (u User) GetById(id primitive.ObjectID) (model.UserBSON, error) {
+func (u User) GetByID(id primitive.ObjectID) (model.UserBSON, error) {
 	var (
 		user model.UserBSON
 	)
 
 	err := database.UserCol().FindOne(util.Ctx, bson.M{"_id": id}).Decode(&user)
 	if err != nil {
-		return model.UserBSON{}, err
+		return user, err
 	}
 
 	return user, nil
@@ -53,12 +54,7 @@ func (u User) UpdatePassword(id primitive.ObjectID, newPassword string) (*mongo.
 		{"$set", bson.D{{"password", newPassword}}},
 	}
 
-	result, err := database.UserCol().UpdateOne(util.Ctx, filter, update)
-	if err != nil {
-		return nil, err
-	}
-
-	return result, nil
+	return database.UserCol().UpdateOne(util.Ctx, filter, update)
 }
 
 func (u User) GetInfo(id primitive.ObjectID) (model.UserBSON, error) {
@@ -76,10 +72,10 @@ func (u User) GetInfo(id primitive.ObjectID) (model.UserBSON, error) {
 }
 
 func (u User) UpdateInfo(id primitive.ObjectID, body model.UserInfoBSON) error {
-
 	filter := bson.M{"_id": id}
+	update := bson.M{"$set": body}
 
-	_, err := database.UserCol().UpdateOne(util.Ctx, filter, bson.M{"$set": body})
+	_, err := database.UserCol().UpdateOne(util.Ctx, filter, update)
 	if err != nil {
 		return err
 	}

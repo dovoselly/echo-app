@@ -120,6 +120,7 @@ func (u UserBSON) ConvertToJSON() UserInfo {
 		FullName:    u.FullName,
 		Email:       u.Email,
 		Username:    u.Username,
+		Avatar:      u.Avatar,
 		Gender:      u.Gender,
 		DateOfBirth: u.DateOfBirth,
 		Phone:       u.Phone,
