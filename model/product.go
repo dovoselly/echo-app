@@ -1,9 +1,11 @@
 package model
 
 import (
+	"echo-app/util"
+	"time"
+
 	validation "github.com/go-ozzo/ozzo-validation"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"time"
 )
 
 type (
@@ -45,7 +47,70 @@ type (
 		CreatedAt   string                 `json:"createdAt"`
 		UpdatedAt   string                 `json:"updatedAt"`
 	}
+
+	ProductCreate struct {
+		Name        string             `json:"name"`
+		CategoryId  primitive.ObjectID `json:"categoryId"`
+		BrandId     primitive.ObjectID `json:"brandId"`
+		Price       uint               `json:"price"`
+		Description string             `json:"description"`
+		Images      []string           `json:"images"`
+		Quantity    uint               `json:"quantity"`
+		Rest        uint               `json:"rest"`
+		Status      string             `json:"status"`
+	}
+
+	ProductUpdate struct {
+		Name        string             `json:"name"`
+		CategoryId  primitive.ObjectID `json:"categoryId"`
+		BrandId     primitive.ObjectID `json:"brandId"`
+		Price       uint               `json:"price"`
+		Quantity    uint               `json:"quantity"`
+		Rest        uint               `json:"rest"`
+		Images      []string           `json:"images"`
+		Description string             `json:"description"`
+	}
+	ProductUpdateBSON struct {
+		Name        string             `bson:"name"`
+		CategoryId  primitive.ObjectID `bson:"categoryId"`
+		BrandId     primitive.ObjectID `bson:"brandId"`
+		Price       uint               `bson:"price"`
+		Quantity    uint               `bson:"quantity"`
+		Rest        uint               `bson:"rest"`
+		Images      []string           `bson:"images"`
+		Description string             `bson:"description"`
+	}
 )
+
+func (p ProductCreate) ConvertToBSON() ProductBSON {
+	result := ProductBSON{
+		Id:          primitive.NewObjectID(),
+		Name:        p.Name,
+		CategoryId:  p.CategoryId,
+		BrandId:     p.BrandId,
+		Price:       p.Price,
+		Description: p.Description,
+		Images:      p.Images,
+		Quantity:    p.Quantity,
+		Rest:        p.Rest,
+		Status:      util.ProductStatusEnabled,
+	}
+	return result
+}
+
+func (p ProductUpdate) ConvertToBSON() ProductUpdateBSON {
+	result := ProductUpdateBSON{
+		Name:        p.Name,
+		CategoryId:  p.CategoryId,
+		BrandId:     p.BrandId,
+		Price:       p.Price,
+		Description: p.Description,
+		Images:      p.Images,
+		Quantity:    p.Quantity,
+		Rest:        p.Rest,
+	}
+	return result
+}
 
 func (p ProductBSON) Validate() error {
 	return validation.ValidateStruct(&p,

@@ -60,13 +60,13 @@ func (c Category) DeleteByID(id primitive.ObjectID) error {
 	return categoryDAO.DeleteByID(id)
 }
 
-func (c Category) UpdateStatus(id primitive.ObjectID) (string, error) {
+func (c Category) UpdateStatus(id primitive.ObjectID) error {
 	var status string
 
 	// check status
 	category, err := categoryDAO.GetByID(id)
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	if category.Status == util.CategoryStatusEnabled {

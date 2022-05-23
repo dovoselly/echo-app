@@ -75,10 +75,12 @@ func (ca Category) DeleteByID(id primitive.ObjectID) error {
 	return nil
 }
 
-func (ca Category) UpdateStatus(id primitive.ObjectID, status string) (string, error) {
-	result, err := database.CategoryCol().UpdateOne(util.Ctx, bson.M{"id": id}, bson.M{"status": status})
+func (ca Category) UpdateStatus(id primitive.ObjectID, status string) error {
+	_, err := database.CategoryCol().UpdateOne(util.Ctx, bson.M{"id": id}, bson.D{
+		{"$set", bson.D{{"status", status}}},
+	})
 	if err != nil {
-		return "", err
+		return err
 	}
-	return result.UpsertedID.(primitive.ObjectID).Hex(), err
+	return nil
 }

@@ -90,10 +90,9 @@ func (ca Category) UpdateStatus(c echo.Context) error {
 	objID, _ := primitive.ObjectIDFromHex(id)
 
 	//process
-	categoryID, err := categoryService.UpdateStatus(objID)
-	if err != nil {
+	if err := categoryService.UpdateStatus(objID); err != nil {
 		return util.Response400(c, nil, err.Error())
 	}
 
-	return util.Response200(c, bson.M{"_id": categoryID}, "")
+	return util.Response200(c, bson.M{"_id": id}, "")
 }
