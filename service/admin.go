@@ -4,7 +4,8 @@ import (
 	"echo-app/model"
 	"echo-app/util"
 	"errors"
-	"fmt"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Admin struct{}
@@ -12,7 +13,6 @@ type Admin struct{}
 func (a Admin) AdminLogin(body model.AdminLoginBody) (string, error) {
 	// find admin in db
 	admin, err := adminDAO.FindByUsername(body.Username)
-
 	if err != nil {
 		return "", err
 	}
@@ -30,20 +30,15 @@ func (a Admin) AdminLogin(body model.AdminLoginBody) (string, error) {
 	// return JWT token
 	token, err := util.GenerateToken(data)
 	if err != nil {
-		fmt.Printf(err.Error())
+		return "", err
 	}
 	return token, err
 }
 
-func (a Admin) GetMyProfile(ID string) (model.Admin, error) {
-	doc, err := adminDAO.ProfileFindByID(ID)
-	if err != nil {
-		return doc, err
-	}
-	return doc, nil
+func (a Admin) GetMyProfile(id primitive.ObjectID) (model.Admin, error) {
+	return adminDAO.ProfileFindByID(id)
 }
 
-func (a Admin) UpdateMyProfile(ID string, newProfile model.Admin) error {
-	err := adminDAO.UpdateMyProfile(ID, newProfile)
-	return err
+func (a Admin) UpdateMyProfile(id primitive.ObjectID, newProfile model.Admin) error {
+	return adminDAO.UpdateMyProfile(id, newProfile)
 }

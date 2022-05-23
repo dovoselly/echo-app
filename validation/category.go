@@ -15,9 +15,7 @@ func (c Category) CreateBody(next echo.HandlerFunc) echo.HandlerFunc {
 
 		// bind request data
 		if err := c.Bind(&body); err != nil {
-			if err != nil {
-				return util.Response400(c, nil, err.Error())
-			}
+			return util.Response400(c, nil, err.Error())
 		}
 
 		// validate

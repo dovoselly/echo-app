@@ -19,3 +19,29 @@ func (p Product) GetListProduct(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+func (p Product) Create(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var body model.ProductCreate
+
+		if err := c.Bind(&body); err != nil {
+			return util.Response400(c, nil, err.Error())
+		}
+
+		c.Set("body", body)
+		return next(c)
+	}
+}
+
+func (p Product) Update(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var body model.ProductUpdate
+
+		if err := c.Bind(&body); err != nil {
+			return util.Response400(c, nil, err.Error())
+		}
+
+		c.Set("body", body)
+		return next(c)
+	}
+}

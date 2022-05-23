@@ -3,44 +3,44 @@ package controller
 import (
 	"echo-app/model"
 	"echo-app/util"
-	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Category struct{}
 
-func (Category) CreateCategory(c echo.Context) error {
+func (ca Category) Create(c echo.Context) error {
 	var body = c.Get("body").(model.CategoryCreateBody)
 
 	// process data
-	if err := categoryService.CreateCategory(body); err != nil {
-		return util.Response400(c, nil, err.Error())
-	}
-
-	return util.Response200(c, body, "")
-}
-
-func (Category) GetListCategory(c echo.Context) error {
-	categories, err := categoryService.GetListCategory()
+	categoryID, err := categoryService.Create(body)
 	if err != nil {
 		return util.Response400(c, nil, err.Error())
 	}
-	return util.Response200(c, categories, "")
 
-	//if categories, err := service.GetListCategory(); err != nil {
-	//	return util.Response400(c, nil, err.Error())
-	//}
-	//return util.Response200(c, categories, "")
-
+	return util.Response200(c, categoryID, "")
 }
 
-func (Category) GetCategoryByID(c echo.Context) error {
-	var strID = c.Get("id").(string)
+func (ca Category) GetList(c echo.Context) error {
+	categories, err := categoryService.GetList()
+	if err != nil {
+		return util.Response400(c, nil, err.Error())
+	}
+
+	return util.Response200(c, categories, "")
+}
+
+func (ca Category) GetByID(c echo.Context) error {
+	var (
+		id = c.Get("id").(string)
+	)
+	// to objectID
+	objID, _ := primitive.ObjectIDFromHex(id)
 
 	// process
-	category, err := categoryService.GetCategoryByID(strID)
-
+	category, err := categoryService.GetByID(objID)
 	// if error
 	if err != nil {
 		return util.Response400(c, nil, err.Error())
@@ -49,27 +49,32 @@ func (Category) GetCategoryByID(c echo.Context) error {
 	return util.Response200(c, category, "")
 }
 
-func (Category) UpdateCategoryByID(c echo.Context) error {
+func (ca Category) UpdateByID(c echo.Context) error {
 	var (
-		ID   = c.Get("id").(string)
+		id   = c.Get("id").(string)
 		body = c.Get("body").(model.CategoryUpdateBody)
 	)
 
+	objID, _ := primitive.ObjectIDFromHex(id)
+
 	// process data
-	err := categoryService.UpdateCategoryByID(ID, body)
+	categoryID, err := categoryService.UpdateByID(objID, body)
 	if err != nil {
 		return util.Response400(c, nil, err.Error())
 	}
 
-	return util.Response200(c, nil, "")
-
+	return util.Response200(c, bson.M{"_id": categoryID}, "")
 }
 
-func (Category) DeleteCategoryByID(c echo.Context) error {
-	var id = c.Get("id").(string)
+func (ca Category) DeleteByID(c echo.Context) error {
+	var (
+		id = c.Get("id").(string)
+	)
+
+	objID, _ := primitive.ObjectIDFromHex(id)
 
 	//process
-	err := categoryService.DeleteCategoryByID(id)
+	err := categoryService.DeleteByID(objID)
 	if err != nil {
 		return util.Response400(c, nil, err.Error())
 	}
@@ -77,10 +82,17 @@ func (Category) DeleteCategoryByID(c echo.Context) error {
 	return util.Response200(c, nil, "")
 }
 
-func (Category) DisabledCategory(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Disabled category")
-}
+func (ca Category) UpdateStatus(c echo.Context) error {
+	var (
+		id = c.Get("id").(string)
+	)
 
-func (Category) EnabledCategory(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Enabled category")
+	objID, _ := primitive.ObjectIDFromHex(id)
+
+	//process
+	if err := categoryService.UpdateStatus(objID); err != nil {
+		return util.Response400(c, nil, err.Error())
+	}
+
+	return util.Response200(c, bson.M{"_id": id}, "")
 }

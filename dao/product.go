@@ -93,6 +93,48 @@ func (p Product) GetProductDetail(id primitive.ObjectID) (*model.ProductResponse
 	)
 
 	err := database.ProductCol().FindOne(util.Ctx, filter).Decode(&results)
-
 	return results, err
+}
+
+func (p Product) Create(body model.ProductBSON) (string, error) {
+	result, err := database.ProductCol().InsertOne(util.Ctx, body)
+	if err != nil {
+		return "", err
+	}
+
+	return result.InsertedID.(primitive.ObjectID).Hex(), err
+}
+
+func (p Product) Update(id primitive.ObjectID, body model.ProductUpdateBSON) error {
+	_, err := database.ProductCol().UpdateOne(util.Ctx, bson.M{"_id": id}, bson.M{"$set": body})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (p Product) UpdateStatus(id primitive.ObjectID, status string) error {
+	_, err := database.ProductCol().UpdateOne(util.Ctx, bson.M{"_id": id}, bson.D{
+		{"$set", bson.D{{"status", status}}},
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (p Product) GetByID(id primitive.ObjectID) (model.ProductBSON, error) {
+	var (
+		product model.ProductBSON
+	)
+
+	filter := bson.M{"_id": id}
+
+	if err := database.ProductCol().FindOne(util.Ctx, filter).Decode(&product); err != nil {
+		return product, err
+	}
+
+	return product, nil
 }

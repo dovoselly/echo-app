@@ -17,9 +17,7 @@ func (a Admin) AdminLogin(next echo.HandlerFunc) echo.HandlerFunc {
 
 		// bind request data
 		if err := c.Bind(&body); err != nil {
-			if err != nil {
-				return util.Response400(c, nil, err.Error())
-			}
+			return util.Response400(c, nil, err.Error())
 		}
 
 		// validate
@@ -28,7 +26,6 @@ func (a Admin) AdminLogin(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		c.Set("body", body)
-
 		return next(c)
 	}
 }
@@ -38,15 +35,12 @@ func ValidateAdminUpdateBody(next echo.HandlerFunc) echo.HandlerFunc {
 		var admin model.Admin
 
 		// bind request body
-		err := c.Bind(&admin)
-
-		if err != nil {
+		if err := c.Bind(&admin); err != nil {
 			return util.Response400(c, nil, err.Error())
 		}
 
 		// success
 		c.Set("body", admin)
-
 		return next(c)
 	}
 }

@@ -72,5 +72,6 @@ func (o Order) Create(id primitive.ObjectID, body model.OrderCreate) (string, er
 }
 
 func (o Order) createItems(body []model.OrderItemBSON) error {
-	return orderItemDAO.Create(body)
+	var oi OrderItem
+	return oi.Create(body)
 }

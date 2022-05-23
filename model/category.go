@@ -1,9 +1,11 @@
 package model
 
 import (
+	"echo-app/util"
+	"time"
+
 	validation "github.com/go-ozzo/ozzo-validation"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"time"
 )
 
 type (
@@ -35,6 +37,30 @@ type (
 		Description string `json:"description"`
 	}
 )
+
+func (c CategoryCreateBody) ConvertToBSON() CategoryBSON {
+	result := CategoryBSON{
+		ID:          primitive.NewObjectID(),
+		Name:        c.Name,
+		Description: c.Description,
+		Status:      util.CategoryStatusEnabled,
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+	}
+	return result
+}
+
+func (c CategoryBSON) ConvertToJSON() CategoryResponse {
+	result := CategoryResponse{
+		ID:          c.ID,
+		Name:        c.Name,
+		Description: c.Description,
+		Status:      c.Status,
+		CreatedAt:   c.CreatedAt,
+		UpdatedAt:   c.UpdatedAt,
+	}
+	return result
+}
 
 func (c CategoryCreateBody) Validate() error {
 	return validation.ValidateStruct(&c,

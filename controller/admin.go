@@ -5,17 +5,16 @@ import (
 	"echo-app/util"
 
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Admin struct{}
 
 func (Admin) AdminLogin(c echo.Context) error {
-	var admin = c.Get("adminLoginBody").(model.AdminLoginBody)
+	var body = c.Get("body").(model.AdminLoginBody)
 
 	// process data
-	token, err := adminService.AdminLogin(admin)
-
-	// if error
+	token, err := adminService.AdminLogin(body)
 	if err != nil {
 		return util.Response400(c, nil, util.InvalidData)
 	}
@@ -25,6 +24,7 @@ func (Admin) AdminLogin(c echo.Context) error {
 		"token":   token,
 		"isAdmin": true,
 	}
+
 	return util.Response200(c, data, "")
 }
 
@@ -32,10 +32,11 @@ func (Admin) GetMyProfile(c echo.Context) error {
 	// jwtPayload get id
 	jwtPayload, _ := util.GetJWTPayload(c)
 	// admin id
-	adminID := jwtPayload["id"].(string)
+	adminID := jwtPayload["_id"].(string)
+	objID, _ := primitive.ObjectIDFromHex(adminID)
 
 	// get admin profile
-	profile, err := adminService.GetMyProfile(adminID)
+	profile, err := adminService.GetMyProfile(objID)
 
 	// if err
 	if err != nil {
@@ -51,14 +52,15 @@ func (Admin) GetMyProfile(c echo.Context) error {
 }
 
 func (Admin) UpdateMyProfile(c echo.Context) error {
-	var body = c.Get("adminRequestBody").(model.Admin)
+	var body = c.Get("body").(model.Admin)
 
 	// jwtPayload for get id
 	jwtPayload, _ := util.GetJWTPayload(c)
-	id := jwtPayload["id"].(string)
+	id := jwtPayload["_id"].(string)
+	objID, _ := primitive.ObjectIDFromHex(id)
 
 	// UpdateProfile
-	err := adminService.UpdateMyProfile(id, body)
+	err := adminService.UpdateMyProfile(objID, body)
 
 	// if err
 	if err != nil {
@@ -67,11 +69,3 @@ func (Admin) UpdateMyProfile(c echo.Context) error {
 
 	return util.Response200(c, id, "")
 }
-
-//func AdminLogin(c echo.Context) error {
-//	return c.JSON(http.StatusOK, "Admin login")
-//}
-
-//func MyProfileAdmin(c echo.Context) error {
-//	return c.JSON(http.StatusOK, "Get Admin profile")
-//}

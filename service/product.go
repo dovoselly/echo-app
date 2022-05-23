@@ -3,6 +3,9 @@ package service
 import (
 	"echo-app/dao"
 	"echo-app/model"
+	"echo-app/util"
+	"fmt"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -23,4 +26,40 @@ func (p Product) GetProductDetail(ID string) (*model.ProductResponse, error) {
 	}
 	results, err := productDAO.GetProductDetail(ojbID)
 	return results, err
+}
+
+func (p Product) Create(body model.ProductCreate) (string, error) {
+	var (
+		productBSON model.ProductBSON
+	)
+	productBSON = body.ConvertToBSON()
+	return productDAO.Create(productBSON)
+}
+
+func (p Product) Update(id primitive.ObjectID, body model.ProductUpdate) error {
+	productBSON := body.ConvertToBSON()
+	return productDAO.Update(id, productBSON)
+}
+
+func (p Product) UpdateStatus(id primitive.ObjectID) error {
+	var status string
+
+	// check status
+	product, err := productDAO.GetByID(id)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("PRODUCT IN SERVICE:", product)
+
+	if product.Status == util.ProductStatusEnabled {
+		status = util.ProductStatusDisabled
+	} else {
+		status = util.ProductStatusEnabled
+	}
+
+	fmt.Println("STATUS UPDATE:", status)
+
+	// update status
+	return productDAO.UpdateStatus(id, status)
 }

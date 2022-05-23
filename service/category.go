@@ -2,104 +2,79 @@ package service
 
 import (
 	"echo-app/model"
-	"errors"
-	"time"
+	"echo-app/util"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Category struct{}
 
-func (c Category) CreateCategory(body model.CategoryCreateBody) error {
-	// category BSON
-	body.Status = "ENABLE"
-	category := model.CategoryBSON{
-		ID:          primitive.NewObjectID(),
-		Name:        body.Name,
-		Description: body.Description,
-		Status:      body.Status,
-		CreatedAt:   time.Now(),
-	}
+func (c Category) Create(body model.CategoryCreateBody) (string, error) {
+	//convert
+	categoryBSON := body.ConvertToBSON()
 
 	// create category
-	if err := categoryDAO.CreateCategory(category); err != nil {
-		return errors.New("can not create new category")
-	}
-
-	return nil
+	return categoryDAO.Create(categoryBSON)
 }
 
-func (c Category) GetListCategory() ([]model.CategoryResponse, error) {
-
-	listCategory := make([]model.CategoryResponse, 0)
+func (c Category) GetList() ([]model.CategoryResponse, error) {
+	var (
+		listCategory = make([]model.CategoryResponse, 0)
+	)
 
 	// get list category bson
-	categoriesBSON, err := categoryDAO.GetListCategory()
+	categoriesBSON, err := categoryDAO.GetList()
 	if err != nil {
 		return listCategory, err
 	}
 
+	// convert to json db
 	for _, categoryBSON := range categoriesBSON {
-		categoryJSON := model.CategoryResponse{
-			ID:          categoryBSON.ID,
-			Name:        categoryBSON.Name,
-			Description: categoryBSON.Description,
-			Status:      categoryBSON.Status,
-		}
+		categoryJSON := categoryBSON.ConvertToJSON()
 		listCategory = append(listCategory, categoryJSON)
 	}
 
 	return listCategory, nil
-
 }
 
-func (c Category) GetCategoryByID(ID string) (model.CategoryResponse, error) {
+func (c Category) GetByID(id primitive.ObjectID) (model.CategoryResponse, error) {
 	var (
 		category model.CategoryResponse
 	)
 
-	// to objectID
-	objID, _ := primitive.ObjectIDFromHex(ID)
-
 	// get category by id
-	categoryBSON, err := categoryDAO.GetCategoryByID(objID)
-
-	category = model.CategoryResponse{
-		ID:          categoryBSON.ID,
-		Name:        categoryBSON.Name,
-		Description: categoryBSON.Description,
-		Status:      categoryBSON.Status,
-		CreatedAt:   categoryBSON.CreatedAt,
-		UpdatedAt:   categoryBSON.UpdatedAt,
-	}
-
+	categoryBSON, err := categoryDAO.GetByID(id)
 	if err != nil {
 		return category, err
 	}
 
+	category = categoryBSON.ConvertToJSON()
 	return category, nil
 }
 
-func (c Category) UpdateCategoryByID(ID string, body model.CategoryUpdateBody) error {
-	objID, _ := primitive.ObjectIDFromHex(ID)
-
-	err := categoryDAO.UpdateCategoryByID(objID, body)
-	if err != nil {
-		return err
-	}
-	return nil
-
+func (c Category) UpdateByID(id primitive.ObjectID, body model.CategoryUpdateBody) (string, error) {
+	return categoryDAO.UpdateByID(id, body)
 }
 
-func (c Category) DeleteCategoryByID(ID string) error {
-	// convert id string to objectID
-	objID, _ := primitive.ObjectIDFromHex(ID)
+func (c Category) DeleteByID(id primitive.ObjectID) error {
+	return categoryDAO.DeleteByID(id)
+}
 
-	err := categoryDAO.DeleteCategoryByID(objID)
+func (c Category) UpdateStatus(id primitive.ObjectID) error {
+	var status string
+
+	// check status
+	category, err := categoryDAO.GetByID(id)
 	if err != nil {
 		return err
 	}
 
-	// success
-	return nil
+	if category.Status == util.CategoryStatusEnabled {
+		status = util.CategoryStatusDisabled
+	} else {
+		status = util.CategoryStatusEnabled
+	}
+
+	// update status
+	return categoryDAO.UpdateStatus(id, status)
 }
